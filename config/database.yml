@@ -86,9 +86,10 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: capscrap_production
-    username: capscrap
-    password: <%= ENV["CAPSCRAP_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
+    # database: capscrap_production
+    # username: capscrap
+    # password: <%= ENV["CAPSCRAP_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
     database: capscrap_production_cache
