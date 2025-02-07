@@ -18,11 +18,21 @@ RSpec.describe "/examples", type: :request do
   # Example. As you add validations to Example, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      name: "MyString"
+    }
+    {
+      name: "Sample Name"
+    }
+    {
+      name: "Sample Name 2"
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: nil
+    }
   }
 
   describe "GET /index" do
@@ -87,14 +97,16 @@ RSpec.describe "/examples", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          name: "hello"
+        }
       }
 
       it "updates the requested example" do
         example = Example.create! valid_attributes
         patch example_url(example), params: { example: new_attributes }
         example.reload
-        skip("Add assertions for updated state")
+        expect(example.name).to eq("hello")
       end
 
       it "redirects to the example" do
