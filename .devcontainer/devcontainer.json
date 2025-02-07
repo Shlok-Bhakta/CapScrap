@@ -4,8 +4,26 @@
 	"name": "Ruby on Rails & Postgres",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
-	"workspaceFolder": "/workspaces"
-
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"features": {
+		"ghcr.io/devcontainers-extra/features/heroku-cli:1": {}
+	},
+	// add extensions
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"rebornix.Ruby",
+				"cweijan.vscode-database-client2",
+				"supermaven.supermaven",
+				"eamodio.gitlens",
+				"ms-vsliveshare.vsliveshare",
+				"shopify.ruby-extensions-pack",
+				"bradlc.vscode-tailwindcss",
+				"formulahendry.auto-close-tag",
+				"formulahendry.auto-rename-tag"
+			]
+		}
+	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
@@ -20,5 +38,5 @@
 	// "customizations": {},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"remoteUser": "root"
 }

@@ -4,9 +4,6 @@ FROM mcr.microsoft.com/devcontainers/ruby:1-3.3-bullseye
 RUN su vscode -c "gem install rails webdrivers"
 RUN su vscode -c "/usr/local/rvm/bin/rvm fix-permissions"
 
-# install Heroku CLI
-RUN curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-
 # Default value to allow debug server to serve content over GitHub Codespace's port forwarding service
 # The value is a comma-separated list of allowed domains 
 ENV RAILS_DEVELOPMENT_HOSTS=".githubpreview.dev,.preview.app.github.dev,.app.github.dev"
