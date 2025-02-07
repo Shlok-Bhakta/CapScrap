@@ -15,7 +15,6 @@ RSpec.describe "examples/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", example_path(example), "post" do
-
       assert_select "input[name=?]", "example[name]"
     end
   end
