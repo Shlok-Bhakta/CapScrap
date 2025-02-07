@@ -59,6 +59,7 @@ test:
 
   # setting up local testing not sure if heroku will nuke itself if I do this :)
   url: <%= ENV["DATABASE_URL"] %>
+  host: postgres
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

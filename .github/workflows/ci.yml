@@ -85,9 +85,6 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Create database
-        run: bundle exec rails db:create
-
       - name: Run tests
         env:
           RAILS_ENV: test
