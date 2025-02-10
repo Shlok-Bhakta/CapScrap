@@ -11,6 +11,8 @@ class User < ApplicationRecord
                    uniqueness: true,
                    format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
 
+  has_one :identity
+
   def name
     "#{first_name} #{last_name}"
   end
