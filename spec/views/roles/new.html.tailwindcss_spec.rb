@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "categories/index", type: :view, skip: "View tests pending" do
-  # Tests will be implemented with Selenium/Capybara when views are ready
+    # Tests will be implemented with Selenium/Capybara when views are ready
   end
 
 # RSpec.describe "roles/new", type: :view do

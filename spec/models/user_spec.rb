@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:role) { Role.create!(name: 'Customer') }
-  
+
   describe 'validations' do
     it 'is valid with valid attributes' do
       user = User.new(

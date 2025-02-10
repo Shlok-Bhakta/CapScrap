@@ -3,7 +3,7 @@ require 'rails_helper'
 # just do nothing (disable this test)
 
 RSpec.describe "categories/index", type: :view, skip: "View tests pending" do
-  # Tests will be implemented with Selenium/Capybara when views are ready
+    # Tests will be implemented with Selenium/Capybara when views are ready
   end
 
 # RSpec.describe "categories/index", type: :view do
