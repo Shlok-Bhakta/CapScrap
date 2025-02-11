@@ -20,7 +20,10 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 # Oauth with google
-gem "oauth2"
+gem "devise"
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection", "~> 1.0"
 
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
@@ -72,5 +75,4 @@ group :test do
 end
 
 gem "tailwindcss-ruby", "~> 4.0"
-
 gem "tailwindcss-rails", "~> 4.0"
