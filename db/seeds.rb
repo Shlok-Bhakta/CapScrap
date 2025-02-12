@@ -8,7 +8,7 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-
+Purchase.delete_all
 Item.delete_all #clears all exisiting data from tables
 User.delete_all
 
@@ -18,7 +18,8 @@ category2 = Category.find_or_create_by(name: "Material")
 role1 = Role.find_or_create_by(name: "user") #creating roles
 role2 = Role.find_or_create_by(name: "admin")
 
-Item.create!([ #creates items
+items = Item.create!([ #creates items
+  { category: category1, description: "VR Headset", location: "HRBB" },
   { category: category1, description: "VR Headset", location: "HRBB" },
   { category: category1, description: "VR Headset", location: "ILCB" },
   { category: category1, description: "Mouse", location: "HELD" },
@@ -35,9 +36,10 @@ Item.create!([ #creates items
   { category: category2, description: "Glass", location: "ZACH" },
   { category: category2, description: "Styrofoam", location: "HELD" },
   { category: category2, description: "Styrofoam", location: "HELD" },
+  { category: category2, description: "Styrofoam", location: "HELD" },
 ])
 
-User.create!([ #adds users to the database
+users = User.create!([ #adds users to the database
   {first_name: "Zach", last_name: "Holman", email: "zach@example.com", role: role1},
   {first_name: "Alice", last_name: "Markle", email: "alice@example.com", role: role1},
   {first_name: "Brock", last_name: "Purdy", email: "babygoat@example.com", role: role1},
@@ -51,5 +53,11 @@ User.create!([ #adds users to the database
   {first_name: "Tom", last_name: "Brady", email: "tb12@example.com", role: role2},
 ])
 
-
+Purchase.create!([
+  { user: users.find { |u| u.email == "zach@example.com" }, item: items.find { |i| i.description == "VR Headset" && i.location == "HRBB" }, purchase_date: "2025-02-11", purchased_quantity: 2 },
+  { user: users.find { |u| u.email == "alice@example.com" }, item: items.find { |i| i.description == "Mouse" && i.location == "HELD" }, purchase_date: "2025-02-10", purchased_quantity: 2 },
+  { user: users.find { |u| u.email == "babygoat@example.com" }, item: items.find { |i| i.description == "Styrofoam" && i.location == "HELD" }, purchase_date: "2025-02-09", purchased_quantity: 3 },
+  { user: users.find { |u| u.email == "hugh@example.com" }, item: items.find { |i| i.description == "Headphones" && i.location == "ZACH" }, purchase_date: "2025-02-08", purchased_quantity: 1 },
+  { user: users.find { |u| u.email == "mclovin@example.com" }, item: items.find { |i| i.description == "Wooden Plank" && i.location == "HELD" }, purchase_date: "2025-02-07", purchased_quantity: 1 }
+])
 
