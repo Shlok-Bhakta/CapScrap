@@ -1,0 +1,16 @@
+class Renting < ApplicationRecord
+  belongs_to :user
+  belongs_to :item
+
+  validates :checkout_date, presence: true
+  validates :quantity, presence: true, numericality: { greater_than: 0 }
+  validate :return_date_after_checkout_date, if: -> { return_date.present? }
+
+  private
+
+  def return_date_after_checkout_date
+    if return_date.present? && checkout_date.present? && return_date < checkout_date
+      errors.add(:return_date, "must be after the checkout date")
+    end
+  end
+end

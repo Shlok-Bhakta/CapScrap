@@ -1,0 +1,42 @@
+<%= form_with(model: renting, class: "contents") do |form| %>
+  <% if renting.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(renting.errors.count, "error") %> prohibited this renting from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% renting.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": renting.errors[:user_id].none?, "border-red-400 focus:outline-red-600": renting.errors[:user_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :item_id %>
+    <%= form.text_field :item_id, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": renting.errors[:item_id].none?, "border-red-400 focus:outline-red-600": renting.errors[:item_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :checkout_date %>
+    <%= form.datetime_field :checkout_date, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": renting.errors[:checkout_date].none?, "border-red-400 focus:outline-red-600": renting.errors[:checkout_date].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :return_date %>
+    <%= form.datetime_field :return_date, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": renting.errors[:return_date].none?, "border-red-400 focus:outline-red-600": renting.errors[:return_date].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": renting.errors[:quantity].none?, "border-red-400 focus:outline-red-600": renting.errors[:quantity].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
