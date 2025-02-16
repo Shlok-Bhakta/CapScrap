@@ -3,7 +3,11 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
-    @items = Item.all
+    if params[:sort].present?
+      @items = Item.order(params[:sort] => :asc)
+    else
+      @items = Item.all
+    end
   end
 
   # GET /items/1 or /items/1.json
