@@ -60,9 +60,9 @@ users = User.create!([
 
 Purchase.create!([
   { user_id: users.find { |u| u.email == "heisman@example.com" }.id, item_id: items.find { |i| i.description == "VR Headset" && i.location == "HRBB" }.id, purchase_date: "2025-02-11", purchased_quantity: 2 },
-  { user_id: users.find { |u| u.email == "alice@example.com" }.id, item_id: items.find { |i| i.description == "Mouse" && i.location == "HELD" }.id, purchase_date: "2025-02-10", purchased_quantity: 2 },
+  { user_id: users.find { |u| u.email == "alice@example.com" }.id, item_id: items.find { |i| i.description == "Mouse" && i.location == "HELD" }.id, purchase_date: "2025-02-02", purchased_quantity: 2 },
   { user_id: users.find { |u| u.email == "babygoat@example.com" }.id, item_id: items.find { |i| i.description == "Styrofoam" && i.location == "HELD" }.id, purchase_date: "2025-02-09", purchased_quantity: 3 },
-  { user_id: users.find { |u| u.email == "tb12@example.com" }.id, item_id: items.find { |i| i.description == "Headphones" && i.location == "ZACH" }.id, purchase_date: "2025-02-08", purchased_quantity: 1 },
+  { user_id: users.find { |u| u.email == "tb12@example.com" }.id, item_id: items.find { |i| i.description == "Headphones" && i.location == "ZACH" }.id, purchase_date: "2025-02-06", purchased_quantity: 1 },
   { user_id: users.find { |u| u.email == "mclovin@example.com" }.id, item_id: items.find { |i| i.description == "Wooden Plank" && i.location == "HELD" }.id, purchase_date: "2025-02-07", purchased_quantity: 1 }
 ])
 
