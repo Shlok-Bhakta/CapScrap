@@ -3,8 +3,13 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
+    if params[:query].present?
+      # Search by ID if the input is numeric; otherwise, search by name
+      @items = params[:query].match?(/^\d+$/) ? Item.where(id: params[:query]) : Item.where("description ILIKE ?", "%#{params[:query]}%")
+    else
     @items = Item.all
   end
+end
 
   # GET /items/1 or /items/1.json
   def show
