@@ -7,8 +7,7 @@ class Item < ApplicationRecord
 
   validates :description, presence: true
   validates :location, presence: true
-  
-  #searches for item by name
+
+  # searches for item by name
   scope :search_by_name, ->(query) { where("name ILIKE ?", "%#{query}%") }
 end
-
