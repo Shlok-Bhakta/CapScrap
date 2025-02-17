@@ -20,6 +20,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_010058) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "examples", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.bigint "category_id", null: false
     t.string "description"

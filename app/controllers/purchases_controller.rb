@@ -3,7 +3,11 @@ class PurchasesController < ApplicationController
 
   # GET /purchases or /purchases.json
   def index
-    @purchases = Purchase.all
+    if params[:sort].present?
+      @purchases = Purchase.order(params[:sort] => :desc)
+    else
+      @purchases = Purchase.all
+    end
   end
 
   # GET /purchases/1 or /purchases/1.json

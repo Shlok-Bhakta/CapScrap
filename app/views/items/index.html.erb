@@ -26,6 +26,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="font-bold text-4xl">Items</h1>
     <div class="flex justify-between items-center">
+
     <%= link_to "View all Items", items_path, class: "rounded-md mx-2 px-3.5 py-2.5 bg-green-600 hover:bg-green-500 text-white block font-medium" %>
     <%= link_to "Sort by Name", items_path(sort: "description"), class: "rounded-md mx-2 px-3.5 py-2.5 bg-green-600 hover:bg-green-500 text-white block font-medium" %>
     <%= link_to "New item", new_item_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
@@ -39,6 +40,7 @@
     <%= submit_tag "Search", class: "bg-blue-600 hover:bg-blue-500 text-white font-medium px-3.5 py-2.5 rounded-md" %>
   <% end %>
 </div>
+
   <!-- DataTables dependencies -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css"/>
@@ -90,11 +92,13 @@
               }
             }
           });
+
         // 🔍 Search by ID functionality
     $('#search-id').on('keyup', function() {
       table.columns(0).search(this.value).draw(); // Assuming ID is in the first column (index 0)
     });
   });
+
       </script>
     <% else %>
       <p class="text-center my-10">No items found.</p>

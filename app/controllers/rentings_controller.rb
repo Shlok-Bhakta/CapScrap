@@ -3,7 +3,11 @@ class RentingsController < ApplicationController
 
   # GET /rentings or /rentings.json
   def index
-    @rentings = Renting.all
+    if params[:sort].present?
+      @rentings = Renting.order(params[:sort] => :desc)
+    else
+      @rentings = Renting.all
+    end
   end
 
   # GET /rentings/1 or /rentings/1.json
