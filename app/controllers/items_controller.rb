@@ -3,7 +3,10 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
-    if params[:sort].present?
+    if params[:query].present?
+      # Search by ID if the input is numeric; otherwise, search by name
+      @items = params[:query].match?(/^\d+$/) ? Item.where(id: params[:query]) : Item.where("description ILIKE ?", "%#{params[:query]}%")
+    elsif params[:sort].present?
       @items = Item.order(params[:sort] => :asc)
     else
       @items = Item.all
