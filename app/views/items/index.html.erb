@@ -60,7 +60,7 @@
         <tbody>
           <% @items.each do |item| %>
             <tr>
-              <td><%= item.category_id %></td>
+              <td><%= item.category.name %></td>
               <td><%= item.description %></td>
               <td><%= item.location %></td>
               <td>
