@@ -9,3 +9,11 @@
  * Consider organizing styles into separate files for maintainability.
  */
 @import "tailwindcss";
+
+@theme {
+    --color-text: #070303;
+    --color-background: #fbf2f2;
+    --color-primary: #500000;
+    --color-secondary: #ee8a8a;
+    --color-accent: #f14141;
+}
