@@ -9,7 +9,7 @@ class ItemsController < ApplicationController
     elsif params[:sort].present?
       @items = Item.order(params[:sort] => :asc)
     else
-      @items = Item.all
+      @items = Item.includes(:category)
     end
   end
 
