@@ -76,3 +76,9 @@ end
 
 gem "tailwindcss-ruby", "~> 4.0"
 gem "tailwindcss-rails", "~> 4.0"
+
+gem "watchman", "~> 0.1.1"
+
+gem "webrick", "~> 1.9"
+
+gem "iconv", "~> 1.1"
