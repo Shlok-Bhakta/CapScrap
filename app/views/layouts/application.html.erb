@@ -59,11 +59,11 @@
 
           <% end%>
             <% if current_user.role_id == 3 %>
-            <%# teacher %>
-            <%# button to go to /admin/dashboard/items %>
-            <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
-            <%# button to go to /admin/dashboard/users %>
-            <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
+              <%# teacher %>
+              <%# button to go to /admin/dashboard/items %>
+              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%# button to go to /admin/dashboard/users %>
+              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
