@@ -46,12 +46,32 @@
         <nav class="flex bg-primary px-4 py-2 shadow-md h-12 items-center">
           <%# logo %>
           <%= image_tag "logo.png", class: "h-8 aspect-auto" %>
+          <%# spacer to push content to the middle %>
+          <div class="flex-1"></div>
+          <%# navigate to items depending on the user %>
+          <% if current_user.role_id == 1 %>
+          <%# student %>
+            <h1>I am a student</h1>
+          <% end %>
+          <% if current_user.role_id == 2 %>  
+            <%# teaching assistant %>
+            <h1>I am a teaching assistant</h1>
+
+          <% end%>
+            <% if current_user.role_id == 3 %>
+            <%# teacher %>
+            <%# button to go to /admin/dashboard/items %>
+            <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
+            <%# button to go to /admin/dashboard/users %>
+            <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
+          <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
+
           <%# logout %>
-          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-accent transition-all duration-200 border border-accent rounded-md px-2 py-1 "%>
+          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
           <%# pfp %>
-          <img src="<%= current_user.avatar_url %>" alt="<%= current_user.email %>" class="h-8 w-8 rounded-full ml-2">
+          <img src="<%= current_user.avatar_url %>" alt="<%= current_user.email %>" title="<%= current_user.email %>" class="h-8 w-8 rounded-full ml-2">
         </nav>
         <main class="container mx-auto mt-28 px-5 flex">
           <%# create a navbar %>
