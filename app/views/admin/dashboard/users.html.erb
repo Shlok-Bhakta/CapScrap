@@ -3,7 +3,71 @@
 <% if current_user.role_id == 3 %> 
 
   <%# this page is gonna have a table with all the users. table will be searchable, sortable, and paginated %>
+  <%# search box for fuzzy %>
+  <input type="text" placeholder="Search...">
+  <%# table %>
+  <table>
+    <tr>
+      <td>Email</td>
+      <td>role_id</td>
+      <td>Email</td>
+    </tr>
+    <%# get all users from the database %>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td>
+          <%= select_tag "user_role_#{user.id}",
+                        options_for_select(@roles, [user.role.name, user.role.id]),
+                        class: "role-select",
+                        data: { user_id: user.id } %>
+        </td>
+        <td><%= user.created_at %></td>
+      </tr>
+      <% end %>
 
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.role-select').forEach(function(select) {
+        select.addEventListener('change', function(e) {
+          const userId = this.dataset.userId;
+          const newRoleId = this.value;
+          
+          if (confirm('Are you sure you want to change this user\'s role?')) {
+            fetch('/admin/dashboard/update_user_role', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+              },
+              body: JSON.stringify({
+                user_id: userId,
+                role_id: newRoleId
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert('Role updated successfully');
+              } else {
+                alert('Failed to update role');
+                window.location.reload(); // Reload to reset the select
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred while updating the role');
+              window.location.reload(); // Reload to reset the select
+            });
+          } else {
+            window.location.reload(); // Reload to reset the select if user cancels
+          }
+        });
+      });
+    });
+  </script>
 
 <% else %>
 
