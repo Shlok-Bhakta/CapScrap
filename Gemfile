@@ -90,4 +90,4 @@ gem "nkf"
 gem "mutex_m"
 
 # fake data generator for seed
-gem 'faker'
+gem "faker"
