@@ -8,13 +8,15 @@
   <%# table %>
   <table>
     <tr>
+      <td>Full Name</td>
       <td>Email</td>
-      <td>role_id</td>
-      <td>Email</td>
+      <td>Role</td>
+      <td>Creation Date</td>
     </tr>
     <%# get all users from the database %>
     <% @users.each do |user| %>
       <tr>
+        <td><%= user.full_name %></td>
         <td><%= user.email %></td>
         <td>
           <%= select_tag "user_role_#{user.id}",
@@ -29,7 +31,7 @@
   </table>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    function initializeRoleSelects() {
       document.querySelectorAll('.role-select').forEach(function(select) {
         select.addEventListener('change', function(e) {
           const userId = this.dataset.userId;
@@ -66,7 +68,11 @@
           }
         });
       });
-    });
+    }
+
+    // Initialize on both regular page load and Turbo navigation
+    document.addEventListener('DOMContentLoaded', initializeRoleSelects);
+    document.addEventListener('turbo:load', initializeRoleSelects);
   </script>
 
 <% else %>
