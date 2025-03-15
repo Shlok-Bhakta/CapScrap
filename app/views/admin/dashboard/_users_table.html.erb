@@ -1,21 +1,33 @@
-<table>
-  <tr>
-    <td>Full Name</td>
-    <td>Email</td>
-    <td>Role</td>
-    <td>Creation Date</td>
-  </tr>
-  <% users.each do |user| %>
-    <tr>
-      <td><%= user.full_name %></td>
-      <td><%= user.email %></td>
-      <td>
-        <%= select_tag "user_role_#{user.id}",
-                      options_for_select(roles, [user.role.name, user.role.id]),
-                      class: "role-select",
-                      data: { user_id: user.id } %>
-      </td>
-      <td><%= user.created_at %></td>
+<table class="w-full">
+  <thead>
+    <tr class="border-b">
+      <th class="p-2 text-left">
+        <%= sort_header('name', 'Full Name', sort_field, sort_direction) %>
+      </th>
+      <th class="p-2 text-left">
+        <%= sort_header('email', 'Email', sort_field, sort_direction) %>
+      </th>
+      <th class="p-2 text-left">
+        <%= sort_header('role', 'Role', sort_field, sort_direction) %>
+      </th>
+      <th class="p-2 text-left">
+        <%= sort_header('created_at', 'Creation Date', sort_field, sort_direction) %>
+      </th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% users.each do |user| %>
+      <tr class="border-b hover:bg-gray-50">
+        <td class="p-2"><%= user.full_name %></td>
+        <td class="p-2"><%= user.email %></td>
+        <td class="p-2">
+          <%= select_tag "user_role_#{user.id}",
+                        options_for_select(roles, [user.role.name, user.role.id]),
+                        class: "role-select p-1 border rounded",
+                        data: { user_id: user.id } %>
+        </td>
+        <td class="p-2"><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

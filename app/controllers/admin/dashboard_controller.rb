@@ -1,6 +1,8 @@
 class Admin::DashboardController < ApplicationController
   def users
-    @users = User.search(params[:query]).joins(:role)
+    @users = User.search(params[:query])
+                 .sort_by_field(params[:sort], params[:direction])
+                 .joins(:role)
     @roles = Role.all.collect { |role| [ role.name, role.id ] }
 
     respond_to do |format|
@@ -9,7 +11,12 @@ class Admin::DashboardController < ApplicationController
         render turbo_stream: turbo_stream.replace(
           "users_table",
           partial: "admin/dashboard/users_table",
-          locals: { users: @users, roles: @roles }
+          locals: {
+            users: @users,
+            roles: @roles,
+            sort_field: params[:sort],
+            sort_direction: params[:direction]
+          }
         )
       }
     end

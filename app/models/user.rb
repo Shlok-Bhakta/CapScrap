@@ -19,6 +19,24 @@ class User < ApplicationRecord
       all
     end
   }
+
+  scope :sort_by_field, ->(field, direction) {
+    # Return to default sort if no field or direction
+    return order(created_at: :desc) if field.blank? || direction.blank?
+
+    case field
+    when "name"
+      order(full_name: direction)
+    when "email"
+      order(email: direction)
+    when "role"
+      joins(:role).order("roles.name #{direction}")
+    when "created_at"
+      order(created_at: direction)
+    else
+      order(created_at: :desc)
+    end
+  }
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email

@@ -14,7 +14,13 @@
     <% end %>
 
     <%= turbo_frame_tag "users_table" do %>
-      <%= render partial: "users_table", locals: { users: @users, roles: @roles } %>
+      <%= render partial: "users_table",
+                locals: {
+                  users: @users,
+                  roles: @roles,
+                  sort_field: params[:sort],
+                  sort_direction: params[:direction]
+                } %>
     <% end %>
   </div>
 
