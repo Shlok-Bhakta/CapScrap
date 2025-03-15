@@ -1,34 +1,22 @@
 
 <%# protection to ensure only teachers can access this page %>
 <% if current_user.role_id == 3 %> 
+<%# make content lign up vertically so its searcg then table%>
+  <div class="flex flex-col w-full h-full">
+    <%= form_with url: admin_dashboard_users_path, method: :get, data: { turbo_frame: "users_table", turbo_action: "advance" } do |f| %>
+      <%= f.text_field :query,
+          placeholder: "Search by name, email or role...",
+          class: "mb-4 p-2 border rounded",
+          data: {
+            controller: "search",
+            action: "input->search#search"
+          } %>
+    <% end %>
 
-  <%# this page is gonna have a table with all the users. table will be searchable, sortable, and paginated %>
-  <%# search box for fuzzy %>
-  <input type="text" placeholder="Search...">
-  <%# table %>
-  <table>
-    <tr>
-      <td>Full Name</td>
-      <td>Email</td>
-      <td>Role</td>
-      <td>Creation Date</td>
-    </tr>
-    <%# get all users from the database %>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.full_name %></td>
-        <td><%= user.email %></td>
-        <td>
-          <%= select_tag "user_role_#{user.id}",
-                        options_for_select(@roles, [user.role.name, user.role.id]),
-                        class: "role-select",
-                        data: { user_id: user.id } %>
-        </td>
-        <td><%= user.created_at %></td>
-      </tr>
-      <% end %>
-
-  </table>
+    <%= turbo_frame_tag "users_table" do %>
+      <%= render partial: "users_table", locals: { users: @users, roles: @roles } %>
+    <% end %>
+  </div>
 
   <script>
     function initializeRoleSelects() {
@@ -55,23 +43,32 @@
                 alert('Role updated successfully');
               } else {
                 alert('Failed to update role');
-                window.location.reload(); // Reload to reset the select
+                // Reset select to original value without reload
+                const originalOption = Array.from(this.options).find(option =>
+                  option.text === this.selectedOptions[0].text
+                );
+                this.value = originalOption.value;
               }
             })
             .catch(error => {
               console.error('Error:', error);
               alert('An error occurred while updating the role');
-              window.location.reload(); // Reload to reset the select
+              // Reset select to original value without reload
+              const originalOption = Array.from(this.options).find(option =>
+                option.text === this.selectedOptions[0].text
+              );
+              this.value = originalOption.value;
             });
           } else {
-            window.location.reload(); // Reload to reset the select if user cancels
+            // Reset select to its original value without reloading
+            const originalOption = Array.from(this.options).find(option =>
+              option.text === this.selectedOptions[0].text
+            );
+            this.value = originalOption.value;
           }
         });
       });
     }
-
-    // Initialize on both regular page load and Turbo navigation
-    document.addEventListener('DOMContentLoaded', initializeRoleSelects);
     document.addEventListener('turbo:load', initializeRoleSelects);
   </script>
 

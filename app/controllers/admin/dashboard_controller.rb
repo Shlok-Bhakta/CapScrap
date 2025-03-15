@@ -1,10 +1,18 @@
 class Admin::DashboardController < ApplicationController
   def users
-    # get all users from the database joined with Role table joined by role_id = Role.id with reguklar post
-    @users = User.joins(:role)
+    @users = User.search(params[:query]).joins(:role)
     @roles = Role.all.collect { |role| [ role.name, role.id ] }
-    # print out the users
-    puts @users
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "users_table",
+          partial: "admin/dashboard/users_table",
+          locals: { users: @users, roles: @roles }
+        )
+      }
+    end
   end
 
   def items

@@ -1,0 +1,21 @@
+<table>
+  <tr>
+    <td>Full Name</td>
+    <td>Email</td>
+    <td>Role</td>
+    <td>Creation Date</td>
+  </tr>
+  <% users.each do |user| %>
+    <tr>
+      <td><%= user.full_name %></td>
+      <td><%= user.email %></td>
+      <td>
+        <%= select_tag "user_role_#{user.id}",
+                      options_for_select(roles, [user.role.name, user.role.id]),
+                      class: "role-select",
+                      data: { user_id: user.id } %>
+      </td>
+      <td><%= user.created_at %></td>
+    </tr>
+  <% end %>
+</table>
