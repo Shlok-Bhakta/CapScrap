@@ -1,4 +1,6 @@
 class Admin::DashboardController < ApplicationController
+  before_action :check_professor_role
+
   def users
     @users_query = User.search(params[:query])
                       .sort_by_field(params[:sort], params[:direction])
@@ -28,16 +30,20 @@ class Admin::DashboardController < ApplicationController
   end
 
   def update_user_role
-    # do nothing if user is not a professor
-    unless current_user.role_id == 3
-      render json: { success: false, message: "You are not authorized to update user roles" }, status: :unprocessable_entity
-      return
-    end
     user = User.find(params[:user_id])
     if user.update(role_id: params[:role_id])
       render json: { success: true, message: "Role updated successfully" }
     else
       render json: { success: false, message: "Failed to update role" }, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def check_professor_role
+    unless current_user&.role_id == 3
+      flash[:alert] = "You are not authorized to access this area"
+      redirect_to root_path
     end
   end
 end
