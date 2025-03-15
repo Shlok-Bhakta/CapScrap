@@ -1,8 +1,9 @@
 class Admin::DashboardController < ApplicationController
   def users
-    @users = User.search(params[:query])
-                 .sort_by_field(params[:sort], params[:direction])
-                 .joins(:role)
+    @users_query = User.search(params[:query])
+                      .sort_by_field(params[:sort], params[:direction])
+                      .joins(:role)
+    @pagy, @users = pagy(@users_query, items: params[:per_page] || 50)
     @roles = Role.all.collect { |role| [ role.name, role.id ] }
 
     respond_to do |format|
@@ -13,6 +14,7 @@ class Admin::DashboardController < ApplicationController
           partial: "admin/dashboard/users_table",
           locals: {
             users: @users,
+            pagy: @pagy,
             roles: @roles,
             sort_field: params[:sort],
             sort_direction: params[:direction]
