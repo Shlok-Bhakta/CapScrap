@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get "dashboard/users"
+    get "dashboard/items"
+    post "dashboard/update_user_role"
+  end
   # Defines the root path route ("/")
   root "items#index"
 
