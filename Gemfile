@@ -85,3 +85,6 @@ gem "iconv", "~> 1.1"
 
 gem "nkf"
 gem "mutex_m"
+
+# fake data generator for seed
+gem 'faker'

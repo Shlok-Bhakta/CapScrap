@@ -8,6 +8,9 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+require 'faker'
+
+
 # Delete all existing data
 Renting.delete_all
 Purchase.delete_all
@@ -51,19 +54,21 @@ items = Item.create!([ # creates items
 
   ])
 
-users = User.create!([
-  { full_name: "Zach Holman", email: "zach@example.com", role_id: student_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Alice Markle", email: "alice@example.com", role_id: student_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Brock Purdy", email: "babygoat@example.com", role_id: student_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Hugh Jazz", email: "hugh@example.com", role_id: ta_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "McLovin", email: "mclovin@example.com", role_id: ta_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Marcel Reed", email: "heisman@example.com", role_id: ta_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Joe Biden", email: "bigJ@example.com", role_id: ta_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Deommodore Lenoir", email: "DeMOn@example.com", role_id: prof_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Fred Warner", email: "freddy@example.com", role_id: prof_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Deebo Samuel", email: "19problemz@example.com", role_id: prof_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid },
-  { full_name: "Tom Brady", email: "tb12@example.com", role_id: prof_role.id, password: "password123", avatar_url: "https://lh3.googleusercontent.com/a/ACg8ocLSWPPdk8T4zdh9PYcNPE36K3dNOyLgKZaq0tNMuhvxjf_7bQ", provider: "Google", uid: SecureRandom.uuid }
-])
+
+
+# use faker to generate fake data
+User.create!(100.times.map do
+  {
+    full_name: Faker::Name.name,
+    email: Faker::Internet.email,
+    role_id: rand(1..3),
+    password: Faker::Internet.password,
+    avatar_url: Faker::Avatar.image,
+    provider: "Google",
+    uid: SecureRandom.uuid
+  }
+end)
+
 
 # users.each do |user|
 #   puts "User: #{user.full_name}, Email: #{user.email}"
