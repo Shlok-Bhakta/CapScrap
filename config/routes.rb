@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     post "dashboard/create_item"
     patch "dashboard/update_item"
     delete "dashboard/delete_item"
+    get "dashboard/search_items"
+    post "dashboard/create_purchase"
 
     # scope "dashboard" do
     #   resources :items, only: [ :create, :update, :destroy ], controller: :dashboard
