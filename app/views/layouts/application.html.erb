@@ -32,16 +32,16 @@
       }
 
       // Whenever the user explicitly chooses light mode
-      localStorage.theme = 'light'
+      // localStorage.theme = 'light'
 
       // Whenever the user explicitly chooses dark mode
-      // localStorage.theme = 'dark'
+    //   localStorage.theme = 'dark'
 
-      // // Whenever the user explicitly chooses to respect the OS preference
+      // Whenever the user explicitly chooses to respect the OS preference
       // localStorage.removeItem('theme')
 
-
     </script>
+
       <% if current_user %>
         <nav class="flex bg-primary px-4 py-2 shadow-md h-12 items-center">
           <%# logo %>
@@ -67,6 +67,11 @@
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
+
+          <%# darkmode slider%>
+          <%= button_tag(type: "button", id: "theme-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md") do %>
+            <%= image_tag "dark.png", id: "theme-icon", alt: "Toggle dark mode" %>
+          <% end %>
 
           <%# logout %>
           <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
@@ -97,5 +102,34 @@
         </div>
         </main>
       <% end %>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var themeToggle = document.getElementById('theme-toggle');
+          var themeIcon = document.getElementById('theme-icon');
+
+          var darkImage = "<%= asset_path('dark.png') %>";
+          var lightImage = "<%= asset_path('light.png') %>";
+
+          if (document.documentElement.classList.contains('dark')) {
+            themeIcon.src = lightImage;
+          } else {
+            themeIcon.src = darkImage;
+          }
+
+          themeToggle.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+              // Switch to light mode.
+              document.documentElement.classList.remove('dark');
+              localStorage.theme = 'light';
+              themeIcon.src = darkImage;
+            } else {
+              // Switch to dark mode.
+              document.documentElement.classList.add('dark');
+              localStorage.theme = 'dark';
+              themeIcon.src = lightImage;
+            }
+          });
+        });
+      </script>
   </body>
 </html>
