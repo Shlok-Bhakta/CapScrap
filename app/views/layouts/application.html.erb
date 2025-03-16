@@ -67,6 +67,7 @@
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
+          <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2" %>
 
           <%# logout %>
           <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
