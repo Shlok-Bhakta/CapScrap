@@ -117,11 +117,12 @@ export default class extends Controller {
   }
 
   saveNewRow(event) {
+    console.log("saveNewRow")
     event.preventDefault()
-    const row = event.target.closest('tr')
-    const description = row.querySelector('input[name="description"]').value
-    const location = row.querySelector('input[name="location"]').value
-    const categoryId = row.querySelector('select[name="category_id"]').value
+    const form = event.target.closest('form')
+    const description = form.querySelector('input[name="description"]').value
+    const location = form.querySelector('input[name="location"]').value
+    const categoryId = form.querySelector('select[name="category_id"]').value
 
     if (!description || !location) {
       alert('Description and Location are required fields')
@@ -130,7 +131,7 @@ export default class extends Controller {
 
     const token = document.querySelector('meta[name="csrf-token"]').content
 
-    fetch('/admin/dashboard/items', {
+    fetch('/admin/dashboard/create_item', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
