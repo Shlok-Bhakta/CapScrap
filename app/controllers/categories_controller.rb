@@ -3,25 +3,30 @@ class CategoriesController < ApplicationController
 
   # GET /categories or /categories.json
   def index
+    logger.debug "#{current_user.email} IS VIEWING THE CATEGORIES PAGE:"
     @categories = Category.all
   end
 
   # GET /categories/1 or /categories/1.json
   def show
+    logger.debug "#{current_user.email} IS VIEWING THE CATEGORY INFORMATION: #{@category.attributes.inspect}"
   end
 
   # GET /categories/new
   def new
     @category = Category.new
+    logger.debug "#{current_user.email} IS VIEWING THE NEW CATEGORY INFORMATION: #{@category.attributes.inspect}"
   end
 
   # GET /categories/1/edit
   def edit
+    logger.debug "#{current_user.email} IS EDITING THE CATEGORY INFORMATION: #{@category.attributes.inspect}"
   end
 
   # POST /categories or /categories.json
   def create
     @category = Category.new(category_params)
+    logger.debug "#{current_user.email} IS CREATING THE CATEGORY INFORMATION: #{@category.attributes.inspect}"
 
     respond_to do |format|
       if @category.save
@@ -40,6 +45,7 @@ class CategoriesController < ApplicationController
       if @category.update(category_params)
         format.html { redirect_to @category, notice: "Category was successfully updated." }
         format.json { render :show, status: :ok, location: @category }
+        logger.debug "#{current_user.email} IS UPDATING THE CATEGORY INFORMATION: #{@category.attributes.inspect}"
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @category.errors, status: :unprocessable_entity }
@@ -50,6 +56,7 @@ class CategoriesController < ApplicationController
   # DELETE /categories/1 or /categories/1.json
   def destroy
     @category.destroy!
+    logger.debug "#{current_user.email} IS DELETING THE CATEGORY INFORMATION: #{@category.attributes.inspect}"
 
     respond_to do |format|
       format.html { redirect_to categories_path, status: :see_other, notice: "Category was successfully destroyed." }
