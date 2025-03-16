@@ -35,9 +35,7 @@ module Capscrap
     end
     # Enable tagged logging
     config.logger = ActiveSupport::TaggedLogging.new(logger)
-    # Set logging level (INFO recommended for production)
+    # Set logging level
     config.logger.level = Logger::INFO
-
-
   end
 end
