@@ -1,15 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Handles the search functionality for tables
 export default class extends Controller {
-  static debounceTime = 300
-
-  search(event) {
-    if (this.timeout) {
-      clearTimeout(this.timeout)
-    }
-
+  search() {
+    // Use debounce to avoid too many requests
+    clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
-      event.target.form.requestSubmit()
-    }, this.constructor.debounceTime)
+      this.element.form.requestSubmit()
+    }, 300)
   }
 }

@@ -4,9 +4,10 @@
 <%# make content lign up vertically so its searcg then table%>
   <div class="flex flex-col w-full h-full">
     <%= form_with url: admin_dashboard_users_path, method: :get, data: { turbo_frame: "users_table", turbo_action: "advance" } do |f| %>
+
       <%= f.text_field :query,
           placeholder: "Search by name, email or role...",
-          class: "mb-4 p-2 border rounded",
+          class: "mb-4 p-2 border rounded w-1/2",
           data: {
             controller: "search",
             action: "input->search#search"

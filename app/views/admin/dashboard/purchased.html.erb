@@ -1,0 +1,65 @@
+<%# protection to ensure only teachers can access this page %>
+<% if current_user.role_id == 3 %>
+  <div class="flex flex-col w-full" data-controller="purchase-search">
+
+    <%= form_with url: admin_dashboard_purchased_path, method: :get, data: { turbo_frame: "content" } do |f| %>
+      <%= f.text_field :query,
+          placeholder: "Search purchases by item, location or category...",
+          value: params[:query],
+          data: { controller: "search", action: "input->search#search" },
+          class: "mb-4 p-2 border rounded w-1/2" %>
+    <% end %>
+
+    <div class="mb-8 w-full">
+      <div class="text-text">New Purchase</div>
+      
+      <%= form_with url: admin_dashboard_create_purchase_path, class: "flex flex-col gap-4 w-full" do |f| %>
+        <div class="flex flex-row gap-4">
+          <div class="relative flex-1">
+            <%= f.text_field :item_query,
+                placeholder: "Search for an item...",
+                class: "w-full p-2 border rounded",
+                required: true,
+                data: {
+                  purchase_search_target: "itemField",
+                  action: "input->purchase-search#searchItems"
+                } %>
+            <div data-purchase-search-target="suggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            </div>
+          </div>
+
+          <div data-purchase-search-target="newItemFields" class="hidden flex-1 flex-row gap-4">
+            <%= f.text_field :location,
+                placeholder: "Location (required for new items)",
+                class: "w-full p-2 border rounded" %>
+
+            <%= f.select :category_id,
+                @categories.map { |c| [c.name, c.id] },
+                { prompt: "Select Category (required for new items)" },
+                class: "w-full p-2 border rounded" %>
+          </div>
+
+          <%= f.number_field :purchased_quantity,
+              placeholder: "Quantity",
+              min: 1,
+              class: "w-48 p-2 border rounded",
+              required: true %>
+
+          <%= f.submit "Create Purchase",
+              class: "px-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded" %>
+        </div>
+      <% end %>
+    </div>
+    <%= turbo_frame_tag "content" do %>
+      <%= render partial: "purchases_table",
+                locals: {
+                  purchases: @purchases,
+                  sort_field: params[:sort],
+                  sort_direction: params[:direction],
+                  pagy: @pagy
+                } %>
+    <% end %>
+  </div>
+<% else %>
+  <h1 class="font-bold text-4xl">You are not authorized to view this page</h1>
+<% end %>
