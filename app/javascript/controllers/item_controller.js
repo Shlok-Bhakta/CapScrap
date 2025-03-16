@@ -207,7 +207,7 @@ export default class extends Controller {
 
   cancelNewRow(event) {
     event.preventDefault()
-    event.target.closest('tr').remove()
+    event.target.closest('form').reset()
   }
 
   cancelEdit(event) {
