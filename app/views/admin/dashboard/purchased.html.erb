@@ -1,0 +1,13 @@
+<%# protection to ensure only teachers can access this page %>
+<% if current_user.role_id == 3 %> 
+  <div>
+    <h1 class="font-bold text-4xl">Admin::Dashboard#purchaded</h1>
+    <p>Find me in app/views/admin/dashboard/items.html.erb</p>
+  </div>
+
+<% else %>
+
+<h1 class="font-bold text-4xl">You are not authorized to view this page</h1>
+
+<% end %>
+

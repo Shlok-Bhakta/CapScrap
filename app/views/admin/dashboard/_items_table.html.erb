@@ -1,10 +1,28 @@
 <div class="flex flex-col" data-controller="item">
   <div class="mb-4">
-    <button type="button"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            data-action="click->item#addNewRow">
-      Add New Item
-    </button>
+
+    <%# form to actually add a new item %>
+    <div class="text-text">Create new item</div>
+    <%= form_with url: admin_dashboard_items_path, method: :post, data: { turbo_frame: "new-item-row" }, class: "flex flex-row gap-2" do |f| %>
+      <%= f.text_field :description,
+          placeholder: "Description",
+          class: "w-full p-1 border rounded",
+          required: true %>
+      <%= f.text_field :location,
+          placeholder: "Location",
+          class: "w-full p-1 border rounded",
+          required: true %>
+      <%= f.select :category_id,
+                    options_from_collection_for_select(categories, 'id', 'name'),
+                    class: "w-full p-1 border rounded",
+                    data: { item_id: nil } %>
+      <%= f.submit "Add Item",
+                    class: "bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1 mr-2",
+                    data: { action: "click->item#saveNewRow" } %>
+      <%= f.submit "Clear",
+                    class: "bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1",
+                    data: { action: "click->item#cancelNewRow" } %>
+    <% end %>
   </div>
 
   <table class="w-full" data-item-target="table">

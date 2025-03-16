@@ -64,8 +64,12 @@ class Admin::DashboardController < ApplicationController
   end
 
   def update_item
-    @item = Item.find(params[:id])
-    if @item.update(item_params)
+    # get data from body of data
+    data = JSON.parse(request.body.read)["item"]
+    puts "Data: #{data}"
+    @item = Item.find(data["id"])
+    puts "Item updated"
+    if @item.update({ description: data["description"], location: data["location"], category_id: data["category_id"] })
       render json: { success: true, message: "Item updated successfully" }
     else
       render json: {
@@ -82,7 +86,7 @@ class Admin::DashboardController < ApplicationController
     else
       render json: {
         success: false,
-        error: "Failed to delete item"
+        error: "Failed to delete item this item is probably being used by someone"
       }, status: :unprocessable_entity
     end
   end

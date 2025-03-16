@@ -5,13 +5,16 @@ Rails.application.routes.draw do
     get "dashboard/renting"
     get "dashboard/purchased"
     post "dashboard/update_user_role"
+    post "dashboard/create_item"
+    patch "dashboard/update_item"
+    delete "dashboard/delete_item"
 
-    scope "dashboard" do
-      resources :items, only: [ :create, :update, :destroy ], controller: :dashboard
-      post "items", to: "dashboard#create_item"
-      patch "items/:id", to: "dashboard#update_item"
-      delete "items/:id", to: "dashboard#delete_item"
-    end
+    # scope "dashboard" do
+    #   resources :items, only: [ :create, :update, :destroy ], controller: :dashboard
+    #   post "items", to: "dashboard#create_item"
+    #   patch "items/:id", to: "dashboard#update_item"
+    #   delete "items/:id", to: "dashboard#delete_item"
+    # end
   end
   # Defines the root path route ("/")
   root "items#index"

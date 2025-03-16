@@ -80,7 +80,7 @@ export default class extends Controller {
     if (confirm('Are you sure you want to save these changes?')) {
       const token = document.querySelector('meta[name="csrf-token"]').content
       
-      fetch(`/admin/dashboard/items/${itemId}`, {
+      fetch(`/admin/dashboard/update_item`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -89,6 +89,7 @@ export default class extends Controller {
         },
         body: JSON.stringify({
           item: {
+            id: itemId,
             description: description,
             location: location,
             category_id: categoryId
@@ -176,7 +177,7 @@ export default class extends Controller {
     if (confirm('Are you sure you want to delete this item?')) {
       const token = document.querySelector('meta[name="csrf-token"]').content
 
-      fetch(`/admin/dashboard/items/${itemId}`, {
+      fetch(`/admin/dashboard/delete_item?id=${itemId}`, {
         method: 'DELETE',
         headers: {
           'X-CSRF-Token': token,
