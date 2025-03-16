@@ -64,11 +64,8 @@ class Admin::DashboardController < ApplicationController
   end
 
   def update_item
-    # get data from body of data
     data = JSON.parse(request.body.read)["item"]
-    puts "Data: #{data}"
     @item = Item.find(data["id"])
-    puts "Item updated"
     if @item.update({ description: data["description"], location: data["location"], category_id: data["category_id"] })
       render json: { success: true, message: "Item updated successfully" }
     else
@@ -91,11 +88,99 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
-
   def renting
   end
 
   def purchased
+    # Default sorting by creation date if no sort params
+    params[:sort] ||= "created_at"
+    params[:direction] ||= "desc"
+
+    @purchases_query = Purchase.includes(item: :category)
+                             .search(params[:query])
+                             .sort_by_field(params[:sort], params[:direction])
+
+    @pagy, @purchases = pagy(@purchases_query, items: params[:per_page] || 50)
+    @categories = Category.all
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "content",
+          partial: "admin/dashboard/purchases_table",
+          locals: {
+            purchases: @purchases,
+            sort_field: params[:sort],
+            sort_direction: params[:direction],
+            pagy: @pagy
+          }
+        )
+      }
+    end
+  end
+
+  def search_items
+    return render json: { error: "Query required" }, status: :unprocessable_entity if params[:query].blank?
+
+    query = params[:query].downcase
+    begin
+      # Find exact matches first
+      exact_matches = Item.includes(:category)
+                        .where("LOWER(description) = ?", query)
+
+      # Then find partial matches, excluding exact matches
+      partial_matches = Item.includes(:category)
+                          .where("LOWER(description) LIKE ?", "%#{query}%")
+                          .where.not(id: exact_matches.select(:id))
+
+      # Combine results with exact matches first
+      @items = (exact_matches + partial_matches).first(5)
+
+      render json: {
+        items: @items.map { |i| {
+          id: i.id,
+          description: i.description,
+          location: i.location,
+          category: i.category.name
+        }}
+      }
+    rescue StandardError => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
+  def create_purchase
+    ActiveRecord::Base.transaction do
+      if params[:item_query].present?
+        # Try to find existing item
+        @item = Item.find_by("LOWER(description) = ?", params[:item_query].downcase)
+
+        # Create new item if not found
+        unless @item
+          @item = Item.create!(
+            description: params[:item_query],
+            location: params[:location],
+            category_id: params[:category_id]
+          )
+        end
+      end
+
+      @purchase = Purchase.new(
+        item: @item,
+        purchased_quantity: params[:purchased_quantity],
+        user: current_user,
+        purchase_date: Time.current
+      )
+
+      if @purchase.save
+        redirect_to admin_dashboard_purchased_path, notice: "Purchase created successfully."
+      else
+        redirect_to admin_dashboard_purchased_path, alert: @purchase.errors.full_messages.join(", ")
+      end
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_dashboard_purchased_path, alert: e.message
   end
 
   def update_user_role
