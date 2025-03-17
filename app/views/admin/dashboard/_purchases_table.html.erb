@@ -1,0 +1,71 @@
+<div class="flex flex-col w-full" data-controller="purchase">
+  <table class="w-full table-fixed">
+    <thead>
+      <tr class="border-b">
+        <th class="p-2 text-left w-1/4">
+          <%= sort_purchases_header('item_description', 'Item Description', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left w-1/6">
+          <%= sort_purchases_header('location', 'Location', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left w-1/6">
+          <%= sort_purchases_header('category', 'Category', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left w-1/12">
+          <%= sort_purchases_header('purchased_quantity', 'Quantity', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left w-1/6">
+          <%= sort_purchases_header('created_at', 'Purchase Date', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left w-20">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% purchases.each do |purchase| %>
+      <tr class="border-b hover:bg-gray-50">
+        <td class="p-2">
+          <span class="description-text"><%= purchase.item.description %></span>
+        </td>
+        <td class="p-2">
+          <span class="location-text"><%= purchase.item.location %></span>
+        </td>
+        <td class="p-2">
+          <span class="category-text"><%= purchase.item.category.name %></span>
+        </td>
+        <td class="p-2">
+          <span class="quantity-text"><%= purchase.purchased_quantity %></span>
+          <input type="number" name="purchased_quantity" value="<%= purchase.purchased_quantity %>"
+                 class="hidden w-full p-1 border rounded" min="1" />
+        </td>
+        <td class="p-2">
+          <span class="date-text"><%= purchase.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+        </td>
+        <td class="p-2 flex space-x-2">
+          <button type="button" 
+                  class="text-blue-600 hover:text-blue-800" 
+                  data-purchase-id="<%= purchase.id %>"
+                  data-action="purchase#editRow">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+          </button>
+          <button type="button" 
+                  class="text-red-600 hover:text-red-800" 
+                  data-purchase-id="<%= purchase.id %>"
+                  data-action="purchase#deletePurchase">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  
+  <% if purchases.any? %>
+    <%= pagination_nav(pagy) %>
+  <% else %>
+    <p class="text-center text-gray-500 mt-4">No purchases found</p>
+  <% end %>
+</div>

@@ -46,6 +46,9 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
+# Pagination
+gem "pagy"
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
@@ -76,3 +79,15 @@ end
 
 gem "tailwindcss-ruby", "~> 4.0"
 gem "tailwindcss-rails", "~> 4.0"
+
+gem "watchman", "~> 0.1.1"
+
+gem "webrick", "~> 1.9"
+
+gem "iconv", "~> 1.1"
+
+gem "nkf"
+gem "mutex_m"
+
+# fake data generator for seed
+gem "faker"
