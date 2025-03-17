@@ -1,13 +1,13 @@
 <%# protection to ensure only teachers can access this page %>
 <% if current_user.role_id == 3 %> 
   <div>
-    <h1 class="font-bold text-4xl">Admin::Dashboard#Renting</h1>
-    <p>Find me in app/views/admin/dashboard/items.html.erb</p>
+    <h1 class="font-bold text-4xl text-content" data-font-size="36" >Admin::Dashboard#Renting</h1>
+    <p class="text-content" data-font-size="16">Find me in app/views/admin/dashboard/items.html.erb</p>
   </div>
 
 <% else %>
 
-<h1 class="font-bold text-4xl">You are not authorized to view this page</h1>
+<h1 class="font-bold text-4xl text-contenr" data-font-size="36">You are not authorized to view this page</h1>
 
 <% end %>
 
