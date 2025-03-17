@@ -1,44 +1,60 @@
-<div class="flex flex-col">
-  <table class="w-full">
-    <thead>
-      <tr class="border-b">
-        <th class="p-2 text-left">
-          <%= sort_rentings_header('user_id', 'User', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left">
-          <%= sort_rentings_header('item_id', 'Item', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left">
-          <%= sort_rentings_header('checkout_date', 'Checkout Date', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left">
-          <%= sort_rentings_header('return_date', 'Return Date', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-    <% rentings.each do |renting| %>
-      <tr class="border-b hover:bg-gray-50">
-        <td class="p-2"><%= renting.user.email %></td>
-        <td class="p-2"><%= renting.item.description %></td>
-        <td class="p-2"><%= renting.checkout_date&.strftime("%Y-%m-%d") %></td>
-        <td class="p-2"><%= renting.return_date&.strftime("%Y-%m-%d") %></td>
-        <td class="p-2">
-          <% if renting.is_returned %>
-            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded">Returned</span>
-          <% else %>
-            <span class="px-2 py-1 bg-green-100 text-green-800 rounded">Active</span>
-          <% end %>
-        </td>
-      </tr>
+<%= turbo_frame_tag "rentings_table" do %>
+  <div class="flex flex-col">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b">
+          <th class="p-2 text-left">
+            <%= sort_rentings_header('user', 'User', sort_field, sort_direction) %>
+          </th>
+          <th class="p-2 text-left">
+            <%= sort_rentings_header('item', 'Item', sort_field, sort_direction) %>
+          </th>
+          <th class="p-2 text-left">
+            <%= sort_rentings_header('checkout_date', 'Checkout Date', sort_field, sort_direction) %>
+          </th>
+          <th class="p-2 text-left">
+            <%= sort_rentings_header('return_date', 'Return Date', sort_field, sort_direction) %>
+          </th>
+          <th class="p-2 text-left">Status</th>
+          <th class="p-2 text-left">Single Use</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% rentings.each do |renting| %>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-2"><%= renting.user.email %></td>
+          <td class="p-2"><%= renting.item.description %></td>
+          <td class="p-2"><%= renting.checkout_date&.strftime("%Y-%m-%d") %></td>
+          <td class="p-2"><%= renting.return_date&.strftime("%Y-%m-%d") %></td>
+          <td class="p-2">
+            <%= form_with(url: admin_dashboard_toggle_renting_path(id: renting.id), 
+                         method: :patch,
+                         data: { turbo_stream: true, 
+                                turbo_confirm: "Are you sure you want to change this item's status?" }) do |f| %>
+              <%= f.button renting.is_returned ? 'Returned' : 'Rented',
+                          class: renting.is_returned ? 'px-2 py-1 bg-confirm text-text rounded' : 'px-2 py-1 bg-secondary text-text rounded',
+                          data: { disable_with: "Updating..." } %>
+            <% end %>
+          </td>
+          <td class="p-2">
+            <%= form_with(url: admin_dashboard_toggle_singleuse_path(id: renting.id), 
+                         method: :patch,
+                         data: { turbo_stream: true, 
+                                turbo_confirm: "Are you sure you want to change this item's status?" }) do |f| %>
+              <%= f.button renting.is_singleuse ? 'Yes' : 'No',
+                          class: renting.is_singleuse ? 'px-2 py-1 bg-confirm text-text rounded' : 'px-2 py-1 bg-secondary text-text rounded',
+                          data: { disable_with: "Updating..." } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    
+    <% if rentings.any? %>
+      <%= pagination_nav(pagy) %>
+    <% else %>
+      <p class="text-center text-gray-500 mt-4">No rentings found</p>
     <% end %>
-    </tbody>
-  </table>
-  
-  <% if rentings.any? %>
-    <%= pagination_nav(pagy) %>
-  <% else %>
-    <p class="text-center text-gray-500 mt-4">No rentings found</p>
-  <% end %>
-</div>
+  </div>
+<% end %>

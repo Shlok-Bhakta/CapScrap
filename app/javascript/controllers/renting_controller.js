@@ -7,6 +7,11 @@ export default class extends Controller {
     console.log("renting controller connected")
   }
 
+  saveStatusUpdate(event){
+
+
+  }
+
   editRow(event) {
     event.preventDefault()
     const row = event.currentTarget.closest('tr')

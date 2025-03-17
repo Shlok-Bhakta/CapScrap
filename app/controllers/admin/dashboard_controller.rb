@@ -71,6 +71,120 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def toggle_renting
+    @renting = Renting.find(params[:id])
+    @renting.toggle!(:is_returned)
+    if @renting.is_returned
+      @renting.update(return_date: Date.today)
+    else
+      # @renting.update(return_date: nil)
+    end
+
+    @rentings_query = Renting.search(params[:query])
+                      .sort_by_field(params[:sort], params[:direction])
+    @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
+    
+    respond_to do |format|
+      format.html { redirect_to admin_dashboard_renting_path }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "rentings_table",
+          partial: "admin/dashboard/rentings_table",
+          locals: {
+            rentings: @rentings,
+            pagy: @pagy,
+            sort_field: params[:sort],
+            sort_direction: params[:direction]
+          }
+        )
+      }
+    end
+  rescue => e
+    respond_to do |format|
+      format.html {
+        flash[:error] = "Error updating renting: #{e.message}"
+        redirect_to admin_dashboard_renting_path
+      }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.update(
+          "flash",
+          html: "Error updating renting: #{e.message}"
+        )
+      }
+    end
+  end
+
+  def toggle_singleuse
+    @renting = Renting.find(params[:id])
+    @renting.toggle!(:is_singleuse)
+
+    @rentings_query = Renting.search(params[:query])
+                      .sort_by_field(params[:sort], params[:direction])
+    @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
+    
+    respond_to do |format|
+      format.html { redirect_to admin_dashboard_renting_path }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "rentings_table",
+          partial: "admin/dashboard/rentings_table",
+          locals: {
+            rentings: @rentings,
+            pagy: @pagy,
+            sort_field: params[:sort],
+            sort_direction: params[:direction]
+          }
+        )
+      }
+    end
+  rescue => e
+    respond_to do |format|
+      format.html {
+        flash[:error] = "Error updating single use: #{e.message}"
+        redirect_to admin_dashboard_renting_path
+      }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.update(
+          "flash",
+          html: "Error updating single use: #{e.message}"
+        )
+      }
+    end
+  end
+
+  def create_renting
+    ActiveRecord::Base.transaction do
+      if params[:item_query].present?
+        # Try to find existing item
+        @item = Item.find_by("LOWER(description) = ?", params[:item_query].downcase)
+
+        # Create new item if not found
+        unless @item
+          @item = Item.create!(
+            description: params[:item_query],
+            location: params[:location],
+            category_id: params[:category_id]
+          )
+        end
+      end
+
+      @purchase = Purchase.new(
+        item: @item,
+        purchased_quantity: params[:purchased_quantity],
+        user: current_user,
+        purchase_date: Time.current
+      )
+
+      if @purchase.save
+        redirect_to admin_dashboard_purchased_path, notice: "Purchase created successfully."
+      else
+        redirect_to admin_dashboard_purchased_path, alert: @purchase.errors.full_messages.join(", ")
+      end
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_dashboard_purchased_path, alert: e.message
+  end
+
   def create_item
     @item = Item.new(item_params)
     if @item.save
