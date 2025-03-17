@@ -1,13 +1,81 @@
 <%# protection to ensure only teachers can access this page %>
-<% if current_user.role_id == 3 %> 
-  <div>
-    <h1 class="font-bold text-4xl text-content" data-font-size="36" >Admin::Dashboard#Renting</h1>
-    <p class="text-content" data-font-size="16">Find me in app/views/admin/dashboard/items.html.erb</p>
+
+<% if current_user.role_id == 3 %>
+  <div class="flex flex-col w-full h-full">
+    <%= form_with url: admin_dashboard_renting_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
+      
+      <%= f.text_field :query,
+          placeholder: "Search by name or item...",
+          class: "mb-4 p-2 border rounded w-1/2",
+          data: {
+            controller: "search",
+            action: "input->search#search"
+          } %>
+
+    <% end %>
+
+    <div class="mb-8 w-full">
+        <div class="text-text">Rent an Item</div>
+        <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "w-full" do |f| %>
+          <div data-controller="renting-search" class="flex flex-row gap-4 w-full">
+          <div class="relative flex-1">
+            <%= f.text_field :user,
+                  placeholder: "Search for a user...",
+                  class: "w-full p-2 border rounded",
+                  required: true,
+                  data: {
+                    renting_search_target: "userField",
+                    action: "input->renting-search#searchUsers"
+                  } %>
+            <div data-renting-search-target="userSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            </div>
+          </div>
+
+          <div class="relative flex-1">
+            <%= f.text_field :item,
+            placeholder: "Search for an item...",
+            class: "w-full p-2 border rounded",
+            required: true,
+            data: {
+              renting_search_target: "itemField",
+              action: "input->renting-search#searchItems"
+            } %>
+            <div data-renting-search-target="itemSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            </div>
+          </div>
+
+          <%= f.number_field :quantity,
+          placeholder: "Quantity",
+          min: 1,
+          class: "w-48 p-2 border rounded",
+          required: true %>
+
+          <div class="flex place-items-center gap-2 ">
+          <%= f.check_box :is_singleuse
+          %>
+          <%= f.label "Is Single Use?" %>
+          </div>
+
+          <%= f.submit "Rent",
+              class: "px-4 py-2 bg-confirm hover:bg-green-700 text-text rounded" %>
+          </div>
+        <% end %>
+    </div>
+
+    <%= turbo_frame_tag "rentings_table" do %>
+      <%= render partial: "rentings_table",
+                locals: {
+                  rentings: @rentings,
+                  sort_field: params[:sort],
+                  sort_direction: params[:direction],
+                  pagy: @pagy
+                } %>
+    <% end %>
   </div>
 
 <% else %>
 
-<h1 class="font-bold text-4xl text-contenr" data-font-size="36">You are not authorized to view this page</h1>
+<h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
 
 <% end %>
 

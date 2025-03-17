@@ -2,15 +2,23 @@ Rails.application.routes.draw do
   get "pages/help"
   namespace :admin do
     get "dashboard/users"
+    post "dashboard/update_user_role"
+    get "dashboard/search_users"
+
     get "dashboard/items"
     get "dashboard/renting"
+    post "dashboard/create_renting"
+    patch "dashboard/toggle_renting"
+    patch "dashboard/toggle_singleuse"
+    delete "dashboard/delete_renting"
+
     get "dashboard/purchased"
-    post "dashboard/update_user_role"
     post "dashboard/create_item"
     patch "dashboard/update_item"
     delete "dashboard/delete_item"
     get "dashboard/search_items"
     post "dashboard/create_purchase"
+
 
     # scope "dashboard" do
     #   resources :items, only: [ :create, :update, :destroy ], controller: :dashboard
