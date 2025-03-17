@@ -1,7 +1,7 @@
 <%# protection to ensure only teachers can access this page %>
-<% if current_user.role_id == 3 %> 
+<% if current_user.role_id == 3 %>
   <div class="flex flex-col w-full h-full">
-    <%= form_with url: admin_dashboard_rentings_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
+    <%= form_with url: admin_dashboard_renting_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
       
       <%= f.text_field :query,
           placeholder: "Search by name or item...",
@@ -16,8 +16,7 @@
     <%= turbo_frame_tag "rentings_table" do %>
       <%= render partial: "rentings_table",
                 locals: {
-                  users: @users,
-                  items: @items,
+                  rentings: @rentings,
                   sort_field: params[:sort],
                   sort_direction: params[:direction],
                   pagy: @pagy
