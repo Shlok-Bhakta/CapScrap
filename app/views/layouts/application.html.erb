@@ -106,50 +106,141 @@
       <% end %>
 
       <script>
-        function applyStoredFontSize() {
-          const fontSizeSlider = document.querySelector('#font-size-slider');
-          const fontSizeValue = document.querySelector('#font-size-value');
-          const textContainers = document.querySelectorAll('.text-content');
+    document.addEventListener("DOMContentLoaded", function() {
+      initializeFontSizeSystem();
+    });
 
-          // Get stored font size or default to 0
-          const savedFontSize = localStorage.getItem('font-size') || '0';
-          if (fontSizeSlider) fontSizeSlider.value = savedFontSize;
+    document.addEventListener('turbo:render', function() {
+      applyStoredFontSize();
+    });
 
-          textContainers.forEach(container => {
-              const initialFontSize = parseInt(container.getAttribute('data-font-size')) || 16; // Default 16px
-              const newFontSize = initialFontSize + parseInt(savedFontSize);
-              container.style.fontSize = newFontSize + 'px';
-          });
+    document.addEventListener('turbo:before-cache', function() {
+      resetFontSizesToDefault();
+    });
 
-          const clampLinks = document.querySelectorAll('.clamp-font-size[data-font-size]'); // Target only the buttons with clamp-font-size class
-            clampLinks.forEach(link => {
-                const initialFontSize = parseInt(link.getAttribute('data-font-size'), 10) || 16; // Get the initial font size
-                const adjustedFontSize = initialFontSize + parseInt(savedFontSize); 
-                const clampedSize = Math.min(20, adjustedFontSize); // Clamp it to a max of 20px
-                link.style.fontSize = `${clampedSize}px`; 
-          });
+    function initializeFontSizeSystem() {
+      setupFontSizeSlider();
+      applyStoredFontSize();
+      
+      // Set up mutation observer after initial setup
+      setupMutationObserver();
+    }
 
-          if (fontSizeValue) fontSizeValue.textContent = savedFontSize + 'px';
+    function setupMutationObserver() {
+      // Disconnect any existing observer first
+      if (window.fontSizeObserver) {
+        window.fontSizeObserver.disconnect();
       }
-
-      function setupFontSizeSlider() {
-          const fontSizeSlider = document.querySelector('#font-size-slider');
-          if (!fontSizeSlider) return;
-
-          fontSizeSlider.addEventListener('input', function() {
-              localStorage.setItem('font-size', fontSizeSlider.value);
-              applyStoredFontSize();
+      
+      // Create a new observer that's more specific to what we're looking for
+      window.fontSizeObserver = new MutationObserver((mutations) => {
+        let shouldUpdate = false;
+        
+        for (const mutation of mutations) {
+          // Only process if nodes were added
+          if (mutation.addedNodes.length > 0) {
+            for (let i = 0; i < mutation.addedNodes.length; i++) {
+              const node = mutation.addedNodes[i];
+              // Only check element nodes
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                // If it's a text container or contains text containers
+                if (node.classList?.contains('text-content') || 
+                    node.querySelectorAll('.text-content').length > 0) {
+                  shouldUpdate = true;
+                  break;
+                }
+              }
+            }
+          }
+          
+          if (shouldUpdate) break;
+        }
+        
+        if (shouldUpdate) {
+          // Use requestAnimationFrame to ensure DOM is ready
+          requestAnimationFrame(() => {
+            applyStoredFontSize();
           });
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-          applyStoredFontSize();
-          setupFontSizeSlider(); // Rebind slider event on full reload
+        }
       });
+      
+      // Observe only the main content area to reduce overhead
+      const contentContainer = document.querySelector('.main-content') || document.body;
+      window.fontSizeObserver.observe(contentContainer, { 
+        childList: true, 
+        subtree: true 
+      });
+    }
+
+    function getStoredFontSize() {
+      return parseInt(localStorage.getItem('font-size') || '0', 10);
+    }
+
+    function applyStoredFontSize() {
+      const savedFontSize = getStoredFontSize();
+      const fontSizeSlider = document.querySelector('#font-size-slider');
+      const fontSizeValue = document.querySelector('#font-size-value');
+      
+      // Update slider if it exists
+      if (fontSizeSlider) {
+        fontSizeSlider.value = savedFontSize;
+      }
+      
+      // Update the display value
+      if (fontSizeValue) {
+        fontSizeValue.textContent = `${savedFontSize}px`;
+      }
+      
+      // Apply to all text containers
+      document.querySelectorAll('.text-content').forEach(container => {
+        // Get initial font size from data attribute or default to 16px
+        const initialFontSize = parseInt(container.getAttribute('data-font-size')) || 16;
+        
+        // Set the adjusted font size
+        container.style.fontSize = `${initialFontSize + savedFontSize}px`;
+        
+        // Mark this element as processed to avoid duplicate processing
+        container.setAttribute('data-font-size-processed', 'true');
+      });
+      
+      // Handle clamped font elements
+      document.querySelectorAll('.clamp-font-size[data-font-size]').forEach(link => {
+        const initialFontSize = parseInt(link.getAttribute('data-font-size')) || 16;
+        const adjustedFontSize = initialFontSize + savedFontSize;
+        link.style.fontSize = `${Math.min(20, adjustedFontSize)}px`;
+        link.setAttribute('data-font-size-processed', 'true');
+      });
+    }
+
+    function resetFontSizesToDefault() {
+      document.querySelectorAll('.text-content, .clamp-font-size').forEach(element => {
+        const defaultFontSize = element.getAttribute('data-font-size') || '16';
+        element.style.fontSize = `${defaultFontSize}px`;
+        
+        // Remove processed flag so it will be reprocessed on next load
+        element.removeAttribute('data-font-size-processed');
+      });
+    }
+
+    function setupFontSizeSlider() {
+      const fontSizeSlider = document.querySelector('#font-size-slider');
+      if (!fontSizeSlider) return;
+      
+      // Remove existing listeners to avoid duplicates
+      fontSizeSlider.removeEventListener('input', handleSliderInput);
+      fontSizeSlider.addEventListener('input', handleSliderInput);
+      
+      // Initialize slider with stored value
+      fontSizeSlider.value = getStoredFontSize();
+    }
+
+    function handleSliderInput() {
+      localStorage.setItem('font-size', this.value);
+      applyStoredFontSize();
+    }
     
         document.addEventListener('turbo:load', function() {
-          applyStoredFontSize();
-          setupFontSizeSlider(); // Rebind slider event on Turbo navigation
+          initializeFontSizeSystem();
             
           var themeToggle = document.getElementById('theme-toggle');
           var themeIcon = document.getElementById('theme-icon');

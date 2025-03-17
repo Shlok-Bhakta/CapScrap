@@ -3,35 +3,35 @@
     <table class="w-full">
       <thead>
         <tr class="border-b">
-          <th class="p-2 text-left">
+          <th class="p-2 text-left text-content" data-font-size="16">
             <%= sort_rentings_header('user', 'User', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left">
+          <th class="p-2 text-left text-content" data-font-size="16">
             <%= sort_rentings_header('item', 'Item', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left w-1/6">
+          <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
             <%= sort_rentings_header('quantity', 'Quantity', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left">
+          <th class="p-2 text-left text-content" data-font-size="16">
             <%= sort_rentings_header('checkout_date', 'Checkout Date', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left">
+          <th class="p-2 text-left text-content" data-font-size="16">
             <%= sort_rentings_header('return_date', 'Return Date', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left">Status</th>
-          <th class="p-2 text-left">Single Use</th>
-          <th class="p-2 text-left">Action</th>
+          <th class="p-2 text-left text-content" data-font-size="16">Status</th>
+          <th class="p-2 text-left text-content" data-font-size="16">Single Use</th>
+          <th class="p-2 text-left text-content" data-font-size="16">Actions</th>
         </tr>
       </thead>
       <tbody>
       <% rentings.each do |renting| %>
         <tr id="renting_<%= renting.id %>" class="border-b hover:bg-gray-50">
-          <td class="p-2"><%= renting.user.email %></td>
-          <td class="p-2"><%= renting.item.description %></td>
-          <td class="p-2"><%= renting.quantity %></td>
-          <td class="p-2"><%= renting.checkout_date&.strftime("%Y-%m-%d") %></td>
-          <td class="p-2"><%= renting.return_date&.strftime("%Y-%m-%d") %></td>
-          <td class="p-2">
+          <td class="p-2 text-content" data-font-size="16"><%= renting.user.email %></td>
+          <td class="p-2 text-content" data-font-size="16"><%= renting.item.description %></td>
+          <td class="p-2 text-content" data-font-size="16"><%= renting.quantity %></td>
+          <td class="p-2 text-content" data-font-size="16"><%= renting.checkout_date&.strftime("%Y-%m-%d") %></td>
+          <td class="p-2 text-content" data-font-size="16"><%= renting.return_date&.strftime("%Y-%m-%d") %></td>
+          <td class="p-2 text-content" data-font-size="16">
             <%= form_with(url: admin_dashboard_toggle_renting_path(id: renting.id), 
                          method: :patch,
                          data: { turbo_stream: true, 
@@ -41,7 +41,7 @@
                           data: { disable_with: "Updating..." } %>
             <% end %>
           </td>
-          <td class="p-2">
+          <td class="p-2 text-content" data-font-size="16">
             <%= form_with(url: admin_dashboard_toggle_singleuse_path(id: renting.id), 
                          method: :patch,
                          data: { turbo_stream: true, 
@@ -51,7 +51,7 @@
                           data: { disable_with: "Updating..." } %>
             <% end %>
           </td>
-          <td class="p-2">
+          <td class="p-2 text-content" data-font-size="16">
             <%= form_with(url: admin_dashboard_delete_renting_path(id: renting.id), 
                          method: :delete,
                          data: { turbo_stream: true, 
@@ -69,7 +69,7 @@
     <% if rentings.any? %>
       <%= pagination_nav(pagy) %>
     <% else %>
-      <p class="text-center text-gray-500 mt-4">No rentings found</p>
+      <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No rentings found</p>
     <% end %>
   </div>
 <% end %>
