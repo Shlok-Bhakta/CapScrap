@@ -14,36 +14,34 @@
     <% end %>
 
     <div class="mb-8 w-full">
-      <div class="text-text">Rent an Item</div>
-      
-      <%= form_with url: admin_dashboard_create_renting_path, class: "flex flex-col gap-4 w-full" do |f| %>
-        <div class="flex flex-row gap-4">
+        <div class="text-text">Rent an Item</div>
+        <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "flex flex-row gap-4 w-full" do |f| %>
           <div class="relative flex-1">
-            <%= f.text_field :item_query,
-                placeholder: "Search for a user...",
-                class: "w-full p-2 border rounded",
-                required: true,
-                data: {
-                  renting_search_target: "itemField",
-                  action: "input->renting-search#searchItems"
-                } %>
-            <div data-purchase-search-target="suggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            <%= f.text_field :user_query,
+                  placeholder: "Search for a user...",
+                  class: "w-full p-2 border rounded",
+                  required: true,
+                  data: {
+                    renting_search_target: "userField",
+                    action: "input->renting-search#searchUsers"
+                  } %>
+            <div data-renting-search-target="suggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
             </div>
           </div>
 
-          <div data-purchase-search-target="newItemFields" class="hidden flex-1 flex-row gap-4">
-          </div>
+          <%= f.number_field :quantity,
+          placeholder: "Quantity",
+          min: 1,
+          class: "w-48 p-2 border rounded",
+          required: true %>
 
-          <%= f.number_field :renting_quantity,
-              placeholder: "Quantity",
-              min: 1,
-              class: "w-48 p-2 border rounded",
-              required: true %>
+          <%= f.text_field :item, 
+          placeholder: "Search for an item...",
+          class: "w-48 p-2 border rounded",
+          required: true
+          %>
 
-          <%= f.submit "Rent",
-              class: "px-4 py-2 bg-confirm hover:bg-green-700 text-text rounded" %>
-        </div>
-      <% end %>
+        <% end %>
     </div>
 
     <%= turbo_frame_tag "rentings_table" do %>

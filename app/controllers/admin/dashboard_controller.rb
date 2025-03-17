@@ -31,6 +31,17 @@ class Admin::DashboardController < ApplicationController
                       .sort_by_field(params[:sort], params[:direction])
                       .joins(:category)
     @pagy, @items = pagy(@items_query, items: params[:per_page] || 50)
+
+    # Calculate and attach purchased quantity to each item
+    @items.each do |item|
+      purchased_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity) + Renting.where(item_id: item.id).where(is_returned: true).sum(:quantity) - Renting.where(item_id: item.id).where(is_returned: false).sum(:quantity) 
+      
+      # Dynamically add a quantity method to each item object
+      item.define_singleton_method(:quantity) do
+        purchased_quantity
+      end
+    end
+    
     @categories = Category.all
 
     respond_to do |format|
@@ -190,31 +201,20 @@ class Admin::DashboardController < ApplicationController
 
   def create_renting
     ActiveRecord::Base.transaction do
-      if params[:item_query].present?
-        # Try to find existing item
-        @item = Item.find_by("LOWER(description) = ?", params[:item_query].downcase)
-
-        # Create new item if not found
-        unless @item
-          @item = Item.create!(
-            description: params[:item_query],
-            location: params[:location],
-            category_id: params[:category_id]
-          )
-        end
-      end
-
-      @purchase = Purchase.new(
-        item: @item,
-        purchased_quantity: params[:purchased_quantity],
-        user: current_user,
-        purchase_date: Time.current
+      @renting = Renting.create!(
+        user: params[:user_query],
+        item: params[:item],
+        quantity: params[:quantity],
+        is_singleuse: params[:is_singleuse],
+        checkout_date: Date.today,
+        return_date: nil,
+        is_returned: false,
       )
 
-      if @purchase.save
-        redirect_to admin_dashboard_purchased_path, notice: "Purchase created successfully."
+      if @renting.save
+        redirect_to admin_dashboard_purchased_path, notice: "Renting created successfully."
       else
-        redirect_to admin_dashboard_purchased_path, alert: @purchase.errors.full_messages.join(", ")
+        redirect_to admin_dashboard_purchased_path, alert: @renting.errors.full_messages.join(", ")
       end
     end
   rescue ActiveRecord::RecordInvalid => e
