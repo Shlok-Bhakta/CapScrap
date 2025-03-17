@@ -164,7 +164,7 @@ module Admin::DashboardHelper
 
     link_to admin_dashboard_renting_path(path_params),
            class: link_class,
-           data: { turbo_frame: "content" } do
+           data: { turbo_frame: "rentings_table" } do
       tag.div(class: "flex items-center") do
         safe_join([ display_name, arrows_html ])
       end
