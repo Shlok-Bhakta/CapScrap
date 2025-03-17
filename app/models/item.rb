@@ -53,4 +53,18 @@ class Item < ApplicationRecord
       # user.skip_confirmation!
     end
   end
+  private
+
+  # Removes single-use items after use
+  def remove_if_single_use
+    if single_use && rented_out?
+      destroy
+      Rails.logger.info "Item #{id} (#{description}) was removed after single use."
+    end
+  end
+
+  # Checks if an item has been rented and returned
+  def rented_out?
+    rentings.where(returned: true).exists?
+  end
 end
