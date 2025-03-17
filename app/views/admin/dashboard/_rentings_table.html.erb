@@ -1,0 +1,35 @@
+<div class="flex flex-col">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b">
+        <th class="p-2 text-left">
+          <%= sort_rentings_header('name', 'Full Name', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left">
+          <%= sort_rentings_header('email', 'Email', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left">
+          <%= sort_rentings_header('role', 'Role', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left">
+          <%= sort_rentings_header('created_at', 'Creation Date', sort_field, sort_direction) %>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <% rentings.each do |renting| %>
+      <tr class="border-b hover:bg-gray-50">
+        <td class="p-2"><%= renting.user_id %></td>
+        <td class="p-2"><%= renting.item_id %></td>
+        <td class="p-2"></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  
+  <% if users.any? %>
+    <%= pagination_nav(pagy) %>
+  <% else %>
+    <p class="text-center text-gray-500 mt-4">No users found</p>
+  <% end %>
+</div>

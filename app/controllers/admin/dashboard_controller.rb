@@ -51,6 +51,26 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def renting
+    @rentings_query = Renting.search(params[:query])
+                      .sort_by_field(params[:sort], params[:direction])
+    @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
+    respond_to do |format|
+      format.html
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "rentings_table",
+          partial: "admin/dashboard/rentings_table",
+          locals: {
+            pagy: @pagy,
+            sort_field: params[:sort],
+            sort_direction: params[:direction]
+          }
+        )
+      }
+    end
+  end
+
   def create_item
     @item = Item.new(item_params)
     if @item.save
@@ -86,9 +106,6 @@ class Admin::DashboardController < ApplicationController
         error: "Failed to delete item this item is probably being used by someone"
       }, status: :unprocessable_entity
     end
-  end
-
-  def renting
   end
 
   def purchased
