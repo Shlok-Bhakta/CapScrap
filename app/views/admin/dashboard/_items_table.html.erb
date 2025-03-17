@@ -37,6 +37,7 @@
         <th class="p-2 text-left">
           <%= sort_items_header('category', 'Category', sort_field, sort_direction) %>
         </th>
+        <th class="p-2 text-center">Quantity</th>
         <th class="p-2 text-left">
           <%= sort_items_header('created_at', 'Creation Date', sort_field, sort_direction) %>
         </th>
@@ -67,6 +68,21 @@
                         data: { item_id: item.id } %>
           <span class="category-text"><%= item.category.name %></span>
         </td>
+        <%# if quantity < 5 then make it red %>
+        
+          <% if item.quantity < 5 %>
+          <td class="p-2 bg-accent text-center">
+            <span class="text-text">
+              <%= item.quantity %>
+            </span>
+         </td>
+          <% else %>
+            <td class="p-2 text-center">
+            <span class="text-text">
+              <%= item.quantity %>
+            </span>
+            </td>
+          <% end %>
         <td class="p-2"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td class="p-2 flex space-x-2">
           <button type="button"
