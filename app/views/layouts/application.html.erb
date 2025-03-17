@@ -111,25 +111,43 @@
       <% end %>
 
       <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const fontSizeSlider = document.querySelector('#font-size-slider');
-        const fontSizeValue = document.querySelector('#font-size-value');
-        const textContainers = document.querySelectorAll('.text-content'); // Select all elements with 'text-content'
+        function applyStoredFontSize() {
+          const fontSizeSlider = document.querySelector('#font-size-slider');
+          const fontSizeValue = document.querySelector('#font-size-value');
+          const textContainers = document.querySelectorAll('.text-content');
 
-        // Update the text font size based on the slider value
-        fontSizeSlider.addEventListener('input', function() {
-          textContainers.forEach(function(container) {
-            // Get the initial font size from the data attribute
-            const initialFontSize = parseInt(container.getAttribute('data-font-size')); // Read the font size from data-font-size
+          // Get stored font size or default to 0
+          const savedFontSize = localStorage.getItem('font-size') || '0';
+          if (fontSizeSlider) fontSizeSlider.value = savedFontSize;
 
-            // Add the slider value to the initial font size
-            const newFontSize = initialFontSize + parseInt(fontSizeSlider.value); // Add slider value to base font size
-            fontSizeValue.textContent = fontSizeSlider.value + 'px'; // Update the displayed font size value
-
-            // Apply the updated font size to the element
-            container.style.fontSize = newFontSize + 'px';
+          textContainers.forEach(container => {
+              const initialFontSize = parseInt(container.getAttribute('data-font-size')) || 16; // Default 16px
+              const newFontSize = initialFontSize + parseInt(savedFontSize);
+              container.style.fontSize = newFontSize + 'px';
           });
-        });
+
+          if (fontSizeValue) fontSizeValue.textContent = savedFontSize + 'px';
+      }
+
+      function setupFontSizeSlider() {
+          const fontSizeSlider = document.querySelector('#font-size-slider');
+          if (!fontSizeSlider) return;
+
+          fontSizeSlider.addEventListener('input', function() {
+              localStorage.setItem('font-size', fontSizeSlider.value);
+              applyStoredFontSize();
+          });
+      }
+
+      // Ensure font size is applied and slider works after page load and navigation
+      document.addEventListener("turbo:load", function () {
+          applyStoredFontSize();
+          setupFontSizeSlider(); // Rebind slider event on Turbo navigation
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+          applyStoredFontSize();
+          setupFontSizeSlider(); // Rebind slider event on full reload
       });
     </script>
   </body>
