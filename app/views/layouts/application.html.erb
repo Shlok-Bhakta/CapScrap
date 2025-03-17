@@ -71,10 +71,17 @@
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
-          <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2" %>
+
+          <div class="flex items-center">
+            <label for="font-size-slider" class="text-white text-sm mr-2 text-content" data-font-size="16">Font Size:</label>
+            <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-32">
+            <span id="font-size-value" class="text-white ml-2 text-content" data-font-size="16">+0px</span>
+          </div>
+
+          <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content", data: { font_size: 16 } %>
 
           <%# logout %>
-          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
+          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content", data: { font_size: 16 } %>
           <%# pfp %>
           <img src="<%= current_user.avatar_url %>" alt="<%= current_user.email %>" title="<%= current_user.email %>" class="h-8 w-8 rounded-full ml-2">
         </nav>
@@ -102,5 +109,28 @@
         </div>
         </main>
       <% end %>
+
+      <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const fontSizeSlider = document.querySelector('#font-size-slider');
+        const fontSizeValue = document.querySelector('#font-size-value');
+        const textContainers = document.querySelectorAll('.text-content'); // Select all elements with 'text-content'
+
+        // Update the text font size based on the slider value
+        fontSizeSlider.addEventListener('input', function() {
+          textContainers.forEach(function(container) {
+            // Get the initial font size from the data attribute
+            const initialFontSize = parseInt(container.getAttribute('data-font-size')); // Read the font size from data-font-size
+
+            // Add the slider value to the initial font size
+            const newFontSize = initialFontSize + parseInt(fontSizeSlider.value); // Add slider value to base font size
+            fontSizeValue.textContent = fontSizeSlider.value + 'px'; // Update the displayed font size value
+
+            // Apply the updated font size to the element
+            container.style.fontSize = newFontSize + 'px';
+          });
+        });
+      });
+    </script>
   </body>
 </html>
