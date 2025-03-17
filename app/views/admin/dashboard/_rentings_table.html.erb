@@ -3,33 +3,42 @@
     <thead>
       <tr class="border-b">
         <th class="p-2 text-left">
-          <%= sort_rentings_header('name', 'Full Name', sort_field, sort_direction) %>
+          <%= sort_rentings_header('user_id', 'User', sort_field, sort_direction) %>
         </th>
         <th class="p-2 text-left">
-          <%= sort_rentings_header('email', 'Email', sort_field, sort_direction) %>
+          <%= sort_rentings_header('item_id', 'Item', sort_field, sort_direction) %>
         </th>
         <th class="p-2 text-left">
-          <%= sort_rentings_header('role', 'Role', sort_field, sort_direction) %>
+          <%= sort_rentings_header('checkout_date', 'Checkout Date', sort_field, sort_direction) %>
         </th>
         <th class="p-2 text-left">
-          <%= sort_rentings_header('created_at', 'Creation Date', sort_field, sort_direction) %>
+          <%= sort_rentings_header('return_date', 'Return Date', sort_field, sort_direction) %>
         </th>
+        <th class="p-2 text-left">Status</th>
       </tr>
     </thead>
     <tbody>
     <% rentings.each do |renting| %>
       <tr class="border-b hover:bg-gray-50">
-        <td class="p-2"><%= renting.user_id %></td>
-        <td class="p-2"><%= renting.item_id %></td>
-        <td class="p-2"></td>
+        <td class="p-2"><%= renting.user.email %></td>
+        <td class="p-2"><%= renting.item.description %></td>
+        <td class="p-2"><%= renting.checkout_date&.strftime("%Y-%m-%d") %></td>
+        <td class="p-2"><%= renting.return_date&.strftime("%Y-%m-%d") %></td>
+        <td class="p-2">
+          <% if renting.is_returned %>
+            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded">Returned</span>
+          <% else %>
+            <span class="px-2 py-1 bg-green-100 text-green-800 rounded">Active</span>
+          <% end %>
+        </td>
       </tr>
     <% end %>
     </tbody>
   </table>
   
-  <% if users.any? %>
+  <% if rentings.any? %>
     <%= pagination_nav(pagy) %>
   <% else %>
-    <p class="text-center text-gray-500 mt-4">No users found</p>
+    <p class="text-center text-gray-500 mt-4">No rentings found</p>
   <% end %>
 </div>
