@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get "dashboard/users"
     post "dashboard/update_user_role"
+    get "dashboard/search_users"
 
     get "dashboard/items"
     get "dashboard/renting"

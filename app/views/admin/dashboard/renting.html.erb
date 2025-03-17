@@ -15,9 +15,10 @@
 
     <div class="mb-8 w-full">
         <div class="text-text">Rent an Item</div>
-        <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "flex flex-row gap-4 w-full" do |f| %>
+        <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "w-full" do |f| %>
+          <div data-controller="renting-search" class="flex flex-row gap-4 w-full">
           <div class="relative flex-1">
-            <%= f.text_field :user_query,
+            <%= f.text_field :user,
                   placeholder: "Search for a user...",
                   class: "w-full p-2 border rounded",
                   required: true,
@@ -25,7 +26,20 @@
                     renting_search_target: "userField",
                     action: "input->renting-search#searchUsers"
                   } %>
-            <div data-renting-search-target="suggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            <div data-renting-search-target="userSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            </div>
+          </div>
+
+          <div class="relative flex-1">
+            <%= f.text_field :item,
+            placeholder: "Search for an item...",
+            class: "w-full p-2 border rounded",
+            required: true,
+            data: {
+              renting_search_target: "itemField",
+              action: "input->renting-search#searchItems"
+            } %>
+            <div data-renting-search-target="itemSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
             </div>
           </div>
 
@@ -35,12 +49,15 @@
           class: "w-48 p-2 border rounded",
           required: true %>
 
-          <%= f.text_field :item, 
-          placeholder: "Search for an item...",
-          class: "w-48 p-2 border rounded",
-          required: true
+          <div class="flex place-items-center gap-2 ">
+          <%= f.check_box :is_singleuse
           %>
+          <%= f.label "Is Single Use?" %>
+          </div>
 
+          <%= f.submit "Rent",
+              class: "px-4 py-2 bg-confirm hover:bg-green-700 text-text rounded" %>
+          </div>
         <% end %>
     </div>
 
