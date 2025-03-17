@@ -19,16 +19,16 @@ class Renting < ApplicationRecord
   }
 
   scope :sort_by_field, ->(field, direction) {
-    direction = direction.to_s.downcase == 'desc' ? 'desc' : 'asc'
-    
+    direction = direction.to_s.downcase == "desc" ? "desc" : "asc"
+
     case field
-    when 'user'
+    when "user"
       joins(:user).order("users.email #{direction}")
-    when 'item'
+    when "item"
       joins(:item).order("items.description #{direction}")
-    when 'quantity'
+    when "quantity"
       order(quantity: direction)
-    when 'checkout_date'
+    when "checkout_date"
       order(checkout_date: direction)
     else
       order(created_at: :desc)

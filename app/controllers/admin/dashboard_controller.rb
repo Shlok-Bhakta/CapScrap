@@ -34,14 +34,14 @@ class Admin::DashboardController < ApplicationController
 
     # Calculate and attach purchased quantity to each item
     @items.each do |item|
-      purchased_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity) + Renting.where(item_id: item.id).where(is_returned: true).sum(:quantity) - Renting.where(item_id: item.id).where(is_returned: false).sum(:quantity) 
-      
+      purchased_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity) + Renting.where(item_id: item.id).where(is_returned: true).sum(:quantity) - Renting.where(item_id: item.id).where(is_returned: false).sum(:quantity)
+
       # Dynamically add a quantity method to each item object
       item.define_singleton_method(:quantity) do
         purchased_quantity
       end
     end
-    
+
     @categories = Category.all
 
     respond_to do |format|
@@ -94,7 +94,7 @@ class Admin::DashboardController < ApplicationController
     @rentings_query = Renting.search(params[:query])
                       .sort_by_field(params[:sort], params[:direction])
     @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
-    
+
     respond_to do |format|
       format.html { redirect_to admin_dashboard_renting_path }
       format.turbo_stream {
@@ -132,7 +132,7 @@ class Admin::DashboardController < ApplicationController
     @rentings_query = Renting.search(params[:query])
                       .sort_by_field(params[:sort], params[:direction])
     @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
-    
+
     respond_to do |format|
       format.html { redirect_to admin_dashboard_renting_path }
       format.turbo_stream {
@@ -203,7 +203,7 @@ class Admin::DashboardController < ApplicationController
     ActiveRecord::Base.transaction do
       user = User.find_by("LOWER(full_name) = ?", params[:user].downcase)
       item = Item.find_by("LOWER(description) = ?", params[:item].downcase)
-      
+
       if !user
         redirect_to admin_dashboard_renting_path, alert: "User not found" and return
       end
@@ -226,7 +226,7 @@ class Admin::DashboardController < ApplicationController
         @rentings_query = Renting.search(params[:query])
                         .sort_by_field(params[:sort], params[:direction])
         @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
-        
+
         respond_to do |format|
           format.html { redirect_to admin_dashboard_renting_path, notice: "Renting created successfully." }
           format.turbo_stream {
