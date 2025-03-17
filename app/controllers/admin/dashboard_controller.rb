@@ -152,6 +152,42 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def delete_renting
+    @renting = Renting.find(params[:id])
+    @renting.destroy
+
+    @rentings_query = Renting.search(params[:query])
+                      .sort_by_field(params[:sort], params[:direction])
+    @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
+
+    respond_to do |format|
+      format.turbo_stream {
+        render turbo_stream: [
+          turbo_stream.remove("renting_#{@renting.id}"),
+          turbo_stream.replace(
+            "rentings_table",
+            partial: "admin/dashboard/rentings_table",
+            locals: {
+              rentings: @rentings,
+              pagy: @pagy,
+              sort_field: params[:sort],
+              sort_direction: params[:direction]
+            }
+          )
+        ]
+      }
+    end
+  rescue => e
+    respond_to do |format|
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.update(
+          "flash",
+          html: "Error deleting renting: #{e.message}"
+        )
+      }
+    end
+  end
+
   def create_renting
     ActiveRecord::Base.transaction do
       if params[:item_query].present?
@@ -183,6 +219,36 @@ class Admin::DashboardController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     redirect_to admin_dashboard_purchased_path, alert: e.message
+  end
+
+  def search_items
+    return render json: { error: "Query required" }, status: :unprocessable_entity if params[:query].blank?
+
+    query = params[:query].downcase
+    begin
+      # Find exact matches first
+      exact_matches = Item.includes(:category)
+                        .where("LOWER(description) = ?", query)
+
+      # Then find partial matches, excluding exact matches
+      partial_matches = Item.includes(:category)
+                          .where("LOWER(description) LIKE ?", "%#{query}%")
+                          .where.not(id: exact_matches.select(:id))
+
+      # Combine results with exact matches first
+      @items = (exact_matches + partial_matches).first(5)
+
+      render json: {
+        items: @items.map { |i| {
+          id: i.id,
+          description: i.description,
+          location: i.location,
+          category: i.category.name
+        }}
+      }
+    rescue StandardError => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
   end
 
   def create_item

@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     post "dashboard/create_renting"
     patch "dashboard/toggle_renting"
     patch "dashboard/toggle_singleuse"
+    delete "dashboard/delete_renting"
+
     get "dashboard/purchased"
     post "dashboard/create_item"
     patch "dashboard/update_item"

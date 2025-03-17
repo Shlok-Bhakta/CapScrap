@@ -11,7 +11,7 @@ class Renting < ApplicationRecord
   scope :search, ->(query) {
     if query.present?
       joins(:user, :item)
-        .where("users.email ILIKE :query OR items.description ILIKE :query",
+        .where("users.email ILIKE :query OR items.description ILIKE :query OR rentings.quantity::text ILIKE :query",
                 query: "%#{query}%")
     else
       all
@@ -26,6 +26,8 @@ class Renting < ApplicationRecord
       joins(:user).order("users.email #{direction}")
     when 'item'
       joins(:item).order("items.description #{direction}")
+    when 'quantity'
+      order(quantity: direction)
     when 'checkout_date'
       order(checkout_date: direction)
     else
