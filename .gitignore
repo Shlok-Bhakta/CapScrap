@@ -40,3 +40,6 @@
 
 # Ignore sensitive env file
 .env
+
+# Ignore OS files
+.DS_Store
