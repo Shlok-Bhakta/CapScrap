@@ -22,9 +22,85 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="bg-background text-text font-sans antialiased">
+    <script>
+      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+
+      // Whenever the user explicitly chooses light mode
+      localStorage.theme = 'light'
+
+      // Whenever the user explicitly chooses dark mode
+      // localStorage.theme = 'dark'
+
+      // // Whenever the user explicitly chooses to respect the OS preference
+      // localStorage.removeItem('theme')
+
+
+    </script>
+      <% if current_user %>
+        <nav class="flex bg-primary px-4 py-2 shadow-md h-12 items-center">
+          <%# logo %>
+          <%= image_tag "logo.png", class: "h-8 aspect-auto" %>
+          <%# spacer to push content to the middle %>
+          <div class="flex-1"></div>
+          <%# navigate to items depending on the user %>
+          <% if current_user.role_id == 1 %>
+          <%# student %>
+            <h1>I am a student</h1>
+          <% end %>
+          <% if current_user.role_id == 2 %>  
+            <%# teaching assistant %>
+            <h1>I am a teaching assistant</h1>
+
+          <% end%>
+            <% if current_user.role_id == 3 %>
+              <%# teacher %>
+              <%# button to go to /admin/dashboard/items %>
+              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%# button to go to /admin/dashboard/users %>
+              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%# button to go to /admin/dashboard/renting %>
+              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%# button to go to /admin/dashboard/purchased %>
+              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+          <% end %>
+          <%# spacer to push content to the right %>
+          <div class="flex-1"></div>
+          <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2" %>
+
+          <%# logout %>
+          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
+          <%# pfp %>
+          <img src="<%= current_user.avatar_url %>" alt="<%= current_user.email %>" title="<%= current_user.email %>" class="h-8 w-8 rounded-full ml-2">
+        </nav>
+        <main class="container mx-auto mt-28 px-5 flex">
+          <%# create a navbar %>
+            <%= yield %>
+        </main>
+      <% else %>
+        <main class="container mx-auto mt-28 px-5 flex">
+
+        <div class="flex flex-col mx-auto bg-primary rounded-lg shadow-md pt-7 px-8 pb-7">
+          <h2 class="text-center text-2xl font-bold mb-6 text-background">Login to CapScrap</h2>
+          <%- if devise_mapping.omniauthable? %>
+            <%- resource_class.omniauth_providers.each do |provider| %>
+              <%= button_to omniauth_authorize_path(resource_name, provider),
+                  data: { turbo: false },
+                  class: "w-full text-text bg-secondary hover:bg-secondary/90 focus:ring-4 focus:ring-secondary/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:focus:ring-[#4285F4]/55" do %>
+                <svg class="mr-2 -ml-1 w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                  <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+                </svg>
+                Sign in with Google
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+        </main>
+      <% end %>
   </body>
 </html>

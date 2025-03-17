@@ -1,41 +1,88 @@
-<% if current_user %>
 <div class="grid grid-flow-row grid-cols-1 w-full">
-<div class="border-2 border-green-400 bg-green-100 p-6 rounded-md">
-  You are logged in
-</div>
 
-<div class="flex flex-row gap-10 mx-auto">
-<h2><%= current_user.email %></h2>
-<div>
-<%= link_to "Edit Account", edit_user_registration_path %>
-</div>
-<div>
-<%= button_to "Logout", destroy_user_session_path, data: {turbo: "false"}, method: :delete %>
-</div>
-<div>
-<% content_for :title, "Items" %>
-
-</div>
-</div>
 
 <div class="w-full">
   <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+    <p class="py-2 px-3 bg-background mb-5 text-primary font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Items</h1>
-    <%= link_to "New item", new_item_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="font-bold text-4xl text-text">Items</h1>
+    <div class="flex justify-between items-center">
+
+    <%= link_to "View all Items", items_path, class: "rounded-md mx-2 px-3.5 py-2.5 bg-primary hover:bg-secondary text-background block font-medium" %>
+    <%= link_to "Sort by Name", items_path(sort: "description"), class: "rounded-md mx-2 px-3.5 py-2.5 bg-primary hover:bg-secondary text-background block font-medium" %>
+    <%= link_to "New item", new_item_path, class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-secondary text-background block font-medium" %>
+    </div>
   </div>
+
+<div class="mt-4 flex items-center gap-2">
+  <label for="query" class="font-medium text-text">Search by ID:</label>
+  <%= form_with url: items_path, method: :get, local: true, class: "flex gap-2" do %>
+    <%= text_field_tag :query, params[:query], placeholder: "Enter ID Number...", class: "border px-3 py-2 rounded-md w-1/2" %>
+    <%= submit_tag "Search", class: "bg-accent hover:bg-secondary text-background font-medium px-3.5 py-2.5 rounded-md" %>
+  <% end %>
+</div>
+
+  <!-- DataTables dependencies -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css"/>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 
   <div id="items" class="min-w-full">
     <% if @items.any? %>
-      <% @items.each do |item| %>
-        <%= render item %>
-        <p>
-          <%= link_to "Show this item", item, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-        </p>
-      <% end %>
+      <table id="items-table" class="display stripe hover row-border order-column" style="width:100%">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @items.each do |item| %>
+            <tr>
+              <td><%= item.category.name %></td>
+              <td><%= item.description %></td>
+              <td><%= item.location %></td>
+              <td>
+                <%= link_to "Show", item, class: "rounded-md px-2 py-1 bg-background hover:bg-secondary inline-block font-medium text-sm text-text" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <script type="text/javascript">
+        $(document).ready(function() {
+          $('#items-table').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            dom: 'Bfrtip',
+            order: [[1, 'asc']], // Sort by description by default
+            language: {
+              search: "Search items:",
+              lengthMenu: "Show _MENU_ items per page",
+              info: "Showing _START_ to _END_ of _TOTAL_ items",
+              infoEmpty: "No items found",
+              paginate: {
+                first: "First",
+                last: "Last",
+                next: "Next",
+                previous: "Previous"
+              }
+            }
+          });
+
+        // 🔍 Search by ID functionality
+    $('#search-id').on('keyup', function() {
+      table.columns(0).search(this.value).draw(); // Assuming ID is in the first column (index 0)
+    });
+  });
+
+      </script>
     <% else %>
       <p class="text-center my-10">No items found.</p>
     <% end %>
@@ -43,11 +90,4 @@
 </div>
 </div>
 
-<% else %>
-<div class="flex flex-col mx-auto"> 
-  <div>You need to login!</div>
-  <%= link_to "Login", new_user_session_path, class: "bg-red-500 hover:bg-red-700 text-white font-bold p-4 rounded text-center" %>
 </div>
-<% end %>
-</div>
-
