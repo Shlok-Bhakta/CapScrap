@@ -61,13 +61,13 @@
             <% if current_user.role_id == 3 %>
               <%# teacher %>
               <%# button to go to /admin/dashboard/items %>
-              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content", data: { font_size: 16 } %>
               <%# button to go to /admin/dashboard/users %>
-              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content", data: { font_size: 16 } %>
               <%# button to go to /admin/dashboard/renting %>
-              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content", data: { font_size: 16 } %>
               <%# button to go to /admin/dashboard/purchased %>
-              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content", data: { font_size: 16 } %>
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
@@ -75,7 +75,7 @@
           <div class="flex items-center">
             <label for="font-size-slider" class="text-white text-sm mr-2 text-content" data-font-size="16">Font Size:</label>
             <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-32">
-            <span id="font-size-value" class="text-white ml-2 text-content" data-font-size="16">+0px</span>
+            <span id="font-size-value" class="text-white ml-2" data-font-size="16">+0px</span>
           </div>
 
           <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content", data: { font_size: 16 } %>
