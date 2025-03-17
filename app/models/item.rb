@@ -1,6 +1,6 @@
 class Item < ApplicationRecord
   belongs_to :category
-  has_many :rentings
+  has_many :rentings, dependent: :destroy
   has_many :users, through: :rentings
   has_many :purchases
   has_many :purchasers, through: :purchases, source: :user
@@ -58,8 +58,10 @@ class Item < ApplicationRecord
   # Removes single-use items after use
   def remove_if_single_use
     if single_use && rented_out?
-      destroy
       Rails.logger.info "Item #{id} (#{description}) was removed after single use."
+      # Delete all associated rentings first to prevent foreign key issues
+      rentings.destroy_all
+      destroy
     end
   end
 

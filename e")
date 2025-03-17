@@ -1,0 +1,25 @@
+=> 
+[[32m#<Item:0x00007f97d874a140[0m
+  id: [34m[1m1[0m,
+  category_id: [34m[1m4[0m,
+  description: [31m[1m"[0m[31mSmall Rubber Bottle[0m[31m[1m"[0m,
+  location: [31m[1m"[0m[31mHELD[0m[31m[1m"[0m,
+  created_at: [31m[1m"[0m[31m2025-03-15 23:21:32.392726000 +0000[0m[31m[1m"[0m,
+  updated_at: [31m[1m"[0m[31m2025-03-17 00:35:35.578194000 +0000[0m[31m[1m"[0m,
+  single_use: [36m[1mnil[0m[32m>[0m,
+ [32m#<Item:0x00007f97d874a000[0m
+  id: [34m[1m101[0m,
+  category_id: [34m[1m4[0m,
+  description: [31m[1m"[0m[31mExam Paper[0m[31m[1m"[0m,
+  location: [31m[1m"[0m[31mLibrary[0m[31m[1m"[0m,
+  created_at: [31m[1m"[0m[31m2025-03-17 00:35:49.099625000 +0000[0m[31m[1m"[0m,
+  updated_at: [31m[1m"[0m[31m2025-03-17 00:35:49.099625000 +0000[0m[31m[1m"[0m,
+  single_use: [36m[1mtrue[0m[32m>[0m,
+ [32m#<Item:0x00007f97d8749ec0[0m
+  id: [34m[1m102[0m,
+  category_id: [34m[1m4[0m,
+  description: [31m[1m"[0m[31mExam Paper[0m[31m[1m"[0m,
+  location: [31m[1m"[0m[31mLibrary[0m[31m[1m"[0m,
+  created_at: [31m[1m"[0m[31m2025-03-17 00:46:16.203595000 +0000[0m[31m[1m"[0m,
+  updated_at: [31m[1m"[0m[31m2025-03-17 00:46:16.203595000 +0000[0m[31m[1m"[0m,
+  single_use: [36m[1mtrue[0m[32m>[0m]
