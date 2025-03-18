@@ -70,7 +70,7 @@
           <div class="flex-1"></div>
 
           <div class="flex items-center">
-            <label for="font-size-slider" class="text-white text-sm mr-2 text-content" data-font-size="16">Font Size:</label>
+            <label for="font-size-slider" class="text-white text-sm mr-2 text-content clamp-font-size" data-font-size="16">Font Size:</label>
             <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-32">
             <span id="font-size-value" class="text-white ml-2">+0px</span>
           </div>
@@ -83,8 +83,8 @@
           <% end %>
 
           <%# colorblind mode%>
-          <%= button_tag(type: "button", id: "color-toggle", class: "bg-secondary px-2 py-1 w-auto h-8 mr-2 rounded-md flex items-center justify-center text-sm whitespace-nowrap") do %>
-            <span id="theme-text">color on</span>
+          <%= button_tag(type: "button", id: "color-toggle", class: "bg-secondary px-2 py-1 w-auto h-8 mr-2 rounded-md flex items-center justify-center text-sm whitespace-nowrap text-text font-medium text-content clamp-font-size", data: { font_size: 16 }) do %>
+            <span id="theme-text">Color On</span>
           <% end %>
 
           <%# logout %>
@@ -132,7 +132,9 @@
 
     function initializeFontSizeSystem() {
       setupFontSizeSlider();
-      applyStoredFontSize();
+      setTimeout(() => {
+        applyStoredFontSize();
+      }, 10);
       
       // Set up mutation observer after initial setup
       setupMutationObserver();
@@ -219,7 +221,7 @@
       document.querySelectorAll('.clamp-font-size[data-font-size]').forEach(link => {
         const initialFontSize = parseInt(link.getAttribute('data-font-size')) || 16;
         const adjustedFontSize = initialFontSize + savedFontSize;
-        link.style.fontSize = `${Math.min(20, adjustedFontSize)}px`;
+        link.style.fontSize = `${Math.min(18, adjustedFontSize)}px`;
         link.setAttribute('data-font-size-processed', 'true');
       });
     }
@@ -269,9 +271,9 @@
           }
 
           if (localStorage.colorMode === 'off') {
-              colorToggle.innerText = "color on";
+              colorToggle.innerText = "Color On";
           } else {
-              colorToggle.innerText = "color off";
+              colorToggle.innerText = "Color Off";
           }
 
           themeToggle.addEventListener('click', function() {
@@ -292,12 +294,12 @@
             if (document.documentElement.classList.contains('colorblind')) {
               document.documentElement.classList.remove('colorblind');
               localStorage.colorMode = 'on';
-              colorToggle.innerText = "color off";  // Correct text
+              colorToggle.innerText = "Color Off";  // Correct text
             } else {
               document.documentElement.classList.add('colorblind');
               console.log("Colorblind mode active?", document.documentElement.classList.contains('colorblind'));
               localStorage.colorMode = 'off';
-              colorToggle.innerText = "color on";   // Correct text
+              colorToggle.innerText = "Color On";   // Correct text
             }
           });
         });
