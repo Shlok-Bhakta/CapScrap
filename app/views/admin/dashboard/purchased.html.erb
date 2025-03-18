@@ -7,18 +7,20 @@
           placeholder: "Search purchases by item, location or category...",
           value: params[:query],
           data: { controller: "search", action: "input->search#search" },
-          class: "mb-4 p-2 border rounded w-1/2" %>
+          class: "mb-4 p-2 border rounded w-1/2 text-content",
+          "data-font-size": { font_size: 16 } %>
     <% end %>
 
     <div class="mb-8 w-full">
-      <div class="text-text">New Purchase</div>
+      <div class="text-text text-content" data-font-size="16">New Purchase</div>
       
       <%= form_with url: admin_dashboard_create_purchase_path, class: "flex flex-col gap-4 w-full" do |f| %>
         <div class="flex flex-row gap-4">
           <div class="relative flex-1">
             <%= f.text_field :item_query,
                 placeholder: "Search for an item...",
-                class: "w-full p-2 border rounded",
+                class: "w-full p-2 border rounded text-content",
+                "data-font-size": { font_size: 16 },
                 required: true,
                 data: {
                   purchase_search_target: "itemField",
@@ -31,22 +33,25 @@
           <div data-purchase-search-target="newItemFields" class="hidden flex-1 flex-row gap-4">
             <%= f.text_field :location,
                 placeholder: "Location (required for new items)",
-                class: "w-full p-2 border rounded" %>
+                class: "w-full p-2 border rounded text-content",
+                "data-font-size": { font_size: 16 }%>
 
             <%= f.select :category_id,
                 @categories.map { |c| [c.name, c.id] },
                 { prompt: "Select Category (required for new items)" },
-                class: "w-full p-2 border rounded" %>
+                class: "w-full p-2 border rounded text-content", "data-font-size": { font_size: 16 } %>
           </div>
 
           <%= f.number_field :purchased_quantity,
               placeholder: "Quantity",
               min: 1,
-              class: "w-48 p-2 border rounded",
+              class: "w-48 p-2 border rounded text-content",
+              "data-font-size": { font_size: 16 },
               required: true %>
 
           <%= f.submit "Create Purchase",
-              class: "px-4 py-2 bg-confirm hover:bg-green-700 text-text rounded" %>
+              class: "px-4 py-2 bg-confirm hover:bg-green-700 text-text rounded text-content", 
+              "data-font-size": { font_size: 16 } %>
         </div>
       <% end %>
     </div>
@@ -61,5 +66,5 @@
     <% end %>
   </div>
 <% else %>
-  <h1 class="font-bold text-4xl">You are not authorized to view this page</h1>
+  <h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
 <% end %>

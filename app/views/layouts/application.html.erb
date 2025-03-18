@@ -30,6 +30,13 @@
       } else {
         document.documentElement.classList.remove('dark')
       }
+
+      //adds themes for colorblind mode
+      if (localStorage.colorMode === 'on') {
+          document.documentElement.classList.remove('colorblind');
+      } else {
+          document.documentElement.classList.add('colorblind');
+      }
     </script>
 
       <% if current_user %>
@@ -41,35 +48,63 @@
           <%# navigate to items depending on the user %>
           <% if current_user.role_id == 1 %>
           <%# student %>
-            <h1>I am a student</h1>
+            <h1 class="text-content" data-font-size="36">I am a student</h1>
           <% end %>
           <% if current_user.role_id == 2 %>  
             <%# teaching assistant %>
-            <h1>I am a teaching assistant</h1>
+            <h1 class="text-content" data-font-size="36">I am a teaching assistant</h1>
 
           <% end%>
             <% if current_user.role_id == 3 %>
               <%# teacher %>
               <%# button to go to /admin/dashboard/items %>
-              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
               <%# button to go to /admin/dashboard/users %>
-              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
               <%# button to go to /admin/dashboard/renting %>
-              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
               <%# button to go to /admin/dashboard/purchased %>
-              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2"%>
+              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
-          <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2" %>
+
+          <div id="google_translate_element" class="mr-2"></div>
+          
+          <%# <div class="language-selector">
+            <select id="language-select" onchange="changeLanguage(this.value)">
+              <option value="">Select Language</option>
+              <option value="en">English</option>
+              <option value="es">Español (Spanish)</option>
+              <option value="fr">Français (French)</option>
+              <option value="de">Deutsch (German)</option>
+              <option value="ja">日本語 (Japanese)</option>
+              <option value="zh-CN">中文 (Chinese)</option>
+              <option value="nl">Nederlands (Dutch)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+            </select>
+          </div> %>
+
+          <div class="flex items-center">
+            <label for="font-size-slider" class="text-white text-sm mr-2 text-content clamp-font-size" data-font-size="16">Font Size:</label>
+            <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-32">
+            <span id="font-size-value" class="text-white ml-2">+0px</span>
+          </div>
+
+          <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
 
           <%# darkmode slider%>
           <%= button_tag(type: "button", id: "theme-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md") do %>
             <%= image_tag "dark.png", id: "theme-icon", alt: "Toggle dark mode" %>
           <% end %>
 
+          <%# colorblind mode%>
+          <%= button_tag(type: "button", id: "color-toggle", class: "bg-secondary px-2 py-1 w-auto h-8 mr-2 rounded-md flex items-center justify-center text-sm whitespace-nowrap text-text font-medium text-content clamp-font-size", data: { font_size: 16 }) do %>
+            <span id="theme-text">Color On</span>
+          <% end %>
+
           <%# logout %>
-          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1"%>
+          <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
           <%# pfp %>
           <img src="<%= current_user.avatar_url %>" alt="<%= current_user.email %>" title="<%= current_user.email %>" class="h-8 w-8 rounded-full ml-2">
         </nav>
@@ -97,10 +132,296 @@
         </div>
         </main>
       <% end %>
+
       <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      initializeFontSizeSystem();
+    });
+
+    document.addEventListener('turbo:render', function() {
+      applyStoredFontSize();
+      initializeGoogleTranslate();
+    });
+
+    document.addEventListener('turbo:before-cache', function() {
+      resetFontSizesToDefault();
+    });
+
+    function initializeFontSizeSystem() {
+      setupFontSizeSlider();
+      setTimeout(() => {
+        applyStoredFontSize();
+      }, 10);
+      
+      // Set up mutation observer after initial setup
+      setupMutationObserver();
+    }
+
+    function setupMutationObserver() {
+      // Disconnect any existing observer first
+      if (window.fontSizeObserver) {
+        window.fontSizeObserver.disconnect();
+      }
+      
+      // Create a new observer that's more specific to what we're looking for
+      window.fontSizeObserver = new MutationObserver((mutations) => {
+        let shouldUpdate = false;
+        
+        for (const mutation of mutations) {
+          // Only process if nodes were added
+          if (mutation.addedNodes.length > 0) {
+            for (let i = 0; i < mutation.addedNodes.length; i++) {
+              const node = mutation.addedNodes[i];
+              // Only check element nodes
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                // If it's a text container or contains text containers
+                if (node.classList?.contains('text-content') || 
+                    node.querySelectorAll('.text-content').length > 0) {
+                  shouldUpdate = true;
+                  break;
+                }
+              }
+            }
+          }
+          
+          if (shouldUpdate) break;
+        }
+        
+        if (shouldUpdate) {
+          // Use requestAnimationFrame to ensure DOM is ready
+          requestAnimationFrame(() => {
+            applyStoredFontSize();
+          });
+        }
+      });
+      
+      // Observe only the main content area to reduce overhead
+      const contentContainer = document.querySelector('.main-content') || document.body;
+      window.fontSizeObserver.observe(contentContainer, { 
+        childList: true, 
+        subtree: true 
+      });
+    }
+
+    function getStoredFontSize() {
+      return parseInt(localStorage.getItem('font-size') || '0', 10);
+    }
+
+    function applyStoredFontSize() {
+      const savedFontSize = getStoredFontSize();
+      const fontSizeSlider = document.querySelector('#font-size-slider');
+      const fontSizeValue = document.querySelector('#font-size-value');
+      
+      // Update slider if it exists
+      if (fontSizeSlider) {
+        fontSizeSlider.value = savedFontSize;
+      }
+      
+      // Update the display value
+      if (fontSizeValue) {
+        fontSizeValue.textContent = `${savedFontSize}px`;
+      }
+      
+      // Apply to all text containers
+      document.querySelectorAll('.text-content').forEach(container => {
+        // Get initial font size from data attribute or default to 16px
+        const initialFontSize = parseInt(container.getAttribute('data-font-size')) || 16;
+        
+        // Set the adjusted font size
+        container.style.fontSize = `${initialFontSize + savedFontSize}px`;
+        
+        // Mark this element as processed to avoid duplicate processing
+        container.setAttribute('data-font-size-processed', 'true');
+      });
+      
+      // Handle clamped font elements
+      document.querySelectorAll('.clamp-font-size[data-font-size]').forEach(link => {
+        const initialFontSize = parseInt(link.getAttribute('data-font-size')) || 16;
+        const adjustedFontSize = initialFontSize + savedFontSize;
+        link.style.fontSize = `${Math.min(18, adjustedFontSize)}px`;
+        link.setAttribute('data-font-size-processed', 'true');
+      });
+    }
+
+    function resetFontSizesToDefault() {
+      document.querySelectorAll('.text-content, .clamp-font-size').forEach(element => {
+        const defaultFontSize = element.getAttribute('data-font-size') || '16';
+        element.style.fontSize = `${defaultFontSize}px`;
+        
+        // Remove processed flag so it will be reprocessed on next load
+        element.removeAttribute('data-font-size-processed');
+      });
+    }
+
+    function setupFontSizeSlider() {
+      const fontSizeSlider = document.querySelector('#font-size-slider');
+      if (!fontSizeSlider) return;
+      
+      // Remove existing listeners to avoid duplicates
+      fontSizeSlider.removeEventListener('input', handleSliderInput);
+      fontSizeSlider.addEventListener('input', handleSliderInput);
+      
+      // Initialize slider with stored value
+      fontSizeSlider.value = getStoredFontSize();
+    }
+
+    function handleSliderInput() {
+      localStorage.setItem('font-size', this.value);
+      applyStoredFontSize();
+    }
+
+
+  // Google translate
+
+        document.addEventListener('DOMContentLoaded', function() {
+          initializeGoogleTranslate();
+        });
+
+        function initializeGoogleTranslate() {
+          console.log("Initializing Google Translate...");
+          // Only add the script if it hasn't been added yet
+          if (!window.googleTranslateScriptAdded) {
+            window.googleTranslateScriptAdded = true;
+            console.log("Adding Google Translate script to page");
+            
+            // Create the script element for Google Translate
+            var googleTranslateScript = document.createElement('script');
+            googleTranslateScript.type = 'text/javascript';
+            googleTranslateScript.async = true;
+            googleTranslateScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            googleTranslateScript.onerror = function() {
+              console.error("Failed to load Google Translate script");
+            };
+            document.body.appendChild(googleTranslateScript);
+            
+            // Define the callback function for Google Translate
+            window.googleTranslateElementInit = function() {
+              console.log("Google Translate script loaded, initializing element");
+              new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,ja,zh-CN,nl,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+              }, 'google_translate_element');
+
+              console.log("Translate element initialized");
+              
+              // Apply stored or just selected language
+              setTimeout(function() {
+                var langToApply = window.preferredLanguage || localStorage.getItem('preferred_language');
+                if (langToApply) {
+                  console.log("Attempting to apply language: " + langToApply);
+                  var selectElement = document.querySelector('.goog-te-combo');
+                  if (selectElement) {
+                    console.log("Found Google Translate dropdown, setting value");
+                    selectElement.value = langToApply;
+                    selectElement.dispatchEvent(new Event('change'));
+                  }
+                  else{
+                    console.log("Could not find Google Translate dropdown");
+                  }
+                }
+              }, 1000); // Give time for Google Translate to initialize
+            };
+          }
+          else{
+            console.log("Google Translate script already added");
+          }
+        }
+
+        // function changeLanguage(langCode) {
+        //   if (!langCode) return;
+          
+        //   console.log("Changing language to: " + langCode);
+          
+        //   // Store selected language in localStorage for persistence
+        //   localStorage.setItem('preferred_language', langCode);
+          
+        //   // If Google Translate is already loaded
+        //   if (window.google && google.translate) {
+        //     console.log("Google Translate exists, finding dropdown");
+        //     var selectElement = document.querySelector('.goog-te-combo');
+        //     if (selectElement) {
+        //       console.log("Found dropdown, changing value");
+        //       selectElement.value = langCode;
+        //       selectElement.dispatchEvent(new Event('change'));
+        //     } else {
+        //       console.log("Could not find Google dropdown");
+        //     }
+        //   } else {
+        //     console.log("Google Translate not yet loaded, setting preferred language");
+        //     // If not loaded yet, set a flag and initialize
+        //     window.preferredLanguage = langCode;
+        //     initializeGoogleTranslate();
+        //   }
+        // }
+
+        function changeLanguage(langCode) {
+          if (!langCode) return;
+          
+          console.log("Changing language to: " + langCode);
+          
+          // Store selected language in localStorage for persistence
+          localStorage.setItem('preferred_language', langCode);
+          
+          // If Google Translate is already loaded
+          if (window.google && google.translate) {
+            console.log("Google Translate exists, finding dropdown");
+            
+            try {
+              // Try direct translation method first (more reliable)
+              if (langCode === 'en') {
+                // Reset to original language
+                var iframe = document.querySelector('.goog-te-menu-frame');
+                if (iframe) {
+                  var doc = iframe.contentDocument || iframe.contentWindow.document;
+                  var cancel = doc.querySelector('.goog-te-button button');
+                  if (cancel) {
+                    cancel.click();
+                    return;
+                  }
+                }
+              } else {
+                google.translate.TranslateElement.getInstance().translate('', langCode);
+                return;
+              }
+            } catch(e) {
+              console.log("Direct translation method failed, trying dropdown", e);
+            }
+            
+            // Fallback to dropdown method
+            var selectElement = document.querySelector('.goog-te-combo');
+            if (selectElement) {
+              console.log("Found dropdown, changing value");
+              selectElement.value = langCode;
+              selectElement.dispatchEvent(new Event('change'));
+            } else {
+              console.log("Could not find Google dropdown");
+            }
+          } else {
+            console.log("Google Translate not yet loaded, setting preferred language");
+            // If not loaded yet, set a flag and initialize
+            window.preferredLanguage = langCode;
+            initializeGoogleTranslate();
+          }
+        }
+    
         document.addEventListener('turbo:load', function() {
+          initializeFontSizeSystem();
+          // initializeGoogleTranslate();
+          var preferredLang = localStorage.getItem('preferred_language');
+            if (preferredLang) {
+              setTimeout(function() {
+                changeLanguage(preferredLang);
+              }, 500);
+            }else{
+              initializeGoogleTranslate();
+            }
+            
           var themeToggle = document.getElementById('theme-toggle');
           var themeIcon = document.getElementById('theme-icon');
+
+          var colorToggle = document.getElementById('color-toggle');
 
           var darkImage = "<%= asset_path('dark.png') %>";
           var lightImage = "<%= asset_path('light.png') %>";
@@ -109,6 +430,12 @@
             themeIcon.src = lightImage;
           } else {
             themeIcon.src = darkImage;
+          }
+
+          if (localStorage.colorMode === 'off') {
+              colorToggle.innerText = "Color On";
+          } else {
+              colorToggle.innerText = "Color Off";
           }
 
           themeToggle.addEventListener('click', function() {
@@ -124,7 +451,21 @@
               themeIcon.src = lightImage;
             }
           });
+
+          colorToggle.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('colorblind')) {
+              document.documentElement.classList.remove('colorblind');
+              localStorage.colorMode = 'on';
+              colorToggle.innerText = "Color Off";  // Correct text
+            } else {
+              document.documentElement.classList.add('colorblind');
+              console.log("Colorblind mode active?", document.documentElement.classList.contains('colorblind'));
+              localStorage.colorMode = 'off';
+              colorToggle.innerText = "Color On";   // Correct text
+            }
+          });
         });
       </script>
+
   </body>
 </html>

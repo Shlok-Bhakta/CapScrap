@@ -17,6 +17,45 @@
       --color-accent: #cc5c5c;
       --color-confirm: #34C759;
     }
+
+    .colorblind{
+      /* filter: grayscale(100%) contrast(1.5); */
+      --color-text: #808080;        /* Grayscale version */
+      --color-background: #d8d8d8;  /* Grayscale version */
+      --color-primary: #7f7f7f;     /* Grayscale version */
+      --color-secondary: #bfbfbf;   /* Grayscale version */
+      --color-accent: #b3b3b3;      /* Grayscale version */
+      --color-confirm: #a8a8a8; 
+    }
+
+    .dark.colorblind{
+      --color-text: #d0d0d0;        
+      --color-background: #2a2a2a;  
+      --color-primary: #d1d1d1;     
+      --color-secondary: #5c5c5c;   
+      --color-accent: #a8a8a8;     
+      /* --color-confirm: #7f7f7f;  */
+      --color-confirm: #1c1c1c; 
+    }
+
+    /* .colorblind {
+      
+      --color-text: #404040;
+      --color-background: #d9d9d9;
+      --color-primary: #a0a0a0;
+      --color-secondary: #888888;
+      --color-accent: #666666;
+      --color-confirm: #bbbbbb;
+    } */
+
+    /* .dark.colorblind {
+      --color-text: #b3b3b3;
+      --color-background: #222222;
+      --color-primary: #888888;
+      --color-secondary: #666666;
+      --color-accent: #555555;
+      --color-confirm: #aaaaaa;
+    } */
 }
 
 
