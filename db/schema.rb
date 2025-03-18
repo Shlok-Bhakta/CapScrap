@@ -20,12 +20,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_181743) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "examples", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.bigint "category_id", null: false
     t.string "description"
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "single_use"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
