@@ -60,11 +60,11 @@ class RolesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_role
-      @role = Role.find(params.expect(:id))
+      @role = Role.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def role_params
-      params.expect(role: [ :name ])
+      params.require(:role).permit(:name)
     end
 end

@@ -17,11 +17,11 @@ RSpec.describe "/roles", type: :request do
   # Role. As you add validations to Role, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    { name: "Professor" }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    { name: "" } # Assuming presence validation on name
   }
 
   describe "GET /index" do
