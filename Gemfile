@@ -91,3 +91,5 @@ gem "mutex_m"
 
 # fake data generator for seed
 gem "faker"
+
+gem 'simplecov', require: false, group: :test
