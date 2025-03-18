@@ -1,22 +1,22 @@
 <div class="grid grid-flow-row grid-cols-1 w-full">
   <div class="w-full">
     <% if notice.present? %>
-      <p class="py-2 px-3 bg-background mb-5 text-primary font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+      <p class="py-2 px-3 bg-background mb-5 text-primary font-medium rounded-md inline-block text-content" data-font-size="16" id="notice"><%= notice %></p>
     <% end %>
 
     <div class="flex justify-between items-center mb-6">
-      <h1 class="font-bold text-4xl text-text">Items</h1>
+      <h1 class="font-bold text-4xl text-text text-content" data-font-size="36">Items</h1>
       <div class="flex justify-between items-center">
-        <%= link_to "View all Items", items_path, class: "rounded-md mx-2 px-3.5 py-2.5 bg-primary hover:bg-secondary text-background block font-medium" %>
-        <%= link_to "Sort by Name", items_path(sort: "description"), class: "rounded-md mx-2 px-3.5 py-2.5 bg-primary hover:bg-secondary text-background block font-medium" %>
-        <%= link_to "New item", new_item_path, class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-secondary text-background block font-medium" %>
+        <%= link_to "View all Items", items_path, class: "rounded-md mx-2 px-3.5 py-2.5 bg-primary hover:bg-secondary text-background block font-medium text-content", data: { font_size: 16 } %>
+        <%= link_to "Sort by Name", items_path(sort: "description"), class: "rounded-md mx-2 px-3.5 py-2.5 bg-primary hover:bg-secondary text-background block font-medium text-content", data: { font_size: 16 } %>
+        <%= link_to "New item", new_item_path, class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-secondary text-background block font-medium text-content", data: { font_size: 16 } %>
       </div>
     </div>
 
     <!-- 🔍 Single Search Bar for Both ID & Name -->
     <div class="mt-4 flex items-center gap-2">
-      <label for="search-query" class="font-medium text-text">Search Items:</label>
-      <input type="text" id="search-query" placeholder="Enter ID or Name..." class="border px-3 py-2 rounded-md w-1/2">
+      <label for="search-query" class="font-medium text-text text-content" data-font-size="16">Search Items:</label>
+      <input type="text" id="search-query" placeholder="Enter ID or Name..." class="border px-3 py-2 rounded-md w-1/2 text-content" data-font-size="16">
     </div>
 
     <!-- DataTables dependencies -->
@@ -29,22 +29,22 @@
         <table id="items-table" class="display stripe hover row-border order-column" style="width:100%">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Location</th>
-              <th>Actions</th>
+              <th class="text-content" data-font-size="16">ID</th>
+              <th class="text-content" data-font-size="16">Category</th>
+              <th class="text-content" data-font-size="16">Description</th>
+              <th class="text-content" data-font-size="16">Location</th>
+              <th class="text-content" data-font-size="16">Actions</th>
             </tr>
           </thead>
           <tbody>
             <% @items.each do |item| %>
               <tr>
-                <td><%= item.id %></td>
-                <td><%= item.category.name %></td>
-                <td><%= item.description %></td>
-                <td><%= item.location %></td>
+                <td class="text-content" data-font-size="15"><%= item.id %></td>
+                <td class="text-content" data-font-size="15"><%= item.category.name %></td>
+                <td class="text-content" data-font-size="15"><%= item.description %></td>
+                <td class="text-content" data-font-size="15"><%= item.location %></td>
                 <td>
-                  <%= link_to "Show", item, class: "rounded-md px-2 py-1 bg-background hover:bg-secondary inline-block font-medium text-sm text-text" %>
+                  <%= link_to "Show", item, class: "rounded-md px-2 py-1 bg-background hover:bg-secondary inline-block font-medium text-sm text-text text-content", data: { font_size: 16 } %>
                 </td>
               </tr>
             <% end %>
@@ -73,6 +73,7 @@
                 }
               }
             });
+
 
             // 🔍 Live search functionality (Search by ID or Name)
             $('#search-query').on('keyup', function() {

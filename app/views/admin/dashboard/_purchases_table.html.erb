@@ -1,46 +1,46 @@
-<div class="flex flex-col w-full" data-controller="purchase">
+<div class="flex flex-col w-full" data-controller="purchase font">
   <table class="w-full table-fixed">
     <thead>
       <tr class="border-b">
-        <th class="p-2 text-left w-1/4">
+        <th class="p-2 text-left w-1/4 text-content" data-font-size="16">
           <%= sort_purchases_header('item_description', 'Item Description', sort_field, sort_direction) %>
         </th>
-        <th class="p-2 text-left w-1/6">
+        <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
           <%= sort_purchases_header('location', 'Location', sort_field, sort_direction) %>
         </th>
-        <th class="p-2 text-left w-1/6">
+        <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
           <%= sort_purchases_header('category', 'Category', sort_field, sort_direction) %>
         </th>
-        <th class="p-2 text-left w-1/12">
+        <th class="p-2 text-left w-1/12 text-content" data-font-size="16">
           <%= sort_purchases_header('purchased_quantity', 'Quantity', sort_field, sort_direction) %>
         </th>
-        <th class="p-2 text-left w-1/6">
+        <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
           <%= sort_purchases_header('created_at', 'Purchase Date', sort_field, sort_direction) %>
         </th>
-        <th class="p-2 text-left w-20">Actions</th>
+        <th class="p-2 text-left w-20 text-content" data-font-size="16">Actions</th>
       </tr>
     </thead>
     <tbody>
     <% purchases.each do |purchase| %>
       <tr class="border-b hover:bg-gray-50">
-        <td class="p-2">
+        <td class="p-2 text-content" data-font-size="16">
           <span class="description-text"><%= purchase.item.description %></span>
         </td>
-        <td class="p-2">
+        <td class="p-2 text-content" data-font-size="16">
           <span class="location-text"><%= purchase.item.location %></span>
         </td>
-        <td class="p-2">
+        <td class="p-2 text-content" data-font-size="16">
           <span class="category-text"><%= purchase.item.category.name %></span>
         </td>
-        <td class="p-2">
+        <td class="p-2 text-content" data-font-size="16">
           <span class="quantity-text"><%= purchase.purchased_quantity %></span>
           <input type="number" name="purchased_quantity" value="<%= purchase.purchased_quantity %>"
                  class="hidden w-full p-1 border rounded" min="1" />
         </td>
-        <td class="p-2">
+        <td class="p-2 text-content" data-font-size="16">
           <span class="date-text"><%= purchase.created_at.strftime("%Y-%m-%d %H:%M") %></span>
         </td>
-        <td class="p-2 flex space-x-2">
+        <td class="p-2 flex space-x-2 text-content" data-font-size="16">
           <button type="button" 
                   class="text-blue-600 hover:text-blue-800" 
                   data-purchase-id="<%= purchase.id %>"
@@ -66,6 +66,6 @@
   <% if purchases.any? %>
     <%= pagination_nav(pagy) %>
   <% else %>
-    <p class="text-center text-gray-500 mt-4">No purchases found</p>
+    <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No purchases found</p>
   <% end %>
 </div>
