@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_11_010058) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_17_181743) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_010058) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "single_use"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
@@ -54,6 +55,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_010058) do
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_returned", default: false
+    t.boolean "is_singleuse", default: false
     t.index ["item_id"], name: "index_rentings_on_item_id"
     t.index ["user_id"], name: "index_rentings_on_user_id"
   end
@@ -68,7 +71,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_010058) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "uid"
-    t.bigint "role_id"
+    t.bigint "role_id", default: 1
     t.string "full_name"
     t.string "avatar_url"
     t.string "provider", default: "Google", null: false

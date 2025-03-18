@@ -1,7 +1,7 @@
 <%= form_with(model: item, class: "contents") do |form| %>
   <% if item.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+      <h2 class="text-content" data-font-size="16"><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
 
       <ul class="list-disc ml-6">
         <% item.errors.each do |error| %>
@@ -12,21 +12,22 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :category_id %>
-    <%= form.text_field :category_id, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": item.errors[:category_id].none?, "border-red-400 focus:outline-red-600": item.errors[:category_id].any?}] %>
+    <%= form.label :category_id, class: "text-content", data: { font_size: 16 } %>
+    <%= form.collection_select(:category_id, Category.all, :id, :name, {prompt: "Select a Category"},{class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full text-content", {"border-gray-400 focus:outline-blue-600": item.errors[:description].none?, "border-red-400 focus:outline-red-600": item.errors[:description].any?}], data: { font_size: 16 }}) %>
   </div>
 
   <div class="my-5">
-    <%= form.label :description %>
-    <%= form.text_field :description, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": item.errors[:description].none?, "border-red-400 focus:outline-red-600": item.errors[:description].any?}] %>
+    <%= form.label :description, class: "text-content", data: { font_size: 16 } %>
+    <%= form.text_field :description, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full text-content", {"border-gray-400 focus:outline-blue-600": item.errors[:description].none?, "border-red-400 focus:outline-red-600": item.errors[:description].any?}], data: { font_size: 16 } %>
   </div>
 
   <div class="my-5">
-    <%= form.label :location %>
-    <%= form.text_field :location, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": item.errors[:location].none?, "border-red-400 focus:outline-red-600": item.errors[:location].any?}] %>
+    <%= form.label :location, class: "text-content", data: { font_size: 16 } %>
+    <%= form.text_field :location, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full text-content", {"border-gray-400 focus:outline-blue-600": item.errors[:location].none?, "border-red-400 focus:outline-red-600": item.errors[:location].any?}], data: { font_size: 16 } %>
   </div>
 
   <div class="inline">
-    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer text-content", data: { font_size: 16 } %>
   </div>
 <% end %>
+ 

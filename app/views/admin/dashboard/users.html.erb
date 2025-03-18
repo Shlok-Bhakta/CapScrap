@@ -1,0 +1,88 @@
+
+<%# protection to ensure only teachers can access this page %>
+<% if current_user.role_id == 3 %> 
+<%# make content lign up vertically so its searcg then table%>
+  <div class="flex flex-col w-full h-full">
+    <%= form_with url: admin_dashboard_users_path, method: :get, data: { turbo_frame: "users_table", turbo_action: "advance" } do |f| %>
+
+      <%= f.text_field :query,
+          placeholder: "Search by name, email or role...",
+          class: "mb-4 p-2 border rounded w-1/2 text-content",
+          "data-font-size": { font_size: 16 },
+          data: {
+            controller: "search",
+            action: "input->search#search"
+          } %>
+    <% end %>
+
+    <%= turbo_frame_tag "users_table" do %>
+      <%= render partial: "users_table",
+                locals: {
+                  users: @users,
+                  roles: @roles,
+                  sort_field: params[:sort],
+                  sort_direction: params[:direction],
+                  pagy: @pagy
+                } %>
+    <% end %>
+  </div>
+
+  <script>
+    function initializeRoleSelects() {
+      document.querySelectorAll('.role-select').forEach(function(select) {
+        select.addEventListener('change', function(e) {
+          const userId = this.dataset.userId;
+          const newRoleId = this.value;
+          
+          if (confirm('Are you sure you want to change this user\'s role?')) {
+            fetch('/admin/dashboard/update_user_role', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+              },
+              body: JSON.stringify({
+                user_id: userId,
+                role_id: newRoleId
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert('Role updated successfully');
+              } else {
+                alert('Failed to update role');
+                // Reset select to original value without reload
+                const originalOption = Array.from(this.options).find(option =>
+                  option.text === this.selectedOptions[0].text
+                );
+                this.value = originalOption.value;
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred while updating the role');
+              // Reset select to original value without reload
+              const originalOption = Array.from(this.options).find(option =>
+                option.text === this.selectedOptions[0].text
+              );
+              this.value = originalOption.value;
+            });
+          } else {
+            // Reset select to its original value without reloading
+            const originalOption = Array.from(this.options).find(option =>
+              option.text === this.selectedOptions[0].text
+            );
+            this.value = originalOption.value;
+          }
+        });
+      });
+    }
+    document.addEventListener('turbo:load', initializeRoleSelects);
+  </script>
+
+<% else %>
+
+<h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
+
+<% end %>

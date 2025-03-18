@@ -1,0 +1,28 @@
+<%# protection to ensure only teachers can access this page %>
+<% if current_user.role_id == 3 %>
+  <div class="flex flex-col w-full h-full">
+    <%= form_with url: admin_dashboard_items_path, method: :get, data: { turbo_frame: "items_table", turbo_action: "advance" } do |f| %>
+      <%= f.text_field :query,
+          placeholder: "Search by description, location or category...",
+          class: "mb-4 p-2 border rounded w-1/2 text-content",
+          "data-font-size": { font_size: 16 },
+          data: {
+            controller: "search",
+            action: "input->search#search"
+          } %>
+    <% end %>
+
+    <%= turbo_frame_tag "items_table" do %>
+      <%= render partial: "items_table",
+                locals: {
+                  items: @items,
+                  categories: @categories,
+                  sort_field: params[:sort],
+                  sort_direction: params[:direction],
+                  pagy: @pagy
+                } %>
+    <% end %>
+  </div>
+<% else %>
+  <h1 class="font-bold text-4xl text-content" data-font-size="16">You are not authorized to view this page</h1>
+<% end %>
