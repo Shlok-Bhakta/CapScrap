@@ -70,6 +70,7 @@
           <div class="flex-1"></div>
 
           <div id="google_translate_element" class="mr-2"></div>
+          
           <%# <div class="language-selector">
             <select id="language-select" onchange="changeLanguage(this.value)">
               <option value="">Select Language</option>
@@ -328,6 +329,33 @@
           }
         }
 
+        // function changeLanguage(langCode) {
+        //   if (!langCode) return;
+          
+        //   console.log("Changing language to: " + langCode);
+          
+        //   // Store selected language in localStorage for persistence
+        //   localStorage.setItem('preferred_language', langCode);
+          
+        //   // If Google Translate is already loaded
+        //   if (window.google && google.translate) {
+        //     console.log("Google Translate exists, finding dropdown");
+        //     var selectElement = document.querySelector('.goog-te-combo');
+        //     if (selectElement) {
+        //       console.log("Found dropdown, changing value");
+        //       selectElement.value = langCode;
+        //       selectElement.dispatchEvent(new Event('change'));
+        //     } else {
+        //       console.log("Could not find Google dropdown");
+        //     }
+        //   } else {
+        //     console.log("Google Translate not yet loaded, setting preferred language");
+        //     // If not loaded yet, set a flag and initialize
+        //     window.preferredLanguage = langCode;
+        //     initializeGoogleTranslate();
+        //   }
+        // }
+
         function changeLanguage(langCode) {
           if (!langCode) return;
           
@@ -339,6 +367,29 @@
           // If Google Translate is already loaded
           if (window.google && google.translate) {
             console.log("Google Translate exists, finding dropdown");
+            
+            try {
+              // Try direct translation method first (more reliable)
+              if (langCode === 'en') {
+                // Reset to original language
+                var iframe = document.querySelector('.goog-te-menu-frame');
+                if (iframe) {
+                  var doc = iframe.contentDocument || iframe.contentWindow.document;
+                  var cancel = doc.querySelector('.goog-te-button button');
+                  if (cancel) {
+                    cancel.click();
+                    return;
+                  }
+                }
+              } else {
+                google.translate.TranslateElement.getInstance().translate('', langCode);
+                return;
+              }
+            } catch(e) {
+              console.log("Direct translation method failed, trying dropdown", e);
+            }
+            
+            // Fallback to dropdown method
             var selectElement = document.querySelector('.goog-te-combo');
             if (selectElement) {
               console.log("Found dropdown, changing value");
