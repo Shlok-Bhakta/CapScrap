@@ -30,6 +30,13 @@
       } else {
         document.documentElement.classList.remove('dark')
       }
+
+      //adds themes for colorblind mode
+      if (localStorage.colorMode === 'on') {
+          document.documentElement.classList.remove('colorblind');
+      } else {
+          document.documentElement.classList.add('colorblind');
+      }
     </script>
 
       <% if current_user %>
@@ -73,6 +80,11 @@
           <%# darkmode slider%>
           <%= button_tag(type: "button", id: "theme-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md") do %>
             <%= image_tag "dark.png", id: "theme-icon", alt: "Toggle dark mode" %>
+          <% end %>
+
+          <%# colorblind mode%>
+          <%= button_tag(type: "button", id: "color-toggle", class: "bg-secondary px-2 py-1 w-auto h-8 mr-2 rounded-md flex items-center justify-center text-sm whitespace-nowrap") do %>
+            <span id="theme-text">color on</span>
           <% end %>
 
           <%# logout %>
@@ -245,6 +257,8 @@
           var themeToggle = document.getElementById('theme-toggle');
           var themeIcon = document.getElementById('theme-icon');
 
+          var colorToggle = document.getElementById('color-toggle');
+
           var darkImage = "<%= asset_path('dark.png') %>";
           var lightImage = "<%= asset_path('light.png') %>";
 
@@ -252,6 +266,12 @@
             themeIcon.src = lightImage;
           } else {
             themeIcon.src = darkImage;
+          }
+
+          if (localStorage.colorMode === 'off') {
+              colorToggle.innerText = "color on";
+          } else {
+              colorToggle.innerText = "color off";
           }
 
           themeToggle.addEventListener('click', function() {
@@ -265,6 +285,19 @@
               document.documentElement.classList.add('dark');
               localStorage.theme = 'dark';
               themeIcon.src = lightImage;
+            }
+          });
+
+          colorToggle.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('colorblind')) {
+              document.documentElement.classList.remove('colorblind');
+              localStorage.colorMode = 'on';
+              colorToggle.innerText = "color off";  // Correct text
+            } else {
+              document.documentElement.classList.add('colorblind');
+              console.log("Colorblind mode active?", document.documentElement.classList.contains('colorblind'));
+              localStorage.colorMode = 'off';
+              colorToggle.innerText = "color on";   // Correct text
             }
           });
         });
