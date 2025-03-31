@@ -239,14 +239,21 @@ module Loggable
     end
   end
 
+  # def current_user_identifier
+  #   # In a Rails app, this would typically come from something like Current.user
+  #   # This is a placeholder - adapt to your user tracking method
+  #   if defined?(Current) && Current.respond_to?(:user) && Current.user
+  #     "#{Current.user.id} (#{Current.user.email})"
+  #   elsif Thread.current[:current_user]
+  #     user = Thread.current[:current_user]
+  #     "#{user.id} (#{user.email})"
+  #   else
+  #     "Unknown User"
+  #   end
+  # end
   def current_user_identifier
-    # In a Rails app, this would typically come from something like Current.user
-    # This is a placeholder - adapt to your user tracking method
-    if defined?(Current) && Current.respond_to?(:user) && Current.user
+    if Current.user
       "#{Current.user.id} (#{Current.user.email})"
-    elsif Thread.current[:current_user]
-      user = Thread.current[:current_user]
-      "#{user.id} (#{user.email})"
     else
       "Unknown User"
     end

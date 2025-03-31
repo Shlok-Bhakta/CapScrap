@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
   before_action :authenticate_user!
+  before_action :set_current_user
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
@@ -34,6 +35,12 @@ class ApplicationController < ActionController::Base
         Rails.logger.info("VIEW | Time: #{timestamp} | User: #{user} | ID: #{resource.id}")
       end
     end
+  end
+
+  private
+  
+  def set_current_user
+    Current.user = current_user if current_user
   end
 
 end
