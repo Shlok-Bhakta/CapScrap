@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def log_view(resource)
     # user = current_user ? "#{current_user.id} (#{current_user.email})" : "Guest User"
-    
+
     # if defined?(DATABASE_LOGGER)
     #   DATABASE_LOGGER.tagged("VIEW_ACTION", resource.class.name) do
     #     DATABASE_LOGGER.info("VIEW | User: #{user} | ID: #{resource.id}")
@@ -21,10 +21,10 @@ class ApplicationController < ActionController::Base
     resource = instance_variable_get("@#{controller_name.singularize}")
     return unless resource # Skip if no resource found
 
-    #user = current_user_identifier
+    # user = current_user_identifier
     user = current_user
     timestamp = Time.current.strftime("%Y-%m-%d %H:%M:%S")
-    
+
     if defined?(DATABASE_LOGGER)
       DATABASE_LOGGER.tagged("VIEW_ACTION", resource.class.name) do
         DATABASE_LOGGER.info("VIEW | Time: #{timestamp} | User: #{user} | ID: #{resource.id}")
@@ -38,9 +38,8 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  
+
   def set_current_user
     Current.user = current_user if current_user
   end
-
 end

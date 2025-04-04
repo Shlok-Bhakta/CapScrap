@@ -1,6 +1,6 @@
 # config/initializers/database_action_logger.rb
-require 'logger'
-log_dir = Rails.root.join('log')
+require "logger"
+log_dir = Rails.root.join("log")
 FileUtils.mkdir_p(log_dir) unless File.directory?(log_dir)
 db_logger_path = log_dir.join("#{Rails.env}_database_actions.log")
 
