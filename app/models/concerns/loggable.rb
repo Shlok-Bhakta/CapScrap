@@ -182,16 +182,16 @@ module Loggable
     if defined?(DATABASE_LOGGER)
       DATABASE_LOGGER.tagged("DATABASE_ACTION", self.class.name) do
         if(self.class.name == "Renting")
-          DATABASE_LOGGER.info("CREATE RENTING | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data{ Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Checkout Date: #{self.attributes["checkout_date"].to_json} | Rental Date: #{self.attributes["rental_date"].to_json} | Quantity: #{self.attributes["quantity"].to_json} | isReturned: #{self.attributes["is_returned"].to_json} | isSingleUse: #{self.attributes["is_singleuse"].to_json}}")
+          DATABASE_LOGGER.info("CREATE RENTING | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data { Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Checkout Date: #{self.attributes["checkout_date"].to_json} | Rental Date: #{self.attributes["rental_date"].to_json} | Quantity: #{self.attributes["quantity"].to_json} | isReturned: #{self.attributes["is_returned"].to_json} | isSingleUse: #{self.attributes["is_singleuse"].to_json}}")
         end
         if(self.class.name == "Item")
-          Rails.logger.info("CREATE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("CREATE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
         end
         if(self.class.name == "User")
-          Rails.logger.info("CREATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("CREATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
         end
         if(self.class.name == "Purchase")
-          Rails.logger.info("CREATE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("CREATE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Purchase Date: #{self.attributes["purchase_date"].to_json} | Purchase Quantity: #{self.attributes["purchased_quantity"].to_json}}")
         end
       end
     else
@@ -227,13 +227,18 @@ module Loggable
           DATABASE_LOGGER.info("CHANGES: #{changes.to_json}")  
         end
         if(self.class.name == "Item")
-          Rails.logger.info("UPDATE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("UPDATE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("CHANGES: #{changes.to_json}")  
         end
         if(self.class.name == "User")
-          Rails.logger.info("UPDATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("UPDATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("CHANGES: #{changes.to_json}")  
         end
         if(self.class.name == "Purchase")
-          Rails.logger.info("UPDATE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("UPDATE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id}")
+          DATABASE_LOGGER.info("BEFORE: Data {Item ID: #{@previous_state["item_id"].to_json} | Item Name: #{Item.find_by(id: @previous_state['item_id'])&.description} | User ID: #{@previous_state["user_id"].to_json} | User Email: #{User.find_by(id: @previous_state['user_id'])&.email} | Purchase Date: #{@previous_state["purchase_date"].to_json} | Purchase Quantity: #{@previous_state["purchased_quantity"].to_json}}")
+          DATABASE_LOGGER.info("AFTER: Data {Item ID: #{current_state["item_id"].to_json} | Item Name: #{Item.find_by(id: current_state['item_id'])&.description} | User ID: #{current_state["user_id"].to_json} | User Email: #{User.find_by(id: current_state['user_id'])&.email} | Purchase Date: #{current_state["purchase_date"].to_json} | Purchase Quantity: #{current_state["purchased_quantity"].to_json}}")
+          DATABASE_LOGGER.info("CHANGES: #{changes.to_json}")  
         end
       end
     else
@@ -254,21 +259,21 @@ module Loggable
     if defined?(DATABASE_LOGGER)
       DATABASE_LOGGER.tagged("DATABASE_ACTION", self.class.name) do
         if(self.class.name == "Renting")
-          DATABASE_LOGGER.info("DELETE RENTING | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data{ Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Checkout Date: #{self.attributes["checkout_date"].to_json} | Rental Date: #{self.attributes["rental_date"].to_json} | Quantity: #{self.attributes["quantity"].to_json} | isReturned: #{self.attributes["is_returned"].to_json} | isSingleUse: #{self.attributes["is_singleuse"].to_json}}")
+          DATABASE_LOGGER.info("DELETE RENTING | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data { Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Checkout Date: #{self.attributes["checkout_date"].to_json} | Rental Date: #{self.attributes["rental_date"].to_json} | Quantity: #{self.attributes["quantity"].to_json} | isReturned: #{self.attributes["is_returned"].to_json} | isSingleUse: #{self.attributes["is_singleuse"].to_json}}")
         end
         if(self.class.name == "Item")
-          Rails.logger.info("DELETE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("DELETE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
         end
         if(self.class.name == "User")
-          Rails.logger.info("DELETE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("DELETE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
         end
         if(self.class.name == "Purchase")
-          Rails.logger.info("DELETE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("DELETE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Purchase Date: #{self.attributes["purchase_date"].to_json} | Purchase Quantity: #{self.attributes["purchased_quantity"].to_json}}")
         end
       end
     else
       Rails.logger.tagged("DATABASE_ACTION", self.class.name) do
-        Rails.logger.info("DESTROY | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{attributes_info}")
+      Rails.logger.info("DESTROY | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{attributes_info}")
       end
     end
   end
