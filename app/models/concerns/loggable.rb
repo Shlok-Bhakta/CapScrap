@@ -188,7 +188,7 @@ module Loggable
           DATABASE_LOGGER.info("CREATE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {Item ID: #{self.attributes["id"].to_json} | Description: #{self.attributes["description"].to_json} | Location: #{self.attributes["location"].to_json} | Category ID: #{self.attributes["category_id"].to_json} | Category: #{Category.find_by(id: self.attributes["category_id"])&.name}")
         end
         if(self.class.name == "User")
-          DATABASE_LOGGER.info("CREATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("CREATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {User ID: #{self.attributes["id"].to_json} | Email: #{self.attributes["email"].to_json} | Full Name: #{self.attributes["full_name"]} | Role ID: #{self.attributes["role_id"].to_json} | Role: #{Role.find_by(id: self.attributes["role_id"])&.name}}")
         end
         if(self.class.name == "Purchase")
           DATABASE_LOGGER.info("CREATE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Purchase Date: #{self.attributes["purchase_date"].to_json} | Purchase Quantity: #{self.attributes["purchased_quantity"].to_json}}")
@@ -242,7 +242,9 @@ module Loggable
           DATABASE_LOGGER.info("CHANGES: #{changes.to_json}")  
         end
         if(self.class.name == "User")
-          DATABASE_LOGGER.info("UPDATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("UPDATE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id}")
+          DATABASE_LOGGER.info("BEFORE: Data {User ID: #{previous_state["id"].to_json} | Email: #{previous_state["email"].to_json} | Full Name: #{previous_state["full_name"]} | Role ID: #{previous_state["role_id"].to_json} | Role: #{Role.find_by(id: previous_state["role_id"])&.name}}")
+          DATABASE_LOGGER.info("AFTER: Data {User ID: #{current_state["id"].to_json} | Email: #{current_state["email"].to_json} | Full Name: #{current_state["full_name"]} | Role ID: #{current_state["role_id"].to_json} | Role: #{Role.find_by(id: current_state["role_id"])&.name}}")
           DATABASE_LOGGER.info("CHANGES: #{changes.to_json}")  
         end
         if(self.class.name == "Purchase")
@@ -276,7 +278,7 @@ module Loggable
           DATABASE_LOGGER.info("DELETE ITEM | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {Item ID: #{self.attributes["id"].to_json} | Description: #{self.attributes["description"].to_json} | Location: #{self.attributes["location"].to_json} | Category ID: #{self.attributes["category_id"].to_json} | Category: #{Category.find_by(id: self.attributes["category_id"])&.name}")
         end
         if(self.class.name == "User")
-          DATABASE_LOGGER.info("DELETE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data: #{self.attributes.except("created_at", "updated_at").to_json}")
+          DATABASE_LOGGER.info("DELETE USER | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {User ID: #{self.attributes["id"].to_json} | Email: #{self.attributes["email"].to_json} | Full Name: #{self.attributes["full_name"]} | Role ID: #{self.attributes["role_id"].to_json} | Role: #{Role.find_by(id: self.attributes["role_id"])&.name}}")
         end
         if(self.class.name == "Purchase")
           DATABASE_LOGGER.info("DELETE PURCHASE | Time: #{timestamp} | User: #{user} | ID: #{self.id} | Data {Item ID: #{self.attributes["item_id"].to_json} | Item Name: #{Item.find_by(id: self.attributes['item_id'])&.description} | User ID: #{self.attributes["user_id"].to_json} | User Email: #{User.find_by(id: self.attributes['user_id'])&.email} | Purchase Date: #{self.attributes["purchase_date"].to_json} | Purchase Quantity: #{self.attributes["purchased_quantity"].to_json}}")
