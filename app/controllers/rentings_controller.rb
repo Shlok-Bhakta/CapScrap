@@ -12,6 +12,7 @@ class RentingsController < ApplicationController
 
   # GET /rentings/1 or /rentings/1.json
   def show
+    log_view(@item)
   end
 
   # GET /rentings/new

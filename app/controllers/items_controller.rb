@@ -15,6 +15,7 @@ class ItemsController < ApplicationController
 
   # GET /items/1 or /items/1.json
   def show
+    log_view(@item)
   end
 
   # GET /items/new

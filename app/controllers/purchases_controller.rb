@@ -12,6 +12,7 @@ class PurchasesController < ApplicationController
 
   # GET /purchases/1 or /purchases/1.json
   def show
+    log_view(@item)
   end
 
   # GET /purchases/new
