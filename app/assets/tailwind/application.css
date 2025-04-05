@@ -7,6 +7,7 @@
   --color-secondary: #ee8a8a;
   --color-accent: #f14141;
   --color-confirm: #88E788;
+  --color-confirm-hover: #6db96d;
 }
 @layer base {
     .dark {
@@ -16,6 +17,7 @@
       --color-secondary: #713131;
       --color-accent: #cc5c5c;
       --color-confirm: #34C759;
+      --color-confirm-hover: #22893c;
     }
 
     .colorblind{

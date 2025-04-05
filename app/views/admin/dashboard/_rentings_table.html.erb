@@ -20,6 +20,7 @@
           </th>
           <th class="p-2 text-left text-content" data-font-size="16">Status</th>
           <th class="p-2 text-left text-content" data-font-size="16">Single Use</th>
+          <th class="p-2 text-left text-content" data-font-size="16">Comments</th>
           <th class="p-2 text-left text-content" data-font-size="16">Actions</th>
         </tr>
       </thead>
@@ -50,6 +51,31 @@
                           class: renting.is_singleuse ? 'px-2 py-1 bg-confirm text-text rounded' : 'px-2 py-1 bg-secondary text-text rounded',
                           data: { disable_with: "Updating..." } %>
             <% end %>
+          </td>
+          <td class="p-2 text-content" data-font-size="16">
+            <button
+              type="button"
+              class="px-2 py-1 bg-confirm text-text rounded hover:bg-confirm-hover"
+              onclick="document.getElementById('comment-modal-<%= renting.id %>').classList.remove('hidden')"
+            >
+              Add Comment
+            </button>
+            <div
+              id="comment-modal-<%= renting.id %>"
+              class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+            >
+              <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-md p-4 relative">
+                <button
+                  type="button"
+                  class="absolute top-2 right-2 text-gray-500 hover:text-black"
+                  onclick="document.getElementById('comment-modal-<%= renting.id %>').classList.add('hidden')"
+                >
+                  &times;
+                </button>
+
+                <h2 class="text-lg font-semibold mb-2">Add Comment</h2>
+              </div>
+            </div>
           </td>
           <td class="p-2 text-content" data-font-size="16">
             <%= form_with(url: admin_dashboard_delete_renting_path(id: renting.id), 
