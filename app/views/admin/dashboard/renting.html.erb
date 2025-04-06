@@ -1,27 +1,30 @@
 <%# protection to ensure only teachers can access this page %>
-
 <% if current_user.role_id == 3 %>
   <div class="flex flex-col w-full h-full">
-    <%= form_with url: admin_dashboard_renting_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
-      
-      <%= f.text_field :query,
-          placeholder: "Search by name or item...",
-          class: "mb-4 p-2 border rounded w-1/2 text-content",
-          "data-font-size": { font_size: 16 },
-          data: {
-            controller: "search",
-            action: "input->search#search"
-          } %>
+    <%# Search Section %>
+    <div class="mb-6 w-full">
+      <h2 class="text-lg font-semibold mb-2 text-text text-content" data-font-size="18">Search Rentals</h2>
+      <%= form_with url: admin_dashboard_renting_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
+        <%= f.text_field :query,
+            placeholder: "Enter a student name or item description",
+            class: "p-2 border rounded w-1/2 text-content",
+            "data-font-size": { font_size: 16 },
+            data: {
+              controller: "search",
+              action: "input->search#search"
+            } %>
+      <% end %>
+    </div>
 
-    <% end %>
-
-    <div class="mb-8 w-full">
-        <div class="text-text text-content" data-font-size="16">Rent an Item</div>
-        <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "w-full" do |f| %>
-          <div data-controller="renting-search" class="flex flex-row gap-4 w-full">
+    <%# Add New Renting Section %>
+    <div class="bg-blue/5 rounded-lg p-6 mb-8 w-full border border-blue/10">
+      <h2 class="text-lg font-semibold mb-4 text-text text-content" data-font-size="18">Create New Rental</h2>
+      <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "w-full" do |f| %>
+        <div data-controller="renting-search" class="flex flex-row gap-4 w-full">
           <div class="relative flex-1">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Student</label>
             <%= f.text_field :user,
-                  placeholder: "Search for a user...",
+                  placeholder: "Enter student name",
                   class: "w-full p-2 border rounded text-content",
                   "data-font-size": { font_size: 16 },
                   required: true,
@@ -34,52 +37,60 @@
           </div>
 
           <div class="relative flex-1">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Item</label>
             <%= f.text_field :item,
-            placeholder: "Search for an item...",
-            class: "w-full p-2 border rounded text-content",
-            "data-font-size": { font_size: 16 },
-            required: true,
-            data: {
-              renting_search_target: "itemField",
-              action: "input->renting-search#searchItems"
-            } %>
+                placeholder: "Enter item description",
+                class: "w-full p-2 border rounded text-content",
+                "data-font-size": { font_size: 16 },
+                required: true,
+                data: {
+                  renting_search_target: "itemField",
+                  action: "input->renting-search#searchItems"
+                } %>
             <div data-renting-search-target="itemSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
             </div>
           </div>
 
-          <%= f.number_field :quantity,
-          placeholder: "Quantity",
-          min: 1,
-          class: "w-48 p-2 border rounded text-content",
-          "data-font-size": { font_size: 16 },
-          required: true %>
-
-          <div class="flex place-items-center gap-2 text-content" data-font-size="16">
-          <%= f.check_box :is_singleuse
-          %>
-          <%= f.label "Is Single Use?" %>
+          <div class="flex-none w-48">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Quantity</label>
+            <%= f.number_field :quantity,
+                placeholder: "Enter amount",
+                min: 1,
+                class: "w-full p-2 border rounded text-content",
+                "data-font-size": { font_size: 16 },
+                required: true %>
           </div>
 
-          <%= f.submit "Rent",
-              class: "px-4 py-2 bg-confirm hover:bg-confirm text-text rounded text-content", "data-font-size": { font_size: 16 } %>
+          <div class="flex flex-col justify-end">
+            <div class="flex items-center gap-2 text-content" data-font-size="16">
+              <%= f.check_box :is_singleuse %>
+              <%= f.label "Is Single Use?" %>
+            </div>
           </div>
-        <% end %>
+
+          <div class="flex items-end">
+            <%= f.submit "Create Rental",
+                class: "h-10 px-6 bg-confirm hover:bg-confirm/90 text-text rounded-md shadow-sm text-content transition-colors duration-200", 
+                "data-font-size": { font_size: 16 } %>
+          </div>
+        </div>
+      <% end %>
     </div>
 
-    <%= turbo_frame_tag "rentings_table" do %>
-      <%= render partial: "rentings_table",
-                locals: {
-                  rentings: @rentings,
-                  sort_field: params[:sort],
-                  sort_direction: params[:direction],
-                  pagy: @pagy
-                } %>
-    <% end %>
+    <%# Rentings Table Section %>
+    <div class="w-full">
+      <h2 class="text-lg font-semibold mb-4 text-text text-content" data-font-size="18">Current Rentals</h2>
+      <%= turbo_frame_tag "rentings_table" do %>
+        <%= render partial: "rentings_table",
+                  locals: {
+                    rentings: @rentings,
+                    sort_field: params[:sort],
+                    sort_direction: params[:direction],
+                    pagy: @pagy
+                  } %>
+      <% end %>
+    </div>
   </div>
-
 <% else %>
-
-<h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
-
+  <h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
 <% end %>
-

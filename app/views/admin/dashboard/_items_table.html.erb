@@ -1,36 +1,4 @@
 <div class="flex flex-col" data-controller="item font">
-  <div class="mb-4">
-
-    <%# form to actually add a new item %>
-    <div class="text-text text-content" data-font-size="16">Create new item</div>
-    <%= form_with url: admin_dashboard_items_path, method: :post, data: { turbo_frame: "new-item-row" }, class: "flex flex-row gap-2" do |f| %>
-      <%= f.text_field :description,
-          placeholder: "Description",
-          class: "w-full p-1 border rounded text-content",
-          required: true, 
-          "data-font-size": { font_size: 16 } %>
-      <%= f.text_field :location,
-          placeholder: "Location",
-          class: "w-full p-1 border rounded text-content",
-          required: true,
-           "data-font-size": { font_size: 16 } %>
-      <%= f.select :category_id,
-                    options_from_collection_for_select(categories, 'id', 'name'),
-                    class: "w-full p-1 border rounded text-content",
-                    data: { item_id: nil },
-                    "data-font-size": { font_size: 16 }
-                     %>
-      <%= f.submit "Add Item",
-                    class: "bg-confirm hover:bg-confirm text-white rounded px-2 py-1 mr-2 text-content",
-                    data: { action: "click->item#saveNewRow" },
-                     "data-font-size": { font_size: 16 } %>
-      <%= f.submit "Clear",
-                    class: "bg-muted hover:bg-muted text-white rounded px-2 py-1 text-content",
-                    data: { action: "click->item#cancelNewRow" },
-                    "data-font-size": { font_size: 16 } %>
-    <% end %>
-  </div>
-
   <table class="w-full" data-item-target="table">
     <thead>
       <tr class="border-b">
@@ -53,7 +21,7 @@
     </thead>
     <tbody>
     <% items.each do |item| %>
-      <tr class="border-b hover:bg-muted" data-item-id="<%= item.id %>">
+      <tr class="border-b hover:bg-muted/10" data-item-id="<%= item.id %>">
         <td class="p-2 text-content" data-font-size="16">
           <span class="description-text"><%= item.description %></span>
           <input type="text" name="description"
@@ -76,25 +44,23 @@
           <span class="category-text"><%= item.category.name %></span>
         </td>
 
-        <%# if quantity < 5 then make it red %>
-        
-          <% if item.quantity < 5 %>
-          <td class="p-2 bg-accent text-center text-content" data-font-size="16">
-            <span class="text-text">
-              <%= item.quantity %>
-            </span>
-         </td>
-          <% else %>
-            <td class="p-2 text-center text-content" data-font-size="16">
-            <span class="text-text">
-              <%= item.quantity %>
-            </span>
-            </td>
-          <% end %>
+        <% if item.quantity < 5 %>
+        <td class="p-2 bg-error/20 text-center text-content" data-font-size="16">
+          <span class="text-text">
+            <%= item.quantity %>
+          </span>
+       </td>
+        <% else %>
+          <td class="p-2 text-center text-content" data-font-size="16">
+          <span class="text-text">
+            <%= item.quantity %>
+          </span>
+          </td>
+        <% end %>
         <td class="p-2 text-content" data-font-size="16"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td class="p-2 flex space-x-2">
           <button type="button"
-                  class="edit-button text-info hover:text-info"
+                  class="edit-button text-info hover:text-info/80"
                   data-action="click->item#editRow"
                   data-item-id="<%= item.id %>">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +68,7 @@
             </svg>
           </button>
           <button type="button"
-                  class="delete-button text-error hover:text-error"
+                  class="delete-button text-error hover:text-error/80"
                   data-action="click->item#deleteRow"
                   data-item-id="<%= item.id %>">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,8 +89,8 @@
 </div>
 
 <template id="new-item-row" data-item-target="newRow">
-  <tr class="border-b hover:bg-gray-50 new-item-row">
-    <td class="p-2 text-contnent" data-font-size="16">
+  <tr class="border-b hover:bg-muted/10 new-item-row">
+    <td class="p-2 text-content" data-font-size="16">
       <input type="text" class="w-full p-1 border rounded" name="description" placeholder="Description" required>
     </td>
     <td class="p-2 text-content" data-font-size="16">
@@ -136,14 +102,15 @@
                     class: "w-full p-1 border rounded" %>
     </td>
     <td class="p-2 text-content" data-font-size="16">-</td>
-    <td class="p-2 flex space-x-2 text-content" data-font-size="16">
+    <td class="p-2 text-content" data-font-size="16">-</td>
+    <td class="p-2 flex space-x-2">
       <button type="button"
-              class="save-button bg-confirm hover:bg-confirm text-white rounded px-2 py-1"
+              class="save-button bg-confirm hover:bg-confirm/90 text-text rounded px-3 py-1.5"
               data-action="click->item#saveNewRow">
         Save
       </button>
       <button type="button"
-              class="cancel-button bg-muted hover:bg-muted text-white rounded px-2 py-1"
+              class="cancel-button bg-muted hover:bg-muted/90 text-text rounded px-3 py-1.5"
               data-action="click->item#cancelNewRow">
         Cancel
       </button>

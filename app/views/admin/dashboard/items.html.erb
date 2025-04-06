@@ -1,28 +1,83 @@
 <%# protection to ensure only teachers can access this page %>
 <% if current_user.role_id == 3 %>
   <div class="flex flex-col w-full h-full">
-    <%= form_with url: admin_dashboard_items_path, method: :get, data: { turbo_frame: "items_table", turbo_action: "advance" } do |f| %>
-      <%= f.text_field :query,
-          placeholder: "Search by description, location or category...",
-          class: "mb-4 p-2 border rounded w-1/2 text-content",
-          "data-font-size": { font_size: 16 },
-          data: {
-            controller: "search",
-            action: "input->search#search"
-          } %>
-    <% end %>
+    <%# Search Section %>
+    <div class="mb-6 w-full">
+      <h2 class="text-lg font-semibold mb-2 text-text text-content" data-font-size="18">Search Items</h2>
+      <%= form_with url: admin_dashboard_items_path, method: :get, data: { turbo_frame: "items_table", turbo_action: "advance" } do |f| %>
+        <%= f.text_field :query,
+            placeholder: "Search by description, location or category...",
+            class: "p-2 border rounded w-1/2 text-content",
+            "data-font-size": { font_size: 16 },
+            data: {
+              controller: "search",
+              action: "input->search#search"
+            } %>
+      <% end %>
+    </div>
 
-    <%= turbo_frame_tag "items_table" do %>
-      <%= render partial: "items_table",
-                locals: {
-                  items: @items,
-                  categories: @categories,
-                  sort_field: params[:sort],
-                  sort_direction: params[:direction],
-                  pagy: @pagy
-                } %>
-    <% end %>
+    <%# Add New Item Section %>
+    <div class="bg-blue/5 rounded-lg p-6 mb-8 w-full border border-blue/10">
+      <h2 class="text-lg font-semibold mb-4 text-text text-content" data-font-size="18">Add New Item</h2>
+      <div data-controller="item-form" class="w-full">
+        <div class="flex flex-row gap-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Description</label>
+            <input type="text" 
+                   placeholder="Enter item description"
+                   class="w-full p-2 border rounded text-content"
+                   data-item-form-target="description"
+                   data-font-size="16">
+          </div>
+
+          <div class="flex-1">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Location</label>
+            <input type="text" 
+                   placeholder="Enter item location"
+                   class="w-full p-2 border rounded text-content"
+                   data-item-form-target="location"
+                   data-font-size="16">
+          </div>
+
+          <div class="flex-1">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Category</label>
+            <select class="w-full p-2 border rounded text-content "
+                    data-item-form-target="category"
+                    data-font-size="16">
+              <option value="">Select Category</option>
+              <% @categories.each do |category| %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="flex items-end">
+            <button type="button"
+                    class="h-10 px-6 bg-confirm hover:bg-confirm/90 text-text rounded-md shadow-sm text-content transition-colors duration-200"
+                    data-action="click->item-form#createItem"
+                    data-font-size="16">
+              Create Item
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Items Table Section %>
+    <div class="w-full">
+      <h2 class="text-lg font-semibold mb-4 text-text text-content" data-font-size="18">Item List</h2>
+      <%= turbo_frame_tag "items_table" do %>
+        <%= render partial: "items_table",
+                  locals: {
+                    items: @items,
+                    categories: @categories,
+                    sort_field: params[:sort],
+                    sort_direction: params[:direction],
+                    pagy: @pagy
+                  } %>
+      <% end %>
+    </div>
   </div>
 <% else %>
-  <h1 class="font-bold text-4xl text-content" data-font-size="16">You are not authorized to view this page</h1>
+  <h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
 <% end %>
