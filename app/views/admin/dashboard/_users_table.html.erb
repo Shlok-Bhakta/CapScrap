@@ -18,7 +18,7 @@
     </thead>
     <tbody>
     <% users.each do |user| %>
-      <tr class="border-b hover:bg-gray-50">
+      <tr class="border-b hover:bg-muted">
         <td class="p-2 text-content" data-font-size="16"><%= user.full_name %></td>
         <td class="p-2 text-content" data-font-size="16"><%= user.email %></td>
         <td class="p-2 text-content" data-font-size="16">
@@ -36,6 +36,6 @@
   <% if users.any? %>
     <%= pagination_nav(pagy) %>
   <% else %>
-    <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No users found</p>
+    <p class="text-center text-muted mt-4 text-content" data-font-size="16">No users found</p>
   <% end %>
 </div>

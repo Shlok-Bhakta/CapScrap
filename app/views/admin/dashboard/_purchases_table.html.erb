@@ -22,7 +22,7 @@
     </thead>
     <tbody>
     <% purchases.each do |purchase| %>
-      <tr class="border-b hover:bg-gray-50">
+      <tr class="border-b hover:bg-muted">
         <td class="p-2 text-content" data-font-size="16">
           <span class="description-text"><%= purchase.item.description %></span>
         </td>
@@ -42,7 +42,7 @@
         </td>
         <td class="p-2 flex space-x-2 text-content" data-font-size="16">
           <button type="button" 
-                  class="text-blue-600 hover:text-blue-800" 
+                  class="text-info hover:text-info"
                   data-purchase-id="<%= purchase.id %>"
                   data-action="purchase#editRow">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@
             </svg>
           </button>
           <button type="button" 
-                  class="text-red-600 hover:text-red-800" 
+                  class="text-error hover:text-error"
                   data-purchase-id="<%= purchase.id %>"
                   data-action="purchase#deletePurchase">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,6 +66,6 @@
   <% if purchases.any? %>
     <%= pagination_nav(pagy) %>
   <% else %>
-    <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No purchases found</p>
+    <p class="text-center text-muted mt-4 text-content" data-font-size="16">No purchases found</p>
   <% end %>
 </div>

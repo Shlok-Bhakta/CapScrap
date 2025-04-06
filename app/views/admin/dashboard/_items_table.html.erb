@@ -21,11 +21,11 @@
                     "data-font-size": { font_size: 16 }
                      %>
       <%= f.submit "Add Item",
-                    class: "bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1 mr-2 text-content",
+                    class: "bg-confirm hover:bg-confirm text-white rounded px-2 py-1 mr-2 text-content",
                     data: { action: "click->item#saveNewRow" },
                      "data-font-size": { font_size: 16 } %>
       <%= f.submit "Clear",
-                    class: "bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1 text-content",
+                    class: "bg-muted hover:bg-muted text-white rounded px-2 py-1 text-content",
                     data: { action: "click->item#cancelNewRow" },
                     "data-font-size": { font_size: 16 } %>
     <% end %>
@@ -53,7 +53,7 @@
     </thead>
     <tbody>
     <% items.each do |item| %>
-      <tr class="border-b hover:bg-gray-50" data-item-id="<%= item.id %>">
+      <tr class="border-b hover:bg-muted" data-item-id="<%= item.id %>">
         <td class="p-2 text-content" data-font-size="16">
           <span class="description-text"><%= item.description %></span>
           <input type="text" name="description"
@@ -94,7 +94,7 @@
         <td class="p-2 text-content" data-font-size="16"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td class="p-2 flex space-x-2">
           <button type="button"
-                  class="edit-button text-blue-600 hover:text-blue-800"
+                  class="edit-button text-info hover:text-info"
                   data-action="click->item#editRow"
                   data-item-id="<%= item.id %>">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +102,7 @@
             </svg>
           </button>
           <button type="button"
-                  class="delete-button text-red-600 hover:text-red-800"
+                  class="delete-button text-error hover:text-error"
                   data-action="click->item#deleteRow"
                   data-item-id="<%= item.id %>">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@
   <% if items.any? %>
     <%= pagination_nav(pagy) %>
   <% else %>
-    <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No items found</p>
+    <p class="text-center text-muted mt-4 text-content" data-font-size="16">No items found</p>
   <% end %>
 </div>
 
@@ -138,12 +138,12 @@
     <td class="p-2 text-content" data-font-size="16">-</td>
     <td class="p-2 flex space-x-2 text-content" data-font-size="16">
       <button type="button"
-              class="save-button bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1"
+              class="save-button bg-confirm hover:bg-confirm text-white rounded px-2 py-1"
               data-action="click->item#saveNewRow">
         Save
       </button>
       <button type="button"
-              class="cancel-button bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1"
+              class="cancel-button bg-muted hover:bg-muted text-white rounded px-2 py-1"
               data-action="click->item#cancelNewRow">
         Cancel
       </button>
