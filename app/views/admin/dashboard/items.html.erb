@@ -7,7 +7,7 @@
       <%= form_with url: admin_dashboard_items_path, method: :get, data: { turbo_frame: "items_table", turbo_action: "advance" } do |f| %>
         <%= f.text_field :query,
             placeholder: "Search by description, location or category...",
-            class: "p-2 border rounded w-1/2 text-content",
+            class: "p-2 border rounded w-full md:w-1/2 text-content",
             "data-font-size": { font_size: 16 },
             data: {
               controller: "search",
@@ -20,7 +20,7 @@
     <div class="bg-blue/5 rounded-lg p-6 mb-8 w-full border border-blue/10">
       <h2 class="text-lg font-semibold mb-4 text-text text-content" data-font-size="18">Add New Item</h2>
       <div data-controller="item-form" class="w-full">
-        <div class="flex flex-row gap-4">
+        <div class="flex flex-col md:flex-row gap-4">
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Description</label>
             <input type="text" 
@@ -51,9 +51,9 @@
             </select>
           </div>
 
-          <div class="flex items-end">
+          <div class="flex items-center md:items-end w-full md:w-auto">
             <button type="button"
-                    class="h-10 px-6 bg-confirm hover:bg-confirm/90 text-text rounded-md shadow-sm text-content transition-colors duration-200"
+                    class="w-full md:w-auto h-10 px-6 bg-confirm hover:bg-confirm/90 text-text rounded-md shadow-sm text-content transition-colors duration-200"
                     data-action="click->item-form#createItem"
                     data-font-size="16">
               Create Item

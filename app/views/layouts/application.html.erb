@@ -52,11 +52,11 @@
     </script>
 
       <% if current_user %>
-        <nav class="flex bg-primary px-4 py-2 shadow-md h-12 items-center">
+        <nav class="flex flex-wrap bg-primary px-4 py-2 shadow-md min-h-[3rem] items-center gap-2">
           <%# logo %>
-          <%= image_tag "logo.png", class: "h-8 aspect-auto" %>
+          <%= image_tag "logo.png", class: "h-8 aspect-auto order-first" %>
           <%# spacer to push content to the middle %>
-          <div class="flex-1"></div>
+          <div class="flex-1 hidden lg:block"></div>
           <%# navigate to items depending on the user %>
           <% if current_user.role_id == 1 %>
           <%# student %>
@@ -70,16 +70,15 @@
             <% if current_user.role_id == 3 %>
               <%# teacher %>
               <%# button to go to /admin/dashboard/items %>
-              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
-              <%# button to go to /admin/dashboard/users %>
-              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
-              <%# button to go to /admin/dashboard/renting %>
-              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
-              <%# button to go to /admin/dashboard/purchased %>
-              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
+              <div class="flex flex-wrap gap-2 w-full lg:w-auto order-last lg:order-none">
+                <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+                <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+                <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+                <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+              </div>
           <% end %>
           <%# spacer to push content to the right %>
-          <div class="flex-1"></div>
+          <div class="flex-1 hidden lg:block"></div>
 
           <div id="google_translate_element" class="mr-2"></div>
           
@@ -97,10 +96,12 @@
             </select>
           </div> %>
 
-          <div class="flex items-center">
-            <label for="font-size-slider" class="text-white text-sm mr-2 text-content clamp-font-size" data-font-size="16">Font Size:</label>
-            <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-32">
-            <span id="font-size-value" class="text-white ml-2">+0px</span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <label for="font-size-slider" class="text-white text-sm text-content clamp-font-size whitespace-nowrap" data-font-size="16">Font Size:</label>
+            <div class="flex items-center gap-2">
+              <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-24 lg:w-32">
+              <span id="font-size-value" class="text-white min-w-[3rem]">+0px</span>
+            </div>
           </div>
 
           <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
@@ -115,7 +116,7 @@
           <%# pfp %>
           <img src="<%= current_user.avatar_url %>" alt="<%= current_user.email %>" title="<%= current_user.email %>" class="h-8 w-8 rounded-full ml-2">
         </nav>
-        <main class="container mx-auto mt-28 px-5 flex">
+        <main class="container mx-auto mt-28 px-3 lg:px-5 flex">
           <%# create a navbar %>
             <%= yield %>
         </main>

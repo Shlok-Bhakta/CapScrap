@@ -1,5 +1,6 @@
 <div class="flex flex-col" data-controller="font">
-  <table class="w-full">
+  <div class="overflow-x-auto -mx-3 lg:mx-0">
+    <table class="w-full min-w-[600px]">
     <thead>
       <tr class="border-b">
         <th class="p-2 text-left text-content" data-font-size="16">
@@ -31,7 +32,8 @@
       </tr>
     <% end %>
     </tbody>
-  </table>
+    </table>
+  </div>
   
   <% if users.any? %>
     <%= pagination_nav(pagy) %>
