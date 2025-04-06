@@ -35,7 +35,7 @@ class Admin::DashboardController < ApplicationController
     # Calculate and attach purchased quantity to each item
     @items.each do |item|
       purchased_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity) - Renting.where(item_id: item.id).where(is_returned: false).sum(:quantity)
-      total_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity);
+      total_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity)
 
       # Dynamically add a quantity method to each item object
       item.define_singleton_method(:quantity) do
@@ -43,7 +43,7 @@ class Admin::DashboardController < ApplicationController
       end
       item.define_singleton_method(:total_quantity) do
         total_quantity
-      end 
+      end
     end
 
     @categories = Category.all
