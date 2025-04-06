@@ -82,6 +82,47 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def update_quantity
+    @renting = Renting.find(params[:id])
+    if @renting.update(quantity_params)
+      respond_to do |format|
+        format.json { render json: { success: true } }
+        format.turbo_stream {
+          @rentings_query = Renting.search(params[:query]).sort_by_field(params[:sort], params[:direction])
+          @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
+          render turbo_stream: turbo_stream.replace(
+            "rentings_table",
+            partial: "admin/dashboard/rentings_table",
+            locals: {
+              rentings: @rentings,
+              pagy: @pagy,
+              sort_field: params[:sort],
+              sort_direction: params[:direction]
+            }
+          )
+        }
+        format.html { redirect_to admin_dashboard_renting_path, notice: "Quantity updated." }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { success: false, error: @renting.errors.full_messages.join(", ") }, status: :unprocessable_entity }
+        format.turbo_stream {
+          render turbo_stream: turbo_stream.replace(
+            "rentings_table",
+            partial: "admin/dashboard/rentings_table",
+            locals: {
+              rentings: Renting.all,
+              pagy: @pagy,
+              sort_field: params[:sort],
+              sort_direction: params[:direction]
+            }
+          ), status: :unprocessable_entity
+        }
+        format.html { redirect_to admin_dashboard_renting_path, alert: @renting.errors.full_messages.join(", ") }
+      end
+    end
+  end
+
   def toggle_renting
     @renting = Renting.find(params[:id])
     @renting.toggle!(:is_returned)
@@ -130,7 +171,7 @@ class Admin::DashboardController < ApplicationController
     @renting.toggle!(:is_singleuse)
 
     @rentings_query = Renting.search(params[:query])
-                      .sort_by_field(params[:sort], params[:direction])
+                    .sort_by_field(params[:sort], params[:direction])
     @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
 
     respond_to do |format|
@@ -165,37 +206,35 @@ class Admin::DashboardController < ApplicationController
 
   def delete_renting
     @renting = Renting.find(params[:id])
-    @renting.destroy
-
-    @rentings_query = Renting.search(params[:query])
-                      .sort_by_field(params[:sort], params[:direction])
-    @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
-
-    respond_to do |format|
-      format.turbo_stream {
-        render turbo_stream: [
-          turbo_stream.remove("renting_#{@renting.id}"),
-          turbo_stream.replace(
-            "rentings_table",
-            partial: "admin/dashboard/rentings_table",
-            locals: {
-              rentings: @rentings,
-              pagy: @pagy,
-              sort_field: params[:sort],
-              sort_direction: params[:direction]
-            }
+    if @renting.destroy
+      respond_to do |format|
+        format.json { render json: { success: true } }
+        format.turbo_stream {
+          render turbo_stream: [
+            turbo_stream.remove("renting_#{@renting.id}"),
+            turbo_stream.replace(
+              "rentings_table",
+              partial: "admin/dashboard/rentings_table",
+              locals: {
+                rentings: @rentings,
+                pagy: @pagy,
+                sort_field: params[:sort],
+                sort_direction: params[:direction]
+              }
+            )
+          ]
+        }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { success: false, error: "Failed to delete renting" }, status: :unprocessable_entity }
+        format.turbo_stream {
+          render turbo_stream: turbo_stream.update(
+            "flash",
+            html: "Error deleting renting: Failed to delete"
           )
-        ]
-      }
-    end
-  rescue => e
-    respond_to do |format|
-      format.turbo_stream {
-        render turbo_stream: turbo_stream.update(
-          "flash",
-          html: "Error deleting renting: #{e.message}"
-        )
-      }
+        }
+      end
     end
   end
 
@@ -389,36 +428,6 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
-  def search_items
-    return render json: { error: "Query required" }, status: :unprocessable_entity if params[:query].blank?
-
-    query = params[:query].downcase
-    begin
-      # Find exact matches first
-      exact_matches = Item.includes(:category)
-                        .where("LOWER(description) = ?", query)
-
-      # Then find partial matches, excluding exact matches
-      partial_matches = Item.includes(:category)
-                          .where("LOWER(description) LIKE ?", "%#{query}%")
-                          .where.not(id: exact_matches.select(:id))
-
-      # Combine results with exact matches first
-      @items = (exact_matches + partial_matches).first(5)
-
-      render json: {
-        items: @items.map { |i| {
-          id: i.id,
-          description: i.description,
-          location: i.location,
-          category: i.category.name
-        }}
-      }
-    rescue StandardError => e
-      render json: { error: e.message }, status: :unprocessable_entity
-    end
-  end
-
   def create_purchase
     ActiveRecord::Base.transaction do
       if params[:item_query].present?
@@ -452,25 +461,18 @@ class Admin::DashboardController < ApplicationController
     redirect_to admin_dashboard_purchased_path, alert: e.message
   end
 
-  def update_user_role
-    user = User.find(params[:user_id])
-    if user.update(role_id: params[:role_id])
-      render json: { success: true, message: "Role updated successfully" }
-    else
-      render json: { success: false, message: "Failed to update role" }, status: :unprocessable_entity
-    end
-  end
-
   private
 
-  def check_professor_role
-    unless current_user&.role_id == 3
-      flash[:alert] = "You are not authorized to access this area"
-      redirect_to root_path
-    end
+  def quantity_params
+    params.require(:renting).permit(:quantity)
   end
 
   def item_params
     params.require(:item).permit(:description, :location, :category_id)
+  end
+
+  def check_professor_role
+    return if current_user&.role_id == 3
+    redirect_to root_path, alert: "You are not authorized to view this page"
   end
 end

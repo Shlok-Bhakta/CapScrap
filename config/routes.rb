@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     patch "dashboard/toggle_renting"
     patch "dashboard/toggle_singleuse"
     delete "dashboard/delete_renting"
+    patch "dashboard/update_quantity", to: "dashboard#update_quantity"
+    get "dashboard/edit_renting", to: "dashboard#edit_renting"
 
     get "dashboard/purchased"
     post "dashboard/create_item"

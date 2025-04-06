@@ -31,6 +31,8 @@ class Renting < ApplicationRecord
       order(quantity: direction)
     when "checkout_date"
       order(checkout_date: direction)
+    when "return_date"
+      order(return_date: direction)
     else
       order(created_at: :desc)
     end
