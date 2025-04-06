@@ -7,6 +7,12 @@
   --color-secondary: #ee8a8a;
   --color-accent: #f14141;
   --color-confirm: #88E788;
+
+  /* Additional standard colors */
+  --color-blue: #1e40af;       /* dark blue */
+  --color-green: #166534;      /* dark green */
+  --color-yellow: #92400e;     /* dark yellow/orange */
+  --color-purple: #5b21b6;     /* dark purple */
 }
 @layer base {
     .dark {
@@ -18,24 +24,18 @@
       --color-confirm: #34C759;
     }
 
-    .colorblind{
-      /* filter: grayscale(100%) contrast(1.5); */
-      --color-text: #808080;        /* Grayscale version */
-      --color-background: #d8d8d8;  /* Grayscale version */
-      --color-primary: #7f7f7f;     /* Grayscale version */
-      --color-secondary: #bfbfbf;   /* Grayscale version */
-      --color-accent: #b3b3b3;      /* Grayscale version */
-      --color-confirm: #a8a8a8; 
-    }
+    .high-contrast {
+      --color-text: #ffffff;
+      --color-background: #000000;
+      --color-primary: #111111;
+      --color-secondary: #0a0a0a;
+      --color-accent: #222222; /* very dark gray for subtle difference */
+      --color-confirm: #0d250d;
 
-    .dark.colorblind{
-      --color-text: #d0d0d0;        
-      --color-background: #2a2a2a;  
-      --color-primary: #d1d1d1;     
-      --color-secondary: #5c5c5c;   
-      --color-accent: #a8a8a8;     
-      /* --color-confirm: #7f7f7f;  */
-      --color-confirm: #1c1c1c; 
+      --color-blue: #0a0a23;    /* nearly black blue */
+      --color-green: #0a1f0a;   /* nearly black green */
+      --color-yellow: #1a1505;  /* nearly black yellow/orange */
+      --color-purple: #1a0a1f;  /* nearly black purple */
     }
 
     /* .colorblind {

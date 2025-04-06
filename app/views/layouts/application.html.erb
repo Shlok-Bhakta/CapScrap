@@ -25,17 +25,29 @@
   <body class="bg-background text-text font-sans antialiased">
     <script>
       // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
+      const savedMode = localStorage.getItem('display-mode');
+
+      function applyMode(mode) {
+        document.documentElement.classList.remove('dark', 'high-contrast');
+
+        if (mode === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (mode === 'high-contrast') {
+          document.documentElement.classList.add('high-contrast');
+        }
       }
 
-      //adds themes for colorblind mode
-      if (localStorage.colorMode === 'on') {
-          document.documentElement.classList.remove('colorblind');
+      if (savedMode) {
+        applyMode(savedMode);
       } else {
-          document.documentElement.classList.add('colorblind');
+        // Default detection
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          localStorage.setItem('display-mode', 'dark');
+          applyMode('dark');
+        } else {
+          localStorage.setItem('display-mode', 'light');
+          applyMode('light');
+        }
       }
     </script>
 
@@ -93,14 +105,9 @@
 
           <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
 
-          <%# darkmode slider%>
-          <%= button_tag(type: "button", id: "theme-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md") do %>
-            <%= image_tag "dark.png", id: "theme-icon", alt: "Toggle dark mode" %>
-          <% end %>
-
-          <%# colorblind mode%>
-          <%= button_tag(type: "button", id: "color-toggle", class: "bg-secondary px-2 py-1 w-auto h-8 mr-2 rounded-md flex items-center justify-center text-sm whitespace-nowrap text-text font-medium text-content clamp-font-size", data: { font_size: 16 }) do %>
-            <span id="theme-text">Color On</span>
+          <%# unified theme toggle button %>
+          <%= button_tag(type: "button", id: "mode-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md flex items-center justify-center") do %>
+            <img id="mode-icon" src="https://api.iconify.design/material-symbols:clear-day-rounded.svg" alt="Toggle display mode" />
           <% end %>
 
           <%# logout %>
@@ -408,61 +415,58 @@
     
         document.addEventListener('turbo:load', function() {
           initializeFontSizeSystem();
-          // initializeGoogleTranslate();
           var preferredLang = localStorage.getItem('preferred_language');
-            if (preferredLang) {
-              setTimeout(function() {
-                changeLanguage(preferredLang);
-              }, 500);
-            }else{
-              initializeGoogleTranslate();
+          if (preferredLang) {
+            setTimeout(function() {
+              changeLanguage(preferredLang);
+            }, 500);
+          } else {
+            initializeGoogleTranslate();
+          }
+
+          var modeToggle = document.getElementById('mode-toggle');
+          var modeIcon = document.getElementById('mode-icon');
+
+          function updateIcon(mode) {
+            if (mode === 'light') {
+              modeIcon.src = 'https://api.iconify.design/material-symbols:clear-day-rounded.svg';
+            } else if (mode === 'dark') {
+              modeIcon.src = 'https://api.iconify.design/material-symbols:dark-mode.svg';
+            } else if (mode === 'high-contrast') {
+              modeIcon.src = 'https://api.iconify.design/material-symbols:eye-tracking.svg';
             }
-            
-          var themeToggle = document.getElementById('theme-toggle');
-          var themeIcon = document.getElementById('theme-icon');
-
-          var colorToggle = document.getElementById('color-toggle');
-
-          var darkImage = "<%= asset_path('dark.png') %>";
-          var lightImage = "<%= asset_path('light.png') %>";
-
-          if (document.documentElement.classList.contains('dark')) {
-            themeIcon.src = lightImage;
-          } else {
-            themeIcon.src = darkImage;
           }
 
-          if (localStorage.colorMode === 'off') {
-              colorToggle.innerText = "Color On";
-          } else {
-              colorToggle.innerText = "Color Off";
-          }
+          function applyMode(mode) {
+            document.documentElement.classList.remove('dark', 'high-contrast');
 
-          themeToggle.addEventListener('click', function() {
-            if (document.documentElement.classList.contains('dark')) {
-              // Switch to light mode.
-              document.documentElement.classList.remove('dark');
-              localStorage.theme = 'light';
-              themeIcon.src = darkImage;
-            } else {
-              // Switch to dark mode.
+            if (mode === 'dark') {
               document.documentElement.classList.add('dark');
-              localStorage.theme = 'dark';
-              themeIcon.src = lightImage;
+            } else if (mode === 'high-contrast') {
+              document.documentElement.classList.add('high-contrast');
             }
-          });
 
-          colorToggle.addEventListener('click', function() {
-            if (document.documentElement.classList.contains('colorblind')) {
-              document.documentElement.classList.remove('colorblind');
-              localStorage.colorMode = 'on';
-              colorToggle.innerText = "Color Off";  // Correct text
+            localStorage.setItem('display-mode', mode);
+            updateIcon(mode);
+          }
+
+          // Initialize icon based on saved mode
+          var savedMode = localStorage.getItem('display-mode') || 'light';
+          applyMode(savedMode);
+
+          modeToggle.addEventListener('click', function() {
+            var currentMode = localStorage.getItem('display-mode') || 'light';
+            var nextMode;
+
+            if (currentMode === 'light') {
+              nextMode = 'dark';
+            } else if (currentMode === 'dark') {
+              nextMode = 'high-contrast';
             } else {
-              document.documentElement.classList.add('colorblind');
-              console.log("Colorblind mode active?", document.documentElement.classList.contains('colorblind'));
-              localStorage.colorMode = 'off';
-              colorToggle.innerText = "Color On";   // Correct text
+              nextMode = 'light';
             }
+
+            applyMode(nextMode);
           });
         });
       </script>
