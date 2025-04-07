@@ -21,7 +21,8 @@ export default class extends Controller {
       return
     }
 
-    fetch(`/admin/dashboard/search_users?query=${encodeURIComponent(query)}`, {
+    const base = window.location.pathname.includes('/ta/') ? '/ta/dashboard' : '/admin/dashboard';
+    fetch(`${base}/search_users?query=${encodeURIComponent(query)}`, {
       headers: {
         'Accept': 'application/json',
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
@@ -54,7 +55,8 @@ export default class extends Controller {
       return
     }
 
-    fetch(`/admin/dashboard/search_items?query=${encodeURIComponent(query)}`, {
+    const base = window.location.pathname.includes('/ta/') ? '/ta/dashboard' : '/admin/dashboard';
+    fetch(`${base}/search_items?query=${encodeURIComponent(query)}`, {
       headers: {
         'Accept': 'application/json',
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
@@ -95,6 +97,7 @@ export default class extends Controller {
   }
 
   showUserSuggestions(users) {
+    console.log("showing suggestions");
     const suggestionsList = users.map(user => `
       <div class="p-2 hover:bg-gray-100 cursor-pointer" data-action="click->renting-search#selectUser">
         <div class="font-medium">${user.full_name}</div>

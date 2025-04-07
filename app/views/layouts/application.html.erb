@@ -59,23 +59,27 @@
           <div class="flex-1 hidden lg:block"></div>
           <%# navigate to items depending on the user %>
           <% if current_user.role_id == 1 %>
-          <%# student %>
-            <h1 class="text-content" data-font-size="36">I am a student</h1>
+            <%# student %>
+            <div class="flex flex-wrap gap-2 w-full lg:w-auto order-last lg:order-none">
+              <%= link_to "View Items", student_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+            </div>
           <% end %>
-          <% if current_user.role_id == 2 %>  
+          <% if current_user.role_id == 2 %>
             <%# teaching assistant %>
-            <h1 class="text-content" data-font-size="36">I am a teaching assistant</h1>
-
-          <% end%>
-            <% if current_user.role_id == 3 %>
-              <%# teacher %>
-              <%# button to go to /admin/dashboard/items %>
-              <div class="flex flex-wrap gap-2 w-full lg:w-auto order-last lg:order-none">
-                <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
-                <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
-                <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
-                <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
-              </div>
+            <div class="flex flex-wrap gap-2 w-full lg:w-auto order-last lg:order-none">
+              <%= link_to "View Items", ta_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+              <%= link_to "View Users", ta_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+              <%= link_to "View Renting", ta_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+            </div>
+          <% end %>
+          <% if current_user.role_id == 3 %>
+            <%# teacher %>
+            <div class="flex flex-wrap gap-2 w-full lg:w-auto order-last lg:order-none">
+              <%= link_to "View Items", admin_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+              <%= link_to "View Users", admin_dashboard_users_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+              <%= link_to "View Renting", admin_dashboard_renting_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+              <%= link_to "View Purchased", admin_dashboard_purchased_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
+            </div>
           <% end %>
           <%# spacer to push content to the right %>
           <div class="flex-1 hidden lg:block"></div>
