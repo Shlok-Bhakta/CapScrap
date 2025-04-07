@@ -36,7 +36,7 @@ module Ta::DashboardHelper
             class: link_class,
             data: { turbo_frame: "rentings_table" } do
       tag.div(class: "flex items-center") do
-        safe_join([display_name, arrows_html])
+        safe_join([ display_name, arrows_html ])
       end
     end
   end
@@ -78,7 +78,7 @@ module Ta::DashboardHelper
             class: link_class,
             data: { turbo_frame: "items_table" } do
       tag.div(class: "flex items-center") do
-        safe_join([display_name, arrows_html])
+        safe_join([ display_name, arrows_html ])
       end
     end
   end

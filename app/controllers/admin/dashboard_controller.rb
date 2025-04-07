@@ -134,7 +134,7 @@ class Admin::DashboardController < ApplicationController
     begin
       ActiveRecord::Base.transaction do
         @renting.toggle(:is_returned)
-        
+
         if @renting.is_returned
           @renting.update!(return_date: Date.today)
         else
@@ -150,10 +150,10 @@ class Admin::DashboardController < ApplicationController
             raise ActiveRecord::RecordInvalid.new(@renting),
                   "Cannot un-return: only #{available} items available"
           end
-          
+
           @renting.update!(return_date: nil)
         end
-        
+
         @renting.save!
       end
     rescue ActiveRecord::RecordInvalid => e
