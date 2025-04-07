@@ -382,17 +382,7 @@
     
         document.addEventListener('turbo:load', function() {
           initializeFontSizeSystem();
-          var themeToggle = document.getElementById('theme-toggle');
-          var themeIcon = document.getElementById('theme-icon');
-
-          var colorToggle = document.getElementById('color-toggle');
-
-          var darkImage = "<%= asset_path('dark.png') %>";
-          var lightImage = "<%= asset_path('light.png') %>";
-
-          if (document.documentElement.classList.contains('dark')) {
-            themeIcon.src = lightImage;
-
+         
           var modeToggle = document.getElementById('mode-toggle');
           var modeIcon = document.getElementById('mode-icon');
 
