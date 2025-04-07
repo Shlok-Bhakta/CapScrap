@@ -1,4 +1,5 @@
 class Item < ApplicationRecord
+  include Loggable
   belongs_to :category
   has_many :rentings
   has_many :users, through: :rentings

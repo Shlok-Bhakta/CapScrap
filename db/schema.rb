@@ -10,17 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_17_181743) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_02_235338) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "categories", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "examples", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -32,7 +26,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_181743) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "single_use"
+    t.text "comments"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
@@ -43,6 +37,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_181743) do
     t.integer "purchased_quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "comments"
     t.index ["item_id"], name: "index_purchases_on_item_id"
     t.index ["user_id"], name: "index_purchases_on_user_id"
   end
@@ -57,6 +52,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_181743) do
     t.datetime "updated_at", null: false
     t.boolean "is_returned", default: false
     t.boolean "is_singleuse", default: false
+    t.text "comments"
     t.index ["item_id"], name: "index_rentings_on_item_id"
     t.index ["user_id"], name: "index_rentings_on_user_id"
   end
