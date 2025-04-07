@@ -163,6 +163,19 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def add_comment
+    renting = Renting.find(params[:id])
+    comment_text = params[:comment]
+
+    renting.update(comments: comment_text)
+
+    respond_to do |format|
+      format.html { redirect_to admin_dashboard_renting_path, notice: "Comment saved!" }
+      format.turbo_stream { head :ok }
+    end
+  end
+
+
   def delete_renting
     @renting = Renting.find(params[:id])
     @renting.destroy
