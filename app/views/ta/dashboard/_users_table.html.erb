@@ -4,16 +4,16 @@
     <thead>
       <tr class="border-b">
         <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('name', 'Full Name', sort_field, sort_direction) %>
+          <%= ta_sort_user_header('name', 'Full Name', sort_field, sort_direction) %>
         </th>
         <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('email', 'Email', sort_field, sort_direction) %>
+          <%= ta_sort_user_header('email', 'Email', sort_field, sort_direction) %>
         </th>
         <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('role', 'Role', sort_field, sort_direction) %>
+          <%= ta_sort_user_header('role', 'Role', sort_field, sort_direction) %>
         </th>
         <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('created_at', 'Creation Date', sort_field, sort_direction) %>
+          <%= ta_sort_user_header('created_at', 'Creation Date', sort_field, sort_direction) %>
         </th>
       </tr>
     </thead>
@@ -23,10 +23,7 @@
         <td class="p-2 text-content" data-font-size="16"><%= user.full_name %></td>
         <td class="p-2 text-content" data-font-size="16"><%= user.email %></td>
         <td class="p-2 text-content" data-font-size="16">
-          <%= select_tag "user_role_#{user.id}",
-                        options_for_select(roles, [user.role.name, user.role.id]),
-                        class: "role-select p-1 border rounded",
-                        data: { user_id: user.id } %>
+          <%= user.role.name %>
         </td>
         <td class="p-2 text-content" data-font-size="16"><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></td>
       </tr>

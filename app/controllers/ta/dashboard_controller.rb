@@ -1,5 +1,7 @@
-class Admin::DashboardController < ApplicationController
-  before_action :check_professor_role
+class Ta::DashboardController < ApplicationController
+  helper Ta::DashboardHelper
+  before_action :check_ta_role
+  respond_to :html, :json, :turbo_stream
 
   def users
     @users_query = User.search(params[:query])
@@ -13,7 +15,7 @@ class Admin::DashboardController < ApplicationController
       format.turbo_stream {
         render turbo_stream: turbo_stream.replace(
           "users_table",
-          partial: "admin/dashboard/users_table",
+          partial: "ta/dashboard/users_table",
           locals: {
             users: @users,
             pagy: @pagy,
@@ -32,18 +34,12 @@ class Admin::DashboardController < ApplicationController
                       .joins(:category)
     @pagy, @items = pagy(@items_query, items: params[:per_page] || 50)
 
-    # Calculate and attach purchased quantity to each item
     @items.each do |item|
       purchased_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity) - Renting.where(item_id: item.id).where(is_returned: false).sum(:quantity)
       total_quantity = Purchase.where(item_id: item.id).sum(:purchased_quantity)
 
-      # Dynamically add a quantity method to each item object
-      item.define_singleton_method(:quantity) do
-        purchased_quantity
-      end
-      item.define_singleton_method(:total_quantity) do
-        total_quantity
-      end
+      item.define_singleton_method(:quantity) { purchased_quantity }
+      item.define_singleton_method(:total_quantity) { total_quantity }
     end
 
     @categories = Category.all
@@ -53,7 +49,7 @@ class Admin::DashboardController < ApplicationController
       format.turbo_stream {
         render turbo_stream: turbo_stream.replace(
           "items_table",
-          partial: "admin/dashboard/items_table",
+          partial: "ta/dashboard/items_table",
           locals: {
             items: @items,
             pagy: @pagy,
@@ -70,13 +66,15 @@ class Admin::DashboardController < ApplicationController
     @rentings_query = Renting.search(params[:query])
                       .sort_by_field(params[:sort], params[:direction])
     @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
+
     respond_to do |format|
       format.html
       format.turbo_stream {
         render turbo_stream: turbo_stream.replace(
           "rentings_table",
-          partial: "admin/dashboard/rentings_table",
+          partial: "ta/dashboard/rentings_table",
           locals: {
+            rentings: @rentings,
             pagy: @pagy,
             sort_field: params[:sort],
             sort_direction: params[:direction]
@@ -96,7 +94,7 @@ class Admin::DashboardController < ApplicationController
           @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
           render turbo_stream: turbo_stream.replace(
             "rentings_table",
-            partial: "admin/dashboard/rentings_table",
+            partial: "ta/dashboard/rentings_table",
             locals: {
               rentings: @rentings,
               pagy: @pagy,
@@ -105,7 +103,7 @@ class Admin::DashboardController < ApplicationController
             }
           )
         }
-        format.html { redirect_to admin_dashboard_renting_path, notice: "Quantity updated." }
+        format.html { redirect_to ta_dashboard_renting_path, notice: "Quantity updated." }
       end
     else
       respond_to do |format|
@@ -113,7 +111,7 @@ class Admin::DashboardController < ApplicationController
         format.turbo_stream {
           render turbo_stream: turbo_stream.replace(
             "rentings_table",
-            partial: "admin/dashboard/rentings_table",
+            partial: "ta/dashboard/rentings_table",
             locals: {
               rentings: Renting.all,
               pagy: @pagy,
@@ -122,7 +120,7 @@ class Admin::DashboardController < ApplicationController
             }
           ), status: :unprocessable_entity
         }
-        format.html { redirect_to admin_dashboard_renting_path, alert: @renting.errors.full_messages.join(", ") }
+        format.html { redirect_to ta_dashboard_renting_path, alert: @renting.errors.full_messages.join(", ") }
       end
     end
   end
@@ -138,7 +136,6 @@ class Admin::DashboardController < ApplicationController
         if @renting.is_returned
           @renting.update!(return_date: Date.today)
         else
-          # When un-returning, validate available quantity
           purchased = Purchase.where(item_id: @renting.item_id).sum(:purchased_quantity)
           rented = Renting.where(item_id: @renting.item_id)
                          .where(is_returned: false)
@@ -167,11 +164,11 @@ class Admin::DashboardController < ApplicationController
       @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
 
       respond_to do |format|
-        format.html { redirect_to admin_dashboard_renting_path }
+        format.html { redirect_to ta_dashboard_renting_path }
         format.turbo_stream {
           render turbo_stream: turbo_stream.replace(
             "rentings_table",
-            partial: "admin/dashboard/rentings_table",
+            partial: "ta/dashboard/rentings_table",
             locals: {
               rentings: @rentings,
               pagy: @pagy,
@@ -189,13 +186,13 @@ class Admin::DashboardController < ApplicationController
 
       respond_to do |format|
         format.html {
-          redirect_to admin_dashboard_renting_path,
+          redirect_to ta_dashboard_renting_path,
           alert: flash[:error]
         }
         format.turbo_stream {
           render turbo_stream: turbo_stream.replace(
             "rentings_table",
-            partial: "admin/dashboard/rentings_table",
+            partial: "ta/dashboard/rentings_table",
             locals: {
               rentings: @rentings,
               pagy: @pagy,
@@ -218,11 +215,11 @@ class Admin::DashboardController < ApplicationController
     @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
 
     respond_to do |format|
-      format.html { redirect_to admin_dashboard_renting_path }
+      format.html { redirect_to ta_dashboard_renting_path }
       format.turbo_stream {
         render turbo_stream: turbo_stream.replace(
           "rentings_table",
-          partial: "admin/dashboard/rentings_table",
+          partial: "ta/dashboard/rentings_table",
           locals: {
             rentings: @rentings,
             pagy: @pagy,
@@ -236,7 +233,7 @@ class Admin::DashboardController < ApplicationController
     respond_to do |format|
       format.html {
         flash[:error] = "Error updating single use: #{e.message}"
-        redirect_to admin_dashboard_renting_path
+        redirect_to ta_dashboard_renting_path
       }
       format.turbo_stream {
         render turbo_stream: turbo_stream.update(
@@ -254,17 +251,15 @@ class Admin::DashboardController < ApplicationController
     renting.update(comments: comment_text)
 
     respond_to do |format|
-      format.html { redirect_to admin_dashboard_renting_path, notice: "Comment saved!" }
+      format.html { redirect_to ta_dashboard_renting_path, notice: "Comment saved!" }
       format.turbo_stream { head :ok }
     end
   end
-
 
   def delete_renting
     @renting = Renting.find(params[:id])
     success = @renting.destroy
 
-    # Always fetch rentings for the table
     @rentings_query = Renting.search(params[:query])
                       .sort_by_field(params[:sort], params[:direction])
     @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
@@ -275,7 +270,7 @@ class Admin::DashboardController < ApplicationController
         format.turbo_stream {
           render turbo_stream: turbo_stream.replace(
             "rentings_table",
-            partial: "admin/dashboard/rentings_table",
+            partial: "ta/dashboard/rentings_table",
             locals: {
               rentings: @rentings,
               pagy: @pagy,
@@ -291,7 +286,7 @@ class Admin::DashboardController < ApplicationController
             turbo_stream.update("flash", html: "Error deleting renting: Failed to delete"),
             turbo_stream.replace(
               "rentings_table",
-              partial: "admin/dashboard/rentings_table",
+              partial: "ta/dashboard/rentings_table",
               locals: {
                 rentings: @rentings,
                 pagy: @pagy,
@@ -311,14 +306,13 @@ class Admin::DashboardController < ApplicationController
       item = Item.find_by("LOWER(description) = ?", params[:item].downcase)
 
       if !user
-        redirect_to admin_dashboard_renting_path, alert: "User not found" and return
+        redirect_to ta_dashboard_renting_path, alert: "User not found" and return
       end
 
       if !item
-        redirect_to admin_dashboard_renting_path, alert: "Item not found" and return
+        redirect_to ta_dashboard_renting_path, alert: "Item not found" and return
       end
 
-      # Check available quantity before creating the renting
       purchased = Purchase.where(item_id: item.id).sum(:purchased_quantity)
       rented = Renting.where(item_id: item.id)
                      .where(is_returned: false)
@@ -328,7 +322,7 @@ class Admin::DashboardController < ApplicationController
       if available <= 0
         message = "exceeds available quantity (#{available} available)"
         respond_to do |format|
-          format.html { redirect_to admin_dashboard_renting_path, alert: message }
+          format.html { redirect_to ta_dashboard_renting_path, alert: message }
           format.turbo_stream {
             render turbo_stream: turbo_stream.update("flash",
               html: "Quantity #{message}"),
@@ -354,11 +348,11 @@ class Admin::DashboardController < ApplicationController
         @pagy, @rentings = pagy(@rentings_query, items: params[:per_page] || 50)
 
         respond_to do |format|
-          format.html { redirect_to admin_dashboard_renting_path, notice: "Renting created successfully." }
+          format.html { redirect_to ta_dashboard_renting_path, notice: "Renting created successfully." }
           format.turbo_stream {
             render turbo_stream: turbo_stream.replace(
               "rentings_table",
-              partial: "admin/dashboard/rentings_table",
+              partial: "ta/dashboard/rentings_table",
               locals: {
                 rentings: @rentings,
                 pagy: @pagy,
@@ -370,7 +364,7 @@ class Admin::DashboardController < ApplicationController
         end
       else
         respond_to do |format|
-          format.html { redirect_to admin_dashboard_renting_path, alert: @renting.errors.full_messages.join(", ") }
+          format.html { redirect_to ta_dashboard_renting_path, alert: @renting.errors.full_messages.join(", ") }
           format.turbo_stream {
             render turbo_stream: turbo_stream.update(
               "flash",
@@ -382,7 +376,7 @@ class Admin::DashboardController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     respond_to do |format|
-      format.html { redirect_to admin_dashboard_renting_path, alert: e.message }
+      format.html { redirect_to ta_dashboard_renting_path, alert: e.message }
       format.turbo_stream {
         render turbo_stream: turbo_stream.update(
           "flash",
@@ -402,20 +396,28 @@ class Admin::DashboardController < ApplicationController
 
       # Then find partial matches, excluding exact matches
       partial_matches = User.where("LOWER(full_name) LIKE ? OR LOWER(email) LIKE ?", "%#{query}%", "%#{query}%")
-                          .where.not(id: exact_matches.select(:id))
+                           .where.not(id: exact_matches.select(:id))
 
       # Combine results with exact matches first
       @users = (exact_matches + partial_matches).first(5)
 
-      render json: {
-        users: @users.map { |u| {
-          id: u.id,
-          full_name: u.full_name,
-          email: u.email
-        }}
-      }
+      respond_to do |format|
+        format.json {
+          render json: {
+            users: @users.map { |u| {
+              id: u.id,
+              full_name: u.full_name,
+              email: u.email
+            }}
+          }
+        }
+      end
     rescue StandardError => e
-      render json: { error: e.message }, status: :unprocessable_entity
+      respond_to do |format|
+        format.json {
+          render json: { error: e.message }, status: :unprocessable_entity
+        }
+      end
     end
   end
 
@@ -426,7 +428,7 @@ class Admin::DashboardController < ApplicationController
     begin
       # Find exact matches first
       exact_matches = Item.includes(:category)
-                        .where("LOWER(description) = ?", query)
+                         .where("LOWER(description) = ?", query)
 
       # Then find partial matches, excluding exact matches
       partial_matches = Item.includes(:category)
@@ -436,130 +438,35 @@ class Admin::DashboardController < ApplicationController
       # Combine results with exact matches first
       @items = (exact_matches + partial_matches).first(5)
 
-      render json: {
-        items: @items.map { |i| {
-          id: i.id,
-          description: i.description,
-          location: i.location,
-          category: i.category.name
-        }}
-      }
-    rescue StandardError => e
-      render json: { error: e.message }, status: :unprocessable_entity
-    end
-  end
-
-  def create_item
-    @item = Item.new(item_params)
-    if @item.save
-      render json: { success: true, message: "Item created successfully" }
-    else
-      render json: {
-        success: false,
-        error: @item.errors.full_messages.join(", ")
-      }, status: :unprocessable_entity
-    end
-  end
-
-  def update_item
-    data = JSON.parse(request.body.read)["item"]
-    @item = Item.find(data["id"])
-    if @item.update({ description: data["description"], location: data["location"], category_id: data["category_id"] })
-      render json: { success: true, message: "Item updated successfully" }
-    else
-      render json: {
-        success: false,
-        error: @item.errors.full_messages.join(", ")
-      }, status: :unprocessable_entity
-    end
-  end
-
-  def delete_item
-    @item = Item.find(params[:id])
-    if @item.destroy
-      render json: { success: true, message: "Item deleted successfully" }
-    else
-      render json: {
-        success: false,
-        error: "Failed to delete item this item is probably being used by someone"
-      }, status: :unprocessable_entity
-    end
-  end
-
-  def purchased
-    # Default sorting by creation date if no sort params
-    params[:sort] ||= "created_at"
-    params[:direction] ||= "desc"
-
-    @purchases_query = Purchase.includes(item: :category)
-                             .search(params[:query])
-                             .sort_by_field(params[:sort], params[:direction])
-
-    @pagy, @purchases = pagy(@purchases_query, items: params[:per_page] || 50)
-    @categories = Category.all
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream {
-        render turbo_stream: turbo_stream.replace(
-          "content",
-          partial: "admin/dashboard/purchases_table",
-          locals: {
-            purchases: @purchases,
-            sort_field: params[:sort],
-            sort_direction: params[:direction],
-            pagy: @pagy
+      respond_to do |format|
+        format.json {
+          render json: {
+            items: @items.map { |i| {
+              id: i.id,
+              description: i.description,
+              location: i.location,
+              category: i.category.name
+            }}
           }
-        )
-      }
-    end
-  end
-
-  def create_purchase
-    ActiveRecord::Base.transaction do
-      if params[:item_query].present?
-        # Try to find existing item
-        @item = Item.find_by("LOWER(description) = ?", params[:item_query].downcase)
-
-        # Create new item if not found
-        unless @item
-          @item = Item.create!(
-            description: params[:item_query],
-            location: params[:location],
-            category_id: params[:category_id]
-          )
-        end
+        }
       end
-
-      @purchase = Purchase.new(
-        item: @item,
-        purchased_quantity: params[:purchased_quantity],
-        user: current_user,
-        purchase_date: Time.current
-      )
-
-      if @purchase.save
-        redirect_to admin_dashboard_purchased_path, notice: "Purchase created successfully."
-      else
-        redirect_to admin_dashboard_purchased_path, alert: @purchase.errors.full_messages.join(", ")
+    rescue StandardError => e
+      respond_to do |format|
+        format.json {
+          render json: { error: e.message }, status: :unprocessable_entity
+        }
       end
     end
-  rescue ActiveRecord::RecordInvalid => e
-    redirect_to admin_dashboard_purchased_path, alert: e.message
   end
 
   private
 
+  def check_ta_role
+    return if current_user&.role_id == 2
+    redirect_to root_path, alert: "You are not authorized to view this page"
+  end
+
   def quantity_params
     params.require(:renting).permit(:quantity)
-  end
-
-  def item_params
-    params.require(:item).permit(:description, :location, :category_id)
-  end
-
-  def check_professor_role
-    return if current_user&.role_id == 3
-    redirect_to root_path, alert: "You are not authorized to view this page"
   end
 end

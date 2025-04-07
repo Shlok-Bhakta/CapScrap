@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    console.log("Renting controller connected")
+    console.log("TA Renting controller connected")
   }
 
   editRow(event) {
@@ -29,13 +29,13 @@ export default class extends Controller {
     actionsCell.innerHTML = `
       <button type="button"
               class="save-button bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1 mr-2"
-              data-action="click->renting#saveRow"
+              data-action="click->ta-renting#saveRow"
               data-renting-id="${rentingId}">
         Save
       </button>
       <button type="button"
               class="cancel-button bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1"
-              data-action="click->renting#cancelEdit">
+              data-action="click->ta-renting#cancelEdit">
         Cancel
       </button>
     `
@@ -60,7 +60,7 @@ export default class extends Controller {
     if (confirm('Are you sure you want to save these changes?')) {
       const token = document.querySelector('meta[name="csrf-token"]').content
 
-      fetch(`/admin/dashboard/update_quantity?id=${rentingId}`, {
+      fetch(`/ta/dashboard/update_quantity?id=${rentingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -84,46 +84,6 @@ export default class extends Controller {
           window.location.reload()
         } else {
           throw new Error(data.error || 'Failed to update renting')
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error)
-        alert(error.message)
-      })
-    }
-  }
-
-  deleteRenting(event) {
-    const rentingId = event.currentTarget.getAttribute('data-renting-id')
-    
-    if (!rentingId) {
-      console.error('No renting ID found')
-      return
-    }
-
-    if (confirm('Are you sure you want to delete this renting?')) {
-      const token = document.querySelector('meta[name="csrf-token"]').content
-
-      fetch(`/admin/dashboard/delete_renting?id=${rentingId}`, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': token,
-          'Accept': 'application/json'
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(data => {
-            throw new Error(data.error || 'Network response was not ok')
-          })
-        }
-        return response.json()
-      })
-      .then(data => {
-        if (data.success) {
-          window.location.reload()
-        } else {
-          throw new Error(data.error || 'Failed to delete renting')
         }
       })
       .catch(error => {

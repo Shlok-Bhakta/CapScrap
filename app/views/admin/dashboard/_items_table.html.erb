@@ -1,37 +1,6 @@
 <div class="flex flex-col" data-controller="item font">
-  <div class="mb-4">
-
-    <%# form to actually add a new item %>
-    <div class="text-text text-content" data-font-size="16">Create new item</div>
-    <%= form_with url: admin_dashboard_items_path, method: :post, data: { turbo_frame: "new-item-row" }, class: "flex flex-row gap-2" do |f| %>
-      <%= f.text_field :description,
-          placeholder: "Description",
-          class: "w-full p-1 border rounded text-content",
-          required: true, 
-          "data-font-size": { font_size: 16 } %>
-      <%= f.text_field :location,
-          placeholder: "Location",
-          class: "w-full p-1 border rounded text-content",
-          required: true,
-           "data-font-size": { font_size: 16 } %>
-      <%= f.select :category_id,
-                    options_from_collection_for_select(categories, 'id', 'name'),
-                    class: "w-full p-1 border rounded text-content",
-                    data: { item_id: nil },
-                    "data-font-size": { font_size: 16 }
-                     %>
-      <%= f.submit "Add Item",
-                    class: "bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1 mr-2 text-content",
-                    data: { action: "click->item#saveNewRow" },
-                     "data-font-size": { font_size: 16 } %>
-      <%= f.submit "Clear",
-                    class: "bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1 text-content",
-                    data: { action: "click->item#cancelNewRow" },
-                    "data-font-size": { font_size: 16 } %>
-    <% end %>
-  </div>
-
-  <table class="w-full" data-item-target="table">
+  <div class="overflow-x-auto -mx-3 lg:mx-0">
+    <table class="w-full min-w-[800px]" data-item-target="table">
     <thead>
       <tr class="border-b">
         <th class="p-2 text-left text-content" data-font-size="16">
@@ -53,7 +22,7 @@
     </thead>
     <tbody>
     <% items.each do |item| %>
-      <tr class="border-b hover:bg-gray-50" data-item-id="<%= item.id %>">
+      <tr class="border-b hover:bg-muted/10" data-item-id="<%= item.id %>">
         <td class="p-2 text-content" data-font-size="16">
           <span class="description-text"><%= item.description %></span>
           <input type="text" name="description"
@@ -75,46 +44,45 @@
                         data: { item_id: item.id } %>
           <span class="category-text"><%= item.category.name %></span>
         </td>
-        <%# if quantity < 2 then make it red %> 
-        <% if item.quantity < 3 %>
-          <td class="p-2 bg-accent text-center text-content" data-font-size="16">
-            <span class="text-text">
-              <%= item.quantity %>
-            </span>
-          </td>
-        <% elsif item.quantity == item.total_quantity %>
-          <td class="p-2 bg-confirm text-center text-content" data-font-size="16">
-            <span class="text-text">
-              <%= item.quantity %>
-            </span>
-          </td>
-        <% else %>
-          <td class="p-2 text-center text-content" data-font-size="16">
-            <span class="text-text">
-              <%= item.quantity %>
-            </span>
-          </td>
-        <% end %>
+         <%# if quantity < 3 then show warning color %>
+         <% if item.quantity < 3 %>
+           <td class="p-2 bg-accent text-center text-content" data-font-size="16">
+             <span class="text-text">
+               <%= item.quantity %>
+             </span>
+           </td>
+         <% elsif item.quantity == item.total_quantity %>
+           <td class="p-2 bg-confirm text-center text-content" data-font-size="16">
+             <span class="text-text">
+               <%= item.quantity %>
+             </span>
+           </td>
+         <% else %>
+           <td class="p-2 text-center text-content" data-font-size="16">
+             <span class="text-text">
+               <%= item.quantity %>
+             </span>
+           </td>
+         <% end %>
 
-        <td class="p-2 text-center text-content" data-font-size="16">
-          <%= item.total_quantity %>
-        </td>
-  
+         <td class="p-2 text-center text-content" data-font-size="16">
+           <%= item.total_quantity %>
+         </td>
         <td class="p-2 text-content" data-font-size="16"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-        <td class="p-2 flex space-x-2">
+        <td class="p-2 flex justify-center items-center">
           <button type="button"
-                  class="edit-button text-blue-600 hover:text-blue-800"
-                  data-action="click->item#editRow"
-                  data-item-id="<%= item.id %>">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 class="edit-button rounded-lg border border-icon-info text-icon-info hover:bg-icon-info/10 p-2 mx-1"
+                 data-action="click->item#editRow"
+                 data-item-id="<%= item.id %>">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" style="color: var(--color-icon-info);" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
             </svg>
           </button>
           <button type="button"
-                  class="delete-button text-red-600 hover:text-red-800"
-                  data-action="click->item#deleteRow"
-                  data-item-id="<%= item.id %>">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 class="delete-button rounded-lg border border-icon-error text-icon-error hover:bg-icon-error/10 p-2 mx-1"
+                 data-action="click->item#deleteRow"
+                 data-item-id="<%= item.id %>">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
             </svg>
           </button>
@@ -122,18 +90,19 @@
       </tr>
     <% end %>
     </tbody>
-  </table>
+    </table>
+  </div>
   
   <% if items.any? %>
     <%= pagination_nav(pagy) %>
   <% else %>
-    <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No items found</p>
+    <p class="text-center text-muted mt-4 text-content" data-font-size="16">No items found</p>
   <% end %>
 </div>
 
 <template id="new-item-row" data-item-target="newRow">
-  <tr class="border-b hover:bg-gray-50 new-item-row">
-    <td class="p-2 text-contnent" data-font-size="16">
+  <tr class="border-b hover:bg-muted/10 new-item-row">
+    <td class="p-2 text-content" data-font-size="16">
       <input type="text" class="w-full p-1 border rounded" name="description" placeholder="Description" required>
     </td>
     <td class="p-2 text-content" data-font-size="16">
@@ -145,17 +114,20 @@
                     class: "w-full p-1 border rounded" %>
     </td>
     <td class="p-2 text-content" data-font-size="16">-</td>
-    <td class="p-2 flex space-x-2 text-content" data-font-size="16">
-      <button type="button"
-              class="save-button bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1"
-              data-action="click->item#saveNewRow">
-        Save
-      </button>
-      <button type="button"
-              class="cancel-button bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1"
-              data-action="click->item#cancelNewRow">
-        Cancel
-      </button>
+    <td class="p-2 text-content" data-font-size="16">-</td>
+    <td class="p-2 flex space-x-2">
+      <div class="flex space-x-2 justify-end">
+        <button type="button"
+                class="save-button bg-confirm hover:bg-confirm/90 text-text rounded px-4 py-2"
+                data-action="click->item#saveNewRow">
+          Save
+        </button>
+        <button type="button"
+                class="cancel-button bg-muted hover:bg-muted/90 text-text rounded px-4 py-2"
+                data-action="click->item#cancelNewRow">
+          Cancel
+        </button>
+      </div>
     </td>
   </tr>
 </template>

@@ -1,0 +1,70 @@
+<div class="flex flex-col" data-controller="font">
+  <div class="overflow-x-auto -mx-3 lg:mx-0">
+    <table class="w-full min-w-[800px]">
+    <thead>
+      <tr class="border-b">
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= ta_sort_items_header('description', 'Description', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= ta_sort_items_header('location', 'Location', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= ta_sort_items_header('category', 'Category', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-center text-content" data-font-size="16">Available</th>
+        <th class="p-2 text-center text-content" data-font-size="16">Total</th>
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= ta_sort_items_header('created_at', 'Creation Date', sort_field, sort_direction) %>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <% items.each do |item| %>
+      <tr class="border-b hover:bg-muted/10">
+        <td class="p-2 text-content" data-font-size="16">
+          <%= item.description %>
+        </td>
+        <td class="p-2 text-content" data-font-size="16">
+          <%= item.location %>
+        </td>
+        <td class="p-2 text-content" data-font-size="16">
+          <%= item.category.name %>
+        </td>
+        <%# if quantity < 3 then show warning color %>
+        <% if item.quantity < 3 %>
+          <td class="p-2 bg-accent text-center text-content" data-font-size="16">
+            <span class="text-text">
+              <%= item.quantity %>
+            </span>
+          </td>
+        <% elsif item.quantity == item.total_quantity %>
+          <td class="p-2 bg-confirm text-center text-content" data-font-size="16">
+            <span class="text-text">
+              <%= item.quantity %>
+            </span>
+          </td>
+        <% else %>
+          <td class="p-2 text-center text-content" data-font-size="16">
+            <span class="text-text">
+              <%= item.quantity %>
+            </span>
+          </td>
+        <% end %>
+
+        <td class="p-2 text-center text-content" data-font-size="16">
+          <%= item.total_quantity %>
+        </td>
+        <td class="p-2 text-content" data-font-size="16"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+  </div>
+  
+  <% if items.any? %>
+    <%= pagination_nav(pagy) %>
+  <% else %>
+    <p class="text-center text-muted mt-4 text-content" data-font-size="16">No items found</p>
+  <% end %>
+</div>

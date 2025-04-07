@@ -1,21 +1,22 @@
 <%= turbo_frame_tag "rentings_table" do %>
-  <div class="flex flex-col">
-    <table class="w-full">
+  <div class="flex flex-col w-full" data-controller="renting">
+    <div class="overflow-x-auto -mx-3 lg:mx-0">
+      <table class="w-full min-w-[800px]">
       <thead>
         <tr class="border-b">
-          <th class="p-2 text-left text-content" data-font-size="16">
+          <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
             <%= sort_rentings_header('user', 'User', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-content" data-font-size="16">
+          <th class="p-2 text-left w-1/4 text-content" data-font-size="16">
             <%= sort_rentings_header('item', 'Item', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
+          <th class="p-2 text-left w-1/12 text-content" data-font-size="16">
             <%= sort_rentings_header('quantity', 'Quantity', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-content" data-font-size="16">
+          <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
             <%= sort_rentings_header('checkout_date', 'Checkout Date', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-content" data-font-size="16">
+          <th class="p-2 text-left w-1/6 text-content" data-font-size="16">
             <%= sort_rentings_header('return_date', 'Return Date', sort_field, sort_direction) %>
           </th>
           <th class="p-2 text-left text-content" data-font-size="16">Status</th>
@@ -26,20 +27,42 @@
       </thead>
       <tbody>
       <% rentings.each do |renting| %>
-        <tr id="renting_<%= renting.id %>" class="border-b hover:bg-gray-50">
+        <tr class="border-b hover:bg-muted">
           <td class="p-2 text-content" data-font-size="16"><%= renting.user.email %></td>
           <td class="p-2 text-content" data-font-size="16"><%= renting.item.description %></td>
-          <td class="p-2 text-content" data-font-size="16"><%= renting.quantity %></td>
+          <td class="p-2 text-content relative" data-font-size="16">
+            <span class="quantity-text"><%= renting.quantity %></span>
+            <input type="number" name="quantity" value="<%= renting.quantity %>"
+                   class="hidden w-full p-1 border rounded" min="1" />
+            <button type="button"
+                   class="edit-button hidden text-info hover:text-info/80 rounded-lg border border-info/20 hover:bg-info/10 p-2"
+                   data-action="click->renting#editRow"
+                   data-renting-id="<%= renting.id %>">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </button>
+          </td>
           <td class="p-2 text-content" data-font-size="16"><%= renting.checkout_date&.strftime("%Y-%m-%d") %></td>
           <td class="p-2 text-content" data-font-size="16"><%= renting.return_date&.strftime("%Y-%m-%d") %></td>
-          <td class="p-2 text-content" data-font-size="16">
-            <%= form_with(url: admin_dashboard_toggle_renting_path(id: renting.id), 
+          <td class="p-2 text-content relative" data-font-size="16">
+            <div>
+              <%= form_with(url: admin_dashboard_toggle_renting_path(id: renting.id),
                          method: :patch,
-                         data: { turbo_stream: true, 
-                                turbo_confirm: "Are you sure you want to change this item's status?" }) do |f| %>
-              <%= f.button renting.is_returned ? 'Returned' : 'Rented',
-                          class: renting.is_returned ? 'px-2 py-1 bg-confirm text-text rounded' : 'px-2 py-1 bg-secondary text-text rounded',
-                          data: { disable_with: "Updating..." } %>
+                         class: "inline-block",
+                         data: {
+                           turbo_stream: true,
+                           turbo_confirm: "Are you sure you want to change this item's status?"
+                         }) do |f| %>
+                <%= f.button renting.is_returned ? 'Returned' : 'Rented',
+                            class: renting.is_returned ? 'px-2 py-1 bg-confirm text-text rounded' : 'px-2 py-1 bg-secondary text-text rounded',
+                            data: { disable_with: "Updating..." } %>
+              <% end %>
+            </div>
+            <% if flash[:error] && flash[:error].include?("quantity") %>
+              <div class="absolute -bottom-4 left-0 w-full">
+                <p class="text-sm text-error"><%= flash[:error] %></p>
+              </div>
             <% end %>
           </td>
           <td class="p-2 text-content" data-font-size="16">
@@ -54,19 +77,17 @@
           </td>
 
 
-          <td class="p-2 text-content" data-font-size="16">
-            <div class="flex justify-center">
-              <button type="button" 
-                    class="text-blue-600 hover:text-blue-800" 
-                    data-renting-id="<%= renting.id %>"
-                    onclick="document.getElementById('comment-modal-<%= renting.id %>').classList.remove('hidden'); document.getElementById('comment-modal-<%= renting.id %>').classList.add('flex')"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          <td class="p-2 text-center">
+           <button type="button"
+                   class="rounded-lg border border-icon-purple text-icon-purple hover:bg-icon-purple/10 p-2"
+                   data-renting-id="<%= renting.id %>"
+                   onclick="document.getElementById('comment-modal-<%= renting.id %>').classList.remove('hidden'); document.getElementById('comment-modal-<%= renting.id %>').classList.add('flex')"
+             >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-6 h-6">
+                  <path fill="currentColor" d="M208 32h-24v-8a8 8 0 0 0-16 0v8h-32v-8a8 8 0 0 0-16 0v8H88v-8a8 8 0 0 0-16 0v8H48a8 8 0 0 0-8 8v160a32 32 0 0 0 32 32h112a32 32 0 0 0 32-32V40a8 8 0 0 0-8-8m-88 24a8 8 0 0 1 16 0v8a8 8 0 0 1-16 0ZM80 72a8 8 0 0 1-8-8v-8a8 8 0 0 1 16 0v8a8 8 0 0 1-8 8m80 96H96a8 8 0 0 1 0-16h64a8 8 0 0 1 0 16m0-32H96a8 8 0 0 1 0-16h64a8 8 0 0 1 0 16m24-72a8 8 0 0 1-16 0v-8a8 8 0 0 1 16 0Z"/>
                 </svg>
-              </button>
-            </div>
-            <div
+             </button>
+           <div
               id="comment-modal-<%= renting.id %>"
               class="fixed inset-0 z-50 items-center justify-center backdrop-blur-sm hidden"
             >
@@ -117,25 +138,38 @@
               </div>
             </div>
           </td>
-          <td class="p-2 text-content" data-font-size="16">
-            <%= form_with(url: admin_dashboard_delete_renting_path(id: renting.id), 
-                        method: :delete,
-                         data: { turbo_stream: true, 
-                                turbo_confirm: "Are you sure you want to delete this renting?" }) do |f| %> 
-              <%= f.button "Delete",
-                          class: "px-2 py-1 bg-red-500 hover:bg-red-700 text-white rounded",
-                          data: { disable_with: "Deleting..." } %>
+          <td class="p-2 flex justify-center items-center gap-2">
+            <button type="button"
+                    class="rounded-lg border border-icon-info text-icon-info hover:bg-icon-info/10 p-2"
+                    data-renting-id="<%= renting.id %>"
+                    data-action="renting#editRow">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </button>
+            <%= form_with(url: admin_dashboard_delete_renting_path(id: renting.id),
+                         method: :delete,
+                         data: { turbo_stream: true,
+                               turbo_confirm: "Are you sure you want to delete this renting?" }) do |f| %>
+              <%= button_tag(type: 'submit',
+                           class: "rounded-lg border border-icon-error text-icon-error hover:bg-icon-error/10 p-2",
+                           data: { disable_with: "Deleting..." }) do %>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              <% end %>
             <% end %>
           </td>
         </tr>
       <% end %>
       </tbody>
-    </table>
+      </table>
+    </div>
     
     <% if rentings.any? %>
       <%= pagination_nav(pagy) %>
     <% else %>
-      <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No rentings found</p>
+      <p class="text-center text-muted mt-4 text-content" data-font-size="16">No rentings found</p>
     <% end %>
   </div>
 <% end %>
@@ -153,3 +187,17 @@
     }
   });
 </script>
+
+<%# Hidden divs to ensure Tailwind classes are bundled %>
+<div class="hidden">
+  <div class="bg-secondary/80"></div>
+  <div class="border-secondary"></div>
+  <div class="text-text"></div>
+  <div class="hover:text-text/80"></div>
+  <div class="text-center"></div>
+  <div class="text-xl"></div>
+  <div class="font-bold"></div>
+  <div class="pr-8"></div>
+  <div class="top-2"></div>
+  <div class="right-4"></div>
+</div>
