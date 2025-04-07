@@ -22,7 +22,9 @@
         <%= render partial: "items_table",
                   locals: {
                     items: @items,
-                    pagy: @pagy
+                    pagy: @pagy,
+                    sort_field: params[:sort],
+                    sort_direction: params[:direction]
                   } %>
       <% end %>
     </div>
