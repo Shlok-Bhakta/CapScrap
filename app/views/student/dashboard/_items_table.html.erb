@@ -3,9 +3,14 @@
     <table class="w-full min-w-[800px]">
     <thead>
       <tr class="border-b">
-        <th class="p-2 text-left text-content" data-font-size="16">Description</th>
-        <th class="p-2 text-left text-content" data-font-size="16">Location</th>
-        <th class="p-2 text-left text-content" data-font-size="16">Category</th>
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= student_sort_items_header('description', 'Description', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= student_sort_items_header('location', 'Location', sort_field, sort_direction) %>
+        </th>
+        <th class="p-2 text-left text-content" data-font-size="16">
+          <%= student_sort_items_header('category', 'Category', sort_field, sort_direction) %>
         <th class="p-2 text-center text-content" data-font-size="16">Available</th>
       </tr>
     </thead>

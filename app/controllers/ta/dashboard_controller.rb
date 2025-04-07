@@ -1,4 +1,5 @@
 class Ta::DashboardController < ApplicationController
+  helper Ta::DashboardHelper
   before_action :check_ta_role
   respond_to :html, :json, :turbo_stream
 

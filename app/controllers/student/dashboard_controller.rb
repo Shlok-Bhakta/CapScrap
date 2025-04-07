@@ -23,7 +23,15 @@ class Student::DashboardController < ApplicationController
     @categories = Category.all
 
     respond_to do |format|
-      format.html
+      format.html {
+        render partial: "student/dashboard/items_table", locals: {
+          items: @items,
+          pagy: @pagy,
+          categories: @categories,
+          sort_field: params[:sort],
+          sort_direction: params[:direction]
+        }
+      }
       format.turbo_stream {
         render turbo_stream: turbo_stream.replace(
           "items_table",
