@@ -97,7 +97,6 @@ export default class extends Controller {
   }
 
   showUserSuggestions(users) {
-    console.log("showing suggestions");
     const suggestionsList = users.map(user => `
       <div class="p-2 hover:bg-gray-100 cursor-pointer" data-action="click->renting-search#selectUser">
         <div class="font-medium">${user.full_name}</div>
