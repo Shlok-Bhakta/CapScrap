@@ -73,12 +73,12 @@
 
 
           <div id="google_translate_element" class="google-translate-container"></div>
-
+            
           <script type="text/javascript">
             function googleTranslateElementInit() {
               new google.translate.TranslateElement({
                 pageLanguage: 'en',          // Default page language is English
-                includedLanguages: 'ar,de,en,es,fr,it,ja,zh-CN',
+                includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
                 layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
                 autoDisplay: false
               }, 'google_translate_element');
@@ -111,7 +111,7 @@
                 if (typeof window.google.translate.TranslateElement !== 'undefined') {
                   new google.translate.TranslateElement({
                     pageLanguage: 'en',
-                    includedLanguages: 'ar,de,en,es,fr,it,ja,zh-CN',
+                    includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
                     layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
                     autoDisplay: false
                   }, 'google_translate_element');
@@ -119,6 +119,66 @@
               }
             });
           </script>
+
+          <style>
+            /* Custom styles for Google Translate */
+            .google-translate-container {
+              margin-right: 0px;
+            }
+            
+            /* Style the Google Translate dropdown */
+            .goog-te-gadget {
+              font-family: inherit !important;
+              font-size: 0.875rem !important;
+            }
+            
+            /* Hide all text in the gadget except the dropdown */
+            .goog-te-gadget-simple .goog-te-menu-value span:first-child,
+            .goog-te-gadget-simple .goog-te-menu-value span:last-child,
+            .goog-te-gadget .goog-te-combo + span,
+            .goog-te-gadget span {
+              display: none !important;
+            }
+            
+            /* Make sure the dropdown itself is still visible */
+            .goog-te-combo {
+              background-color: var(--color-secondary) !important;
+              color: var(--color-text) !important;
+              border: 1px solid var(--color-secondary) !important;
+              border-radius: 0.375rem !important;
+              padding: 0.25rem 0.5rem !important;
+              font-size: 0.875rem !important;
+              line-height: 1.25rem !important;
+              transition: background-color 0.2s ease-in-out !important;
+              outline: none !important;
+              display: inline-block !important;
+            }
+            
+            .goog-te-combo:hover {
+              background-color: color-mix(in srgb, var(--color-secondary) 80%, transparent) !important;
+            }
+            
+            /* Fix option text color */
+            .goog-te-combo option {
+              background-color: var(--color-primary) !important;
+              color: var(--color-text) !important;
+            }
+            
+            /* Additional selector to target the "powered by" specifically */
+            .goog-logo-link, 
+            .goog-te-gadget-icon,
+            .goog-te-banner-frame.skiptranslate,
+            .goog-te-gadget-icon,
+            #goog-gt-tt, 
+            .goog-te-balloon-frame {
+              display: none !important;
+            }
+            
+            /* Remove all text and only keep the select dropdown */
+            .goog-te-gadget {
+              color: transparent !important;
+            }
+          </style>
 
           <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
