@@ -12,8 +12,8 @@
         <th class="p-2 text-left text-content" data-font-size="16">
           <%= sort_items_header('category', 'Category', sort_field, sort_direction) %>
         </th>
-
-        <th class="p-2 text-center text-content" data-font-size="16">Quantity</th>
+        <th class="p-2 text-center text-content" data-font-size="16">Available</th>
+        <th class="p-2 text-center text-content" data-font-size="16">Total</th>
         <th class="p-2 text-left text-content" data-font-size="16">
           <%= sort_items_header('created_at', 'Creation Date', sort_field, sort_direction) %>
         </th>
@@ -44,40 +44,48 @@
                         data: { item_id: item.id } %>
           <span class="category-text"><%= item.category.name %></span>
         </td>
+         <%# if quantity < 3 then show warning color %>
+         <% if item.quantity < 3 %>
+           <td class="p-2 bg-accent text-center text-content" data-font-size="16">
+             <span class="text-text">
+               <%= item.quantity %>
+             </span>
+           </td>
+         <% elsif item.quantity == item.total_quantity %>
+           <td class="p-2 bg-confirm text-center text-content" data-font-size="16">
+             <span class="text-text">
+               <%= item.quantity %>
+             </span>
+           </td>
+         <% else %>
+           <td class="p-2 text-center text-content" data-font-size="16">
+             <span class="text-text">
+               <%= item.quantity %>
+             </span>
+           </td>
+         <% end %>
 
-        <% if item.quantity < 5 %>
-        <td class="p-2 bg-error/20 text-center text-content" data-font-size="16">
-          <span class="text-text">
-            <%= item.quantity %>
-          </span>
-       </td>
-        <% else %>
-          <td class="p-2 text-center text-content" data-font-size="16">
-          <span class="text-text">
-            <%= item.quantity %>
-          </span>
-          </td>
-        <% end %>
+         <td class="p-2 text-center text-content" data-font-size="16">
+           <%= item.total_quantity %>
+         </td>
         <td class="p-2 text-content" data-font-size="16"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-        <td class="p-2">
-          <div class="flex space-x-2 justify-end">
-            <button type="button"
-                   class="edit-button text-info hover:text-info/80 p-2"
-                   data-action="click->item#editRow"
-                   data-item-id="<%= item.id %>">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-              </svg>
-            </button>
-            <button type="button"
-                   class="delete-button text-error hover:text-error/80 p-2"
-                   data-action="click->item#deleteRow"
-                   data-item-id="<%= item.id %>">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-              </svg>
-            </button>
-          </div>
+        <td class="p-2 flex justify-center items-center">
+          <button type="button"
+                 class="edit-button rounded-lg border border-icon-info text-icon-info hover:bg-icon-info/10 p-2 mx-1"
+                 data-action="click->item#editRow"
+                 data-item-id="<%= item.id %>">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" style="color: var(--color-icon-info);" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+          </button>
+          <button type="button"
+                 class="delete-button rounded-lg border border-icon-error text-icon-error hover:bg-icon-error/10 p-2 mx-1"
+                 data-action="click->item#deleteRow"
+                 data-item-id="<%= item.id %>">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
         </td>
       </tr>
     <% end %>

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     delete "dashboard/delete_item"
     get "dashboard/search_items"
     post "dashboard/create_purchase"
+    post "dashboard/add_comment"
 
 
     # scope "dashboard" do

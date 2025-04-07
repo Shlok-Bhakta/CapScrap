@@ -19,6 +19,12 @@
   --color-warning: #92400e;    /* dark yellow/orange */
   --color-error: #7f1d1d;      /* dark red */
   --color-muted: #6b7280;      /* gray-500 */
+  --color-confirm-hover: #6db96d;
+
+  /* Icon colors */
+  --color-icon-info: #0087B8;
+  --color-icon-error: #F6948D;
+  --color-icon-purple: #BAA5FF;
 }
 @layer base {
     .dark {
@@ -38,6 +44,11 @@
       --color-warning: #eab308;
       --color-error: #ef4444;      /* red-500 */
       --color-muted: #9ca3af;      /* gray-400 */
+      --color-confirm-hover: #22893c;
+
+      --color-icon-info: #33C9FF;
+      --color-icon-error: #E22012;
+      --color-icon-purple: #2B00B8;
     }
 
     .high-contrast {
@@ -52,11 +63,18 @@
       --color-green: #0a1f0a;   /* nearly black green */
       --color-yellow: #1a1505;  /* nearly black yellow/orange */
       --color-purple: #1a0a1f;  /* nearly black purple */
-
+  
       --color-info: #0a0a23;
       --color-warning: #1a1505;
       --color-error: #1a0000;
       --color-muted: #222222;
+      
+      --color-confirm-hover: #0f2b0f;
+
+      /* Override icon colors to white for contrast */
+      --color-icon-info: #ffffff;
+      --color-icon-error: #ffffff;
+      --color-icon-purple: #ffffff;
     }
 
     /* .colorblind {

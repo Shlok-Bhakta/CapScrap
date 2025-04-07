@@ -1,6 +1,11 @@
 <%# protection to ensure only teachers can access this page %>
 <% if current_user.role_id == 3 %>
+
   <div class="flex flex-col w-full h-full">
+    <div id="flash" class="mb-4 text-center bg-accent/70 border-accent border text-text p-4 relative hidden">
+      <button onclick="this.closest('#flash').classList.add('hidden');" class="absolute top-2 right-4 text-text hover:text-text/80 text-xl font-bold" aria-label="Close">&times;</button>
+      <p class="pr-8"></p>
+    </div>
     <%# Search Section %>
     <div class="mb-6 w-full">
       <h2 class="text-lg font-semibold mb-2 text-text text-content" data-font-size="18">Search Rentals</h2>
@@ -75,6 +80,24 @@
           </div>
         </div>
       <% end %>
+      
+      <script>
+        document.addEventListener('turbo:before-stream-render', (event) => {
+          if (event.target.target === 'flash') {
+            const flash = document.getElementById('flash');
+            const message = event.target.templateContent.textContent.trim();
+            
+            if (message) {
+              flash.querySelector('p').textContent = message;
+              flash.classList.remove('hidden');
+            } else {
+              flash.classList.add('hidden');
+            }
+            
+            event.preventDefault();
+          }
+        });
+      </script>
     </div>
 
     <%# Rentings Table Section %>
