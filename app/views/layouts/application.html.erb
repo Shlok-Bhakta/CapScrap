@@ -69,21 +69,58 @@
           <%# spacer to push content to the right %>
           <div class="flex-1"></div>
 
-          <div id="google_translate_element" class="mr-2"></div>
-          
-          <%# <div class="language-selector">
-            <select id="language-select" onchange="changeLanguage(this.value)">
-              <option value="">Select Language</option>
-              <option value="en">English</option>
-              <option value="es">Español (Spanish)</option>
-              <option value="fr">Français (French)</option>
-              <option value="de">Deutsch (German)</option>
-              <option value="ja">日本語 (Japanese)</option>
-              <option value="zh-CN">中文 (Chinese)</option>
-              <option value="nl">Nederlands (Dutch)</option>
-              <option value="hi">हिन्दी (Hindi)</option>
-            </select>
-          </div> %>
+          <%# <div id="google_translate_element" class="mr-2"></div> %>
+
+
+          <div id="google_translate_element" class="google-translate-container"></div>
+
+          <script type="text/javascript">
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({
+                pageLanguage: 'en',          // Default page language is English
+                includedLanguages: 'ar,de,en,es,fr,it,ja,zh-CN',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false
+              }, 'google_translate_element');
+              
+              // Force English on first visit if no language cookie exists
+              if (!readCookie('googtrans')) {
+                // English is actually the default, so we don't need to do anything here
+                // But if you wanted to force another language by default, you could use:
+                // document.cookie = 'googtrans=/en/fr; path=/; domain=' + document.domain;
+              }
+            }
+            
+            // Helper function to read cookies
+            function readCookie(name) {
+              var nameEQ = name + "=";
+              var ca = document.cookie.split(';');
+              for(var i=0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+              }
+              return null;
+            }
+            
+            // Add event listener to execute after page loads
+            document.addEventListener('turbolinks:load', function() {
+              // This ensures the widget reflects the saved language after page navigation with Turbolinks
+              if (window.google && window.google.translate) {
+                // Refresh the Google Translate widget if needed
+                if (typeof window.google.translate.TranslateElement !== 'undefined') {
+                  new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'ar,de,en,es,fr,it,ja,zh-CN',
+                    layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                    autoDisplay: false
+                  }, 'google_translate_element');
+                }
+              }
+            });
+          </script>
+
+          <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
           <div class="flex items-center">
             <label for="font-size-slider" class="text-white text-sm mr-2 text-content clamp-font-size" data-font-size="16">Font Size:</label>
@@ -136,11 +173,12 @@
       <script>
     document.addEventListener("DOMContentLoaded", function() {
       initializeFontSizeSystem();
+      // initializeGoogleTranslate();
     });
 
     document.addEventListener('turbo:render', function() {
       applyStoredFontSize();
-      initializeGoogleTranslate();
+      // initializeGoogleTranslate();
     });
 
     document.addEventListener('turbo:before-cache', function() {
@@ -269,155 +307,9 @@
       localStorage.setItem('font-size', this.value);
       applyStoredFontSize();
     }
-
-
-  // Google translate
-
-        document.addEventListener('DOMContentLoaded', function() {
-          initializeGoogleTranslate();
-        });
-
-        function initializeGoogleTranslate() {
-          console.log("Initializing Google Translate...");
-          // Only add the script if it hasn't been added yet
-          if (!window.googleTranslateScriptAdded) {
-            window.googleTranslateScriptAdded = true;
-            console.log("Adding Google Translate script to page");
-            
-            // Create the script element for Google Translate
-            var googleTranslateScript = document.createElement('script');
-            googleTranslateScript.type = 'text/javascript';
-            googleTranslateScript.async = true;
-            googleTranslateScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            googleTranslateScript.onerror = function() {
-              console.error("Failed to load Google Translate script");
-            };
-            document.body.appendChild(googleTranslateScript);
-            
-            // Define the callback function for Google Translate
-            window.googleTranslateElementInit = function() {
-              console.log("Google Translate script loaded, initializing element");
-              new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: 'en,es,fr,de,ja,zh-CN,nl,hi',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-              }, 'google_translate_element');
-
-              console.log("Translate element initialized");
-              
-              // Apply stored or just selected language
-              setTimeout(function() {
-                var langToApply = window.preferredLanguage || localStorage.getItem('preferred_language');
-                if (langToApply) {
-                  console.log("Attempting to apply language: " + langToApply);
-                  var selectElement = document.querySelector('.goog-te-combo');
-                  if (selectElement) {
-                    console.log("Found Google Translate dropdown, setting value");
-                    selectElement.value = langToApply;
-                    selectElement.dispatchEvent(new Event('change'));
-                  }
-                  else{
-                    console.log("Could not find Google Translate dropdown");
-                  }
-                }
-              }, 1000); // Give time for Google Translate to initialize
-            };
-          }
-          else{
-            console.log("Google Translate script already added");
-          }
-        }
-
-        // function changeLanguage(langCode) {
-        //   if (!langCode) return;
-          
-        //   console.log("Changing language to: " + langCode);
-          
-        //   // Store selected language in localStorage for persistence
-        //   localStorage.setItem('preferred_language', langCode);
-          
-        //   // If Google Translate is already loaded
-        //   if (window.google && google.translate) {
-        //     console.log("Google Translate exists, finding dropdown");
-        //     var selectElement = document.querySelector('.goog-te-combo');
-        //     if (selectElement) {
-        //       console.log("Found dropdown, changing value");
-        //       selectElement.value = langCode;
-        //       selectElement.dispatchEvent(new Event('change'));
-        //     } else {
-        //       console.log("Could not find Google dropdown");
-        //     }
-        //   } else {
-        //     console.log("Google Translate not yet loaded, setting preferred language");
-        //     // If not loaded yet, set a flag and initialize
-        //     window.preferredLanguage = langCode;
-        //     initializeGoogleTranslate();
-        //   }
-        // }
-
-        function changeLanguage(langCode) {
-          if (!langCode) return;
-          
-          console.log("Changing language to: " + langCode);
-          
-          // Store selected language in localStorage for persistence
-          localStorage.setItem('preferred_language', langCode);
-          
-          // If Google Translate is already loaded
-          if (window.google && google.translate) {
-            console.log("Google Translate exists, finding dropdown");
-            
-            try {
-              // Try direct translation method first (more reliable)
-              if (langCode === 'en') {
-                // Reset to original language
-                var iframe = document.querySelector('.goog-te-menu-frame');
-                if (iframe) {
-                  var doc = iframe.contentDocument || iframe.contentWindow.document;
-                  var cancel = doc.querySelector('.goog-te-button button');
-                  if (cancel) {
-                    cancel.click();
-                    return;
-                  }
-                }
-              } else {
-                google.translate.TranslateElement.getInstance().translate('', langCode);
-                return;
-              }
-            } catch(e) {
-              console.log("Direct translation method failed, trying dropdown", e);
-            }
-            
-            // Fallback to dropdown method
-            var selectElement = document.querySelector('.goog-te-combo');
-            if (selectElement) {
-              console.log("Found dropdown, changing value");
-              selectElement.value = langCode;
-              selectElement.dispatchEvent(new Event('change'));
-            } else {
-              console.log("Could not find Google dropdown");
-            }
-          } else {
-            console.log("Google Translate not yet loaded, setting preferred language");
-            // If not loaded yet, set a flag and initialize
-            window.preferredLanguage = langCode;
-            initializeGoogleTranslate();
-          }
-        }
     
         document.addEventListener('turbo:load', function() {
           initializeFontSizeSystem();
-          // initializeGoogleTranslate();
-          var preferredLang = localStorage.getItem('preferred_language');
-            if (preferredLang) {
-              setTimeout(function() {
-                changeLanguage(preferredLang);
-              }, 500);
-            }else{
-              initializeGoogleTranslate();
-            }
-            
           var themeToggle = document.getElementById('theme-toggle');
           var themeIcon = document.getElementById('theme-icon');
 
