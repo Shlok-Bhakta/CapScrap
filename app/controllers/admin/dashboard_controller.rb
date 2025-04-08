@@ -344,7 +344,7 @@ class Admin::DashboardController < ApplicationController
     @item = Item.new(item_params)
     if @item.save
       render json: { success: true, message: "Item created successfully" }
-    else 
+    else
       render json: { success: false, error: @item.errors.full_messages.join(", ") }, status: :ok
     end
   end
