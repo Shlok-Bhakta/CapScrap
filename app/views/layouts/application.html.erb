@@ -122,6 +122,16 @@
       // On page load or when changing themes, best to add inline in `head` to avoid FOUC
       const savedMode = localStorage.getItem('display-mode');
 
+      // function applyMode(mode) {
+      //   document.documentElement.classList.remove('dark', 'high-contrast');
+
+      //   if (mode === 'dark') {
+      //     document.documentElement.classList.add('dark');
+      //   } else if (mode === 'high-contrast') {
+      //     document.documentElement.classList.add('high-contrast');
+      //   }
+      // }
+
       function applyMode(mode) {
         document.documentElement.classList.remove('dark', 'high-contrast');
 
@@ -130,6 +140,11 @@
         } else if (mode === 'high-contrast') {
           document.documentElement.classList.add('high-contrast');
         }
+
+        localStorage.setItem('display-mode', mode);
+        
+        // Update active button if the dropdown exists
+        updateActiveButton();
       }
 
       if (savedMode) {
@@ -461,7 +476,7 @@
       document.querySelectorAll('.clamp-font-size[data-font-size]').forEach(link => {
         const initialFontSize = parseInt(link.getAttribute('data-font-size')) || 16;
         const adjustedFontSize = initialFontSize + savedFontSize;
-        link.style.fontSize = `${Math.min(18, adjustedFontSize)}px`;
+        link.style.fontSize = `${Math.min(20, adjustedFontSize)}px`;
         link.setAttribute('data-font-size-processed', 'true');
       });
     }
