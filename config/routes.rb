@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     patch "dashboard/toggle_renting"
     patch "dashboard/toggle_singleuse"
     delete "dashboard/delete_renting"
+    patch "dashboard/update_quantity", to: "dashboard#update_quantity"
+    get "dashboard/edit_renting", to: "dashboard#edit_renting"
 
     get "dashboard/purchased"
     post "dashboard/create_item"
@@ -18,17 +20,39 @@ Rails.application.routes.draw do
     delete "dashboard/delete_item"
     get "dashboard/search_items"
     post "dashboard/create_purchase"
+    post "dashboard/add_comment"
+  end
 
+  namespace :ta do
+    get "dashboard/users"
+    get "dashboard/search_users"
 
-    # scope "dashboard" do
-    #   resources :items, only: [ :create, :update, :destroy ], controller: :dashboard
-    #   post "items", to: "dashboard#create_item"
-    #   patch "items/:id", to: "dashboard#update_item"
-    #   delete "items/:id", to: "dashboard#delete_item"
-    # end
+    get "dashboard/items"
+    get "dashboard/renting"
+    post "dashboard/create_renting"
+    patch "dashboard/toggle_renting"
+    patch "dashboard/toggle_singleuse"
+    post "dashboard/add_comment"
+    patch "dashboard/update_quantity"
+    patch "dashboard/toggle_singleuse"
+    patch "dashboard/toggle_renting"
+    post "dashboard/add_comment"
+    delete "dashboard/delete_renting"
+    post "dashboard/create_renting"
+    get "dashboard/search_users"
+    get "dashboard/search_items"
+    post "dashboard/create_item"
+    patch "dashboard/update_item"
+    delete "dashboard/delete_item"
+    get "dashboard/purchased"
+    post "dashboard/create_purchase"
+  end
+
+  namespace :student do
+    get "dashboard/items"
   end
   # Defines the root path route ("/")
-  root "items#index"
+  root "home#index"
 
   devise_for :users, controllers: {
     registrations: "users/registrations",

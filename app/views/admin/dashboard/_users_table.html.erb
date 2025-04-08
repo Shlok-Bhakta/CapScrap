@@ -1,41 +1,130 @@
 <div class="flex flex-col" data-controller="font">
-  <table class="w-full">
-    <thead>
-      <tr class="border-b">
-        <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('name', 'Full Name', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('email', 'Email', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('role', 'Role', sort_field, sort_direction) %>
-        </th>
-        <th class="p-2 text-left text-content" data-font-size="16">
-          <%= sort_user_header('created_at', 'Creation Date', sort_field, sort_direction) %>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-    <% users.each do |user| %>
-      <tr class="border-b hover:bg-gray-50">
-        <td class="p-2 text-content" data-font-size="16"><%= user.full_name %></td>
-        <td class="p-2 text-content" data-font-size="16"><%= user.email %></td>
-        <td class="p-2 text-content" data-font-size="16">
-          <%= select_tag "user_role_#{user.id}",
-                        options_for_select(roles, [user.role.name, user.role.id]),
-                        class: "role-select p-1 border rounded",
-                        data: { user_id: user.id } %>
-        </td>
-        <td class="p-2 text-content" data-font-size="16"><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
+  <%# Responsive table with horizontal scrolling on small screens %>
+  <div class="overflow-x-auto rounded-lg border border-primary/10">
+    <table class="w-full min-w-[800px] border-collapse">
+      <thead>
+        <tr class="bg-primary/5 border-b border-primary/10">
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= sort_user_header('name', 'Full Name', sort_field, sort_direction) %>
+          </th>
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= sort_user_header('email', 'Email', sort_field, sort_direction) %>
+          </th>
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= sort_user_header('role', 'Role', sort_field, sort_direction) %>
+          </th>
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= sort_user_header('created_at', 'Creation Date', sort_field, sort_direction) %>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if users.any? %>
+        <% users.each do |user| %>
+          <tr class="border-b border-primary/10 hover:bg-primary/5 transition-colors duration-150">
+            <td class="p-3 text-content" data-font-size="16">
+              <div class="flex items-center gap-3">
+                <img src="<%= user.avatar_url %>" alt="<%= user.full_name %>" class="h-8 w-8 rounded-full">
+                <span><%= user.full_name %></span>
+              </div>
+            </td>
+            <td class="p-3 text-content" data-font-size="16">
+              <a href="mailto:<%= user.email %>" class="text-primary hover:underline"><%= user.email %></a>
+            </td>
+            <td class="p-3 text-content" data-font-size="16">
+              <%= select_tag "user_role_#{user.id}",
+                          options_for_select(roles, [user.role.name, user.role.id]),
+                          class: "role-select p-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary/30 focus:outline-none transition-colors duration-200 w-full max-w-[200px]",
+                          data: { user_id: user.id } %>
+            </td>
+            <td class="p-3 text-content" data-font-size="16">
+              <span class="text-text/70 text-sm"><%= user.created_at.strftime("%Y-%m-%d") %></span>
+              <span class="block text-text/60 text-xs"><%= user.created_at.strftime("%H:%M") %></span>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="4" class="p-8 text-center text-muted italic">
+            <div class="flex flex-col items-center justify-center py-6">
+              <svg class="w-12 h-12 text-muted/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              <p>No users found matching your search criteria</p>
+              <button type="button" onclick="window.location.href='<%= admin_dashboard_users_path %>'" class="mt-4 text-primary hover:underline">
+                Clear search filters
+              </button>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
   
   <% if users.any? %>
-    <%= pagination_nav(pagy) %>
-  <% else %>
-    <p class="text-center text-gray-500 mt-4 text-content" data-font-size="16">No users found</p>
+    <div class="mt-4">
+      <%= pagination_nav(pagy) %>
+    </div>
   <% end %>
+
+  <%# Mobile cards view (hidden on larger screens) %>
+  <div class="lg:hidden mt-4">
+    <div class="space-y-4">
+      <% users.each do |user| %>
+        <div class="bg-background border border-primary/10 rounded-lg p-4 shadow-sm relative">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="<%= user.avatar_url %>" alt="<%= user.full_name %>" class="h-10 w-10 rounded-full">
+            <div>
+              <h3 class="font-medium text-lg"><%= user.full_name %></h3>
+              <a href="mailto:<%= user.email %>" class="text-primary hover:underline text-sm"><%= user.email %></a>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 gap-3 text-sm">
+            <div>
+              <p class="text-text/60 mb-1">Role:</p>
+              <%= select_tag "user_role_mobile_#{user.id}",
+                          options_for_select(roles, [user.role.name, user.role.id]),
+                          class: "role-select p-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary/30 focus:outline-none transition-colors duration-200 w-full",
+                          data: { user_id: user.id } %>
+            </div>
+            <div>
+              <p class="text-text/60 mb-1">Joined:</p>
+              <p><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle table/cards view based on screen size
+    function handleResponsiveView() {
+      const tableContainer = document.querySelector('.overflow-x-auto');
+      const cardsContainer = document.querySelector('.lg\\:hidden');
+      
+      if (window.innerWidth < 1024) { // lg breakpoint in Tailwind
+        tableContainer.classList.add('hidden');
+        cardsContainer.classList.remove('lg:hidden');
+      } else {
+        tableContainer.classList.remove('hidden');
+        cardsContainer.classList.add('lg:hidden');
+      }
+      
+      // Re-initialize role selects after view change to ensure mobile selects work
+      if (typeof initializeRoleSelects === 'function') {
+        initializeRoleSelects();
+      }
+    }
+    
+    // Initial check
+    handleResponsiveView();
+    
+    // Check on resize
+    window.addEventListener('resize', handleResponsiveView);
+  });
+</script>

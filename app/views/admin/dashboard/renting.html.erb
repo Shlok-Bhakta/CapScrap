@@ -1,85 +1,237 @@
 <%# protection to ensure only teachers can access this page %>
-
 <% if current_user.role_id == 3 %>
   <div class="flex flex-col w-full h-full">
-    <%= form_with url: admin_dashboard_renting_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
+    <%# Page Header %>
+    <div class="mb-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-text mb-2 text-content" data-font-size="24">Rental Management</h1>
+      <p class="text-text/70 text-content" data-font-size="16">Add, edit and manage equipment rentals</p>
+    </div>
+
+    <div id="flash" class="mb-4 text-center bg-accent/70 border-accent border text-text p-4 relative hidden">
+      <button onclick="this.closest('#flash').classList.add('hidden');" class="absolute top-2 right-4 text-text hover:text-text/80 text-xl font-bold" aria-label="Close">&times;</button>
+      <p class="pr-8"></p>
+    </div>
+
+    <%# Search Section %>
+    <div class="mb-8 w-full bg-primary/10 rounded-lg p-4 shadow-sm">
+      <h2 class="text-lg font-semibold mb-3 text-text text-content flex items-center" data-font-size="18">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Search Rentals
+      </h2>
+      <%= form_with url: admin_dashboard_renting_path, method: :get, data: { turbo_frame: "rentings_table", turbo_action: "advance" } do |f| %>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <%= f.text_field :query,
+              placeholder: "Search by student name or item description...",
+              class: "p-3 border border-primary/20 rounded-lg w-full focus:ring-2 focus:ring-primary/30 focus:outline-none text-content transition-all duration-200",
+              "data-font-size": { font_size: 16 },
+              data: {
+                controller: "search",
+                action: "input->search#search"
+              } %>
+          <button type="submit" class="bg-primary hover:bg-primary/90 text-background px-4 py-2 rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap sm:w-auto w-full">
+            Search
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Add New Renting Section %>
+    <div class="bg-secondary/20 rounded-lg p-6 mb-8 w-full border border-secondary/30 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-text text-content flex items-center" data-font-size="18">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Create New Rental
+        </h2>
+        <button type="button" id="toggleNewRentingForm" class="text-primary hover:text-primary/80 text-sm flex items-center transition-all duration-200">
+          <span id="formToggleText">Hide Form</span>
+          <svg id="formToggleIcon" class="w-4 h-4 ml-1 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
       
-      <%= f.text_field :query,
-          placeholder: "Search by name or item...",
-          class: "mb-4 p-2 border rounded w-1/2 text-content",
-          "data-font-size": { font_size: 16 },
-          data: {
-            controller: "search",
-            action: "input->search#search"
-          } %>
-
-    <% end %>
-
-    <div class="mb-8 w-full">
-        <div class="text-text text-content" data-font-size="16">Rent an Item</div>
-        <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "w-full" do |f| %>
-          <div data-controller="renting-search" class="flex flex-row gap-4 w-full">
-          <div class="relative flex-1">
+      <%= form_with url: admin_dashboard_create_renting_path, scope: nil, local: true, class: "w-full", id: "newRentingForm" do |f| %>
+        <div data-controller="renting-search" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="relative">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Student</label>
             <%= f.text_field :user,
-                  placeholder: "Search for a user...",
-                  class: "w-full p-2 border rounded text-content",
+                  placeholder: "Enter student name",
+                  class: "w-full p-3 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary/30 focus:outline-none text-content transition-all duration-200",
                   "data-font-size": { font_size: 16 },
                   required: true,
                   data: {
                     renting_search_target: "userField",
                     action: "input->renting-search#searchUsers"
                   } %>
-            <div data-renting-search-target="userSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+            <div data-renting-search-target="userSuggestions" class="hidden absolute w-full bg-white border rounded-lg mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
             </div>
           </div>
 
-          <div class="relative flex-1">
+          <div class="relative">
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Item</label>
             <%= f.text_field :item,
-            placeholder: "Search for an item...",
-            class: "w-full p-2 border rounded text-content",
-            "data-font-size": { font_size: 16 },
-            required: true,
-            data: {
-              renting_search_target: "itemField",
-              action: "input->renting-search#searchItems"
-            } %>
-            <div data-renting-search-target="itemSuggestions" class="hidden absolute w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
+                placeholder: "Enter item description",
+                class: "w-full p-3 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary/30 focus:outline-none text-content transition-all duration-200",
+                "data-font-size": { font_size: 16 },
+                required: true,
+                data: {
+                  renting_search_target: "itemField",
+                  action: "input->renting-search#searchItems"
+                } %>
+            <div data-renting-search-target="itemSuggestions" class="hidden absolute w-full bg-white border rounded-lg mt-1 max-h-60 overflow-y-auto z-10 shadow-lg">
             </div>
           </div>
 
-          <%= f.number_field :quantity,
-          placeholder: "Quantity",
-          min: 1,
-          class: "w-48 p-2 border rounded text-content",
-          "data-font-size": { font_size: 16 },
-          required: true %>
-
-          <div class="flex place-items-center gap-2 text-content" data-font-size="16">
-          <%= f.check_box :is_singleuse
-          %>
-          <%= f.label "Is Single Use?" %>
+          <div>
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Quantity</label>
+            <%= f.number_field :quantity,
+                value: 1,
+                min: 1,
+                class: "w-full p-3 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary/30 focus:outline-none text-content transition-all duration-200",
+                "data-font-size": { font_size: 16 },
+                required: true %>
           </div>
 
-          <%= f.submit "Rent",
-              class: "px-4 py-2 bg-confirm hover:bg-green-700 text-text rounded text-content", "data-font-size": { font_size: 16 } %>
+          <div>
+            <label class="block text-sm font-medium mb-1 text-text/80 text-content" data-font-size="14">Single Use</label>
+            <%= f.check_box :is_singleuse,
+                class: "mt-2 h-6 w-6 rounded border-primary/20 text-primary focus:ring-primary/30",
+                "data-font-size": { font_size: 16 } %>
           </div>
-        <% end %>
+        </div>
+        
+        <div class="mt-4 flex justify-end">
+          <%= f.submit "Create Rental",
+              class: "px-6 py-3 bg-confirm hover:bg-confirm-hover text-text rounded-lg shadow-sm text-content transition-all duration-200 flex items-center",
+              "data-font-size": { font_size: 16 } do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create Rental
+          <% end %>
+        </div>
+      <% end %>
+      
+      <script>
+        document.addEventListener('turbo:before-stream-render', (event) => {
+          if (event.target.target === 'flash') {
+            const flash = document.getElementById('flash');
+            const message = event.target.templateContent.textContent.trim();
+            
+            if (message) {
+              flash.querySelector('p').textContent = message;
+              flash.classList.remove('hidden');
+            } else {
+              flash.classList.add('hidden');
+            }
+            
+            event.preventDefault();
+          }
+        });
+
+        // Toggle new renting form visibility with Turbo navigation support
+        document.addEventListener('DOMContentLoaded', initializeRentingPage);
+        document.addEventListener('turbo:load', initializeRentingPage);
+        document.addEventListener('turbo:render', initializeRentingPage);
+        
+        function initializeRentingPage() {
+          initializeFormToggle();
+          initializeRentingSearchController();
+        }
+        
+        function initializeFormToggle() {
+          const toggleBtn = document.getElementById('toggleNewRentingForm');
+          const formContainer = document.getElementById('newRentingForm');
+          
+          // Exit if elements don't exist on this page
+          if (!toggleBtn || !formContainer) return;
+          
+          const toggleText = document.getElementById('formToggleText');
+          const toggleIcon = document.getElementById('formToggleIcon');
+          
+          // Set initial state to match UI (form shown by default)
+          let isFormVisible = true;
+          
+          // Remove previous event listeners to prevent duplicates
+          toggleBtn.removeEventListener('click', toggleForm);
+          
+          // Re-add event listener
+          toggleBtn.addEventListener('click', toggleForm);
+          
+          function toggleForm() {
+            isFormVisible = !isFormVisible;
+            
+            if (isFormVisible) {
+              formContainer.classList.remove('hidden');
+              toggleText.textContent = 'Hide Form';
+              toggleIcon.classList.add('rotate-180');
+            } else {
+              formContainer.classList.add('hidden');
+              toggleText.textContent = 'Show Form';
+              toggleIcon.classList.remove('rotate-180');
+            }
+          }
+        }
+        
+        function initializeRentingSearchController() {
+          // Reset any search forms to ensure proper functionality after navigation
+          const rentingSearchController = document.querySelector('[data-controller="renting-search"]');
+          
+          if (rentingSearchController) {
+            // Reset user suggestions
+            const userField = rentingSearchController.querySelector('[data-renting-search-target="userField"]');
+            const userSuggestions = rentingSearchController.querySelector('[data-renting-search-target="userSuggestions"]');
+            
+            if (userField && userSuggestions) {
+              userSuggestions.classList.add('hidden');
+            }
+            
+            // Reset item suggestions
+            const itemField = rentingSearchController.querySelector('[data-renting-search-target="itemField"]');
+            const itemSuggestions = rentingSearchController.querySelector('[data-renting-search-target="itemSuggestions"]');
+            
+            if (itemField && itemSuggestions) {
+              itemSuggestions.classList.add('hidden');
+            }
+          }
+        }
+      </script>
     </div>
 
-    <%= turbo_frame_tag "rentings_table" do %>
-      <%= render partial: "rentings_table",
-                locals: {
-                  rentings: @rentings,
-                  sort_field: params[:sort],
-                  sort_direction: params[:direction],
-                  pagy: @pagy
-                } %>
-    <% end %>
+    <%# Rentings Table Section %>
+    <div class="w-full bg-background rounded-lg shadow-sm border border-primary/10 p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-text text-content flex items-center" data-font-size="18">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          Current Rentals
+        </h2>
+      </div>
+      
+      <%= turbo_frame_tag "rentings_table" do %>
+        <%= render partial: "rentings_table",
+                  locals: {
+                    rentings: @rentings,
+                    sort_field: params[:sort],
+                    sort_direction: params[:direction],
+                    pagy: @pagy
+                  } %>
+      <% end %>
+    </div>
   </div>
-
 <% else %>
-
-<h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
-
+  <div class="flex items-center justify-center h-full">
+    <div class="bg-error/10 border border-error/20 rounded-lg p-8 text-center max-w-md">
+      <svg class="w-16 h-16 mx-auto text-error mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+      <h1 class="font-bold text-2xl text-content mb-2" data-font-size="24">Access Denied</h1>
+      <p class="text-text/70">You don't have permission to view this page. Please contact an administrator if you believe this is an error.</p>
+    </div>
+  </div>
 <% end %>
-

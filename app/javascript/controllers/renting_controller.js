@@ -1,31 +1,23 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["table"]
-
   connect() {
-    console.log("renting controller connected")
-  }
-
-  saveStatusUpdate(event){
-
-
+    console.log("Renting controller connected")
   }
 
   editRow(event) {
-    event.preventDefault()
     const row = event.currentTarget.closest('tr')
-    const purchaseId = event.currentTarget.getAttribute('data-purchase-id')
+    const rentingId = event.currentTarget.getAttribute('data-renting-id')
 
-    if (!purchaseId) {
-      console.error('No purchase ID found')
+    if (!rentingId) {
+      console.error('No renting ID found')
       return
     }
 
     // Show edit fields, hide text
     row.querySelectorAll('td').forEach(td => {
-      const textSpan = td.querySelector('[class$="-text"]')
-      const input = td.querySelector('input, select')
+      const textSpan = td.querySelector('.quantity-text')
+      const input = td.querySelector('input[type="number"]')
       if (textSpan && input) {
         textSpan.classList.add('hidden')
         input.classList.remove('hidden')
@@ -37,29 +29,28 @@ export default class extends Controller {
     actionsCell.innerHTML = `
       <button type="button"
               class="save-button bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1 mr-2"
-              data-action="click->purchase#saveRow"
-              data-purchase-id="${purchaseId}">
+              data-action="click->renting#saveRow"
+              data-renting-id="${rentingId}">
         Save
       </button>
       <button type="button"
               class="cancel-button bg-gray-500 hover:bg-gray-700 text-white rounded px-2 py-1"
-              data-action="click->purchase#cancelEdit">
+              data-action="click->renting#cancelEdit">
         Cancel
       </button>
     `
   }
 
   saveRow(event) {
-    event.preventDefault()
     const row = event.currentTarget.closest('tr')
-    const purchaseId = event.currentTarget.getAttribute('data-purchase-id')
+    const rentingId = event.currentTarget.getAttribute('data-renting-id')
 
-    if (!purchaseId) {
-      console.error('No purchase ID found')
+    if (!rentingId) {
+      console.error('No renting ID found')
       return
     }
 
-    const quantity = row.querySelector('input[name="purchased_quantity"]')?.value
+    const quantity = row.querySelector('input[name="quantity"]')?.value
 
     if (!quantity) {
       alert('Quantity is required')
@@ -69,7 +60,7 @@ export default class extends Controller {
     if (confirm('Are you sure you want to save these changes?')) {
       const token = document.querySelector('meta[name="csrf-token"]').content
 
-      fetch(`/purchases/${purchaseId}`, {
+      fetch(`/admin/dashboard/update_quantity?id=${rentingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -77,8 +68,8 @@ export default class extends Controller {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          purchase: {
-            purchased_quantity: quantity
+          renting: {
+            quantity: quantity
           }
         })
       })
@@ -92,7 +83,7 @@ export default class extends Controller {
         if (data.success) {
           window.location.reload()
         } else {
-          throw new Error(data.error || 'Failed to update purchase')
+          throw new Error(data.error || 'Failed to update renting')
         }
       })
       .catch(error => {
@@ -102,19 +93,18 @@ export default class extends Controller {
     }
   }
 
-  deletePurchase(event) {
-    event.preventDefault()
-    const purchaseId = event.currentTarget.getAttribute('data-purchase-id')
+  deleteRenting(event) {
+    const rentingId = event.currentTarget.getAttribute('data-renting-id')
     
-    if (!purchaseId) {
-      console.error('No purchase ID found')
+    if (!rentingId) {
+      console.error('No renting ID found')
       return
     }
 
-    if (confirm('Are you sure you want to delete this purchase?')) {
+    if (confirm('Are you sure you want to delete this renting?')) {
       const token = document.querySelector('meta[name="csrf-token"]').content
 
-      fetch(`/purchases/${purchaseId}`, {
+      fetch(`/admin/dashboard/delete_renting?id=${rentingId}`, {
         method: 'DELETE',
         headers: {
           'X-CSRF-Token': token,
@@ -133,7 +123,7 @@ export default class extends Controller {
         if (data.success) {
           window.location.reload()
         } else {
-          throw new Error(data.error || 'Failed to delete purchase')
+          throw new Error(data.error || 'Failed to delete renting')
         }
       })
       .catch(error => {

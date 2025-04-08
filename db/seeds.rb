@@ -45,7 +45,8 @@ Item.create!(100.times.map do
   {
     category: rand(1..3) == 1 ? equipment_category : rand(1..3) == 1 ? tools_category : material_category,
     description: Faker::Commerce.product_name,
-    location: rand(1..3) == 1 ? "HRBB" : rand(1..3) == 1 ? "HELD" : rand(1..3) == 1 ? "ZACH" : "ILCB"
+    location: rand(1..3) == 1 ? "HRBB" : rand(1..3) == 1 ? "HELD" : rand(1..3) == 1 ? "ZACH" : "ILCB",
+    comments: rand(0..1) == 1 ? nil : Faker::Lorem.paragraph
   }
 end)
 
@@ -89,7 +90,8 @@ Purchase.create!(100.times.map do
     user_id: User.all.sample.id,
     item_id: Item.all.sample.id,
     purchase_date: Faker::Date.between(from: Date.today - 10, to: Date.today),
-    purchased_quantity: rand(1..10)
+    purchased_quantity: rand(1..10),
+    comments: rand(0..1) == 1 ? nil : Faker::Lorem.paragraph
   }
 end)
 
@@ -101,7 +103,8 @@ Renting.create!(100.times.map do
     return_date: Faker::Date.between(from: Date.today+1, to: Date.today+10),
     is_returned: rand(0..1) == 1,
     is_singleuse: rand(0..1) == 1,
-    quantity: rand(1..10)
+    quantity: rand(1..10),
+    comments: rand(0..1) == 1 ? nil : Faker::Lorem.paragraph
   }
 end)
 # Purchase.create!([
