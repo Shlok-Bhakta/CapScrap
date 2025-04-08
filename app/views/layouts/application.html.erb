@@ -20,6 +20,101 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <style>
+      /* Settings dropdown styles */
+      #settings-dropdown {
+        transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #settings-dropdown.hidden {
+        display: none;
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      .mode-toggle-btn {
+        transition: all 0.2s ease-in-out;
+      }
+
+      .mode-toggle-btn:hover {
+        background-color: var(--color-secondary-hover, rgba(var(--color-secondary), 0.8));
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 640px) {
+        #settings-dropdown {
+          width: calc(100vw - 2rem);
+          right: -0.5rem;
+        }
+      }
+      
+      /* Active button indicator */
+      .mode-toggle-btn.active {
+        outline: 2px solid var(--color-accent, #4a90e2);
+        outline-offset: -2px;
+      }
+      
+      /* Custom styles for Google Translate */
+      .google-translate-container {
+        margin-right: 0px;
+      }
+      
+      /* Style the Google Translate dropdown */
+      .goog-te-gadget {
+        font-family: inherit !important;
+        font-size: 0.875rem !important;
+      }
+      
+      /* Hide all text in the gadget except the dropdown */
+      .goog-te-gadget-simple .goog-te-menu-value span:first-child,
+      .goog-te-gadget-simple .goog-te-menu-value span:last-child,
+      .goog-te-gadget .goog-te-combo + span,
+      .goog-te-gadget span {
+        display: none !important;
+      }
+      
+      /* Make sure the dropdown itself is still visible */
+      .goog-te-combo {
+        background-color: var(--color-secondary) !important;
+        color: var(--color-text) !important;
+        border: 1px solid var(--color-secondary) !important;
+        border-radius: 0.375rem !important;
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.875rem !important;
+        line-height: 1.25rem !important;
+        transition: background-color 0.2s ease-in-out !important;
+        outline: none !important;
+        display: inline-block !important;
+      }
+      
+      .goog-te-combo:hover {
+        background-color: color-mix(in srgb, var(--color-secondary) 80%, transparent) !important;
+      }
+      
+      /* Fix option text color */
+      .goog-te-combo option {
+        background-color: var(--color-primary) !important;
+        color: var(--color-text) !important;
+      }
+      
+      /* Additional selector to target the "powered by" specifically */
+      .goog-logo-link, 
+      .goog-te-gadget-icon,
+      .goog-te-banner-frame.skiptranslate,
+      .goog-te-gadget-icon,
+      #goog-gt-tt, 
+      .goog-te-balloon-frame {
+        display: none !important;
+      }
+      
+      /* Remove all text and only keep the select dropdown */
+      .goog-te-gadget {
+        color: transparent !important;
+      }
+    </style>
   </head>
 
   <body class="bg-background text-text font-sans antialiased" data-controller="theme">
@@ -29,13 +124,28 @@
       // The Stimulus controller will take over for interaction and subsequent loads.
       const savedMode = localStorage.getItem('display-mode');
 
-      function applyInitialMode(mode) {
+      // function applyMode(mode) {
+      //   document.documentElement.classList.remove('dark', 'high-contrast');
+
+      //   if (mode === 'dark') {
+      //     document.documentElement.classList.add('dark');
+      //   } else if (mode === 'high-contrast') {
+      //     document.documentElement.classList.add('high-contrast');
+      //   }
+      // }
+
+      function applyMode(mode) {
         document.documentElement.classList.remove('dark', 'high-contrast');
         if (mode === 'dark') {
           document.documentElement.classList.add('dark');
         } else if (mode === 'high-contrast') {
           document.documentElement.classList.add('high-contrast');
         }
+
+        localStorage.setItem('display-mode', mode);
+        
+        // Update active button if the dropdown exists
+        updateActiveButton();
       }
 
       if (savedMode) {
@@ -83,134 +193,53 @@
           <%# spacer to push content to the right %>
           <div class="flex-1 hidden lg:block"></div>
 
-          <%# <div id="google_translate_element" class="mr-2"></div> %>
+          <!-- Settings Dropdown Menu - Replaces the individual settings controls -->
+          <div class="relative">
+            <button id="settings-dropdown-button" class="text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-3 py-1.5 flex items-center gap-2 text-content clamp-font-size" data-font-size="16">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+              </svg>
+              Settings
+            </button>
 
-
-          <div id="google_translate_element" class="google-translate-container"></div>
-            
-          <script type="text/javascript">
-            function googleTranslateElementInit() {
-              new google.translate.TranslateElement({
-                pageLanguage: 'en',          // Default page language is English
-                includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
-                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
-                autoDisplay: false
-              }, 'google_translate_element');
+            <div id="settings-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-primary rounded-md shadow-lg z-10 p-4 border border-secondary/30">
+              <!-- Google Translate -->
+              <div class="mb-4">
+                <label class="block text-text mb-2 text-sm font-medium">Language:</label>
+                <div id="google_translate_element" class="google-translate-container"></div>
+              </div>
               
-              // Force English on first visit if no language cookie exists
-              if (!readCookie('googtrans')) {
-                // English is actually the default, so we don't need to do anything here
-                // But if you wanted to force another language by default, you could use:
-                // document.cookie = 'googtrans=/en/fr; path=/; domain=' + document.domain;
-              }
-            }
-            
-            // Helper function to read cookies
-            function readCookie(name) {
-              var nameEQ = name + "=";
-              var ca = document.cookie.split(';');
-              for(var i=0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-              }
-              return null;
-            }
-            
-            // Add event listener to execute after page loads
-            document.addEventListener('turbolinks:load', function() {
-              // This ensures the widget reflects the saved language after page navigation with Turbolinks
-              if (window.google && window.google.translate) {
-                // Refresh the Google Translate widget if needed
-                if (typeof window.google.translate.TranslateElement !== 'undefined') {
-                  new google.translate.TranslateElement({
-                    pageLanguage: 'en',
-                    includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
-                    layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
-                    autoDisplay: false
-                  }, 'google_translate_element');
-                }
-              }
-            });
-          </script>
-
-          <style>
-            /* Custom styles for Google Translate */
-            .google-translate-container {
-              margin-right: 0px;
-            }
-            
-            /* Style the Google Translate dropdown */
-            .goog-te-gadget {
-              font-family: inherit !important;
-              font-size: 0.875rem !important;
-            }
-            
-            /* Hide all text in the gadget except the dropdown */
-            .goog-te-gadget-simple .goog-te-menu-value span:first-child,
-            .goog-te-gadget-simple .goog-te-menu-value span:last-child,
-            .goog-te-gadget .goog-te-combo + span,
-            .goog-te-gadget span {
-              display: none !important;
-            }
-            
-            /* Make sure the dropdown itself is still visible */
-            .goog-te-combo {
-              background-color: var(--color-secondary) !important;
-              color: var(--color-text) !important;
-              border: 1px solid var(--color-secondary) !important;
-              border-radius: 0.375rem !important;
-              padding: 0.25rem 0.5rem !important;
-              font-size: 0.875rem !important;
-              line-height: 1.25rem !important;
-              transition: background-color 0.2s ease-in-out !important;
-              outline: none !important;
-              display: inline-block !important;
-            }
-            
-            .goog-te-combo:hover {
-              background-color: color-mix(in srgb, var(--color-secondary) 80%, transparent) !important;
-            }
-            
-            /* Fix option text color */
-            .goog-te-combo option {
-              background-color: var(--color-primary) !important;
-              color: var(--color-text) !important;
-            }
-            
-            /* Additional selector to target the "powered by" specifically */
-            .goog-logo-link, 
-            .goog-te-gadget-icon,
-            .goog-te-banner-frame.skiptranslate,
-            .goog-te-gadget-icon,
-            #goog-gt-tt, 
-            .goog-te-balloon-frame {
-              display: none !important;
-            }
-            
-            /* Remove all text and only keep the select dropdown */
-            .goog-te-gadget {
-              color: transparent !important;
-            }
-          </style>
-
-          <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-          <div class="flex items-center gap-2 flex-wrap">
-            <label for="font-size-slider" class="text-white text-sm text-content clamp-font-size whitespace-nowrap" data-font-size="16">Font Size:</label>
-            <div class="flex items-center gap-2">
-              <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-24 lg:w-32">
-              <span id="font-size-value" class="text-white min-w-[3rem]">+0px</span>
+              <!-- Font Size Control -->
+              <div class="mb-4">
+                <label for="font-size-slider" class="block text-text mb-2 text-sm font-medium">Font Size:</label>
+                <div class="flex items-center gap-2">
+                  <input type="range" id="font-size-slider" min="0" max="10" value="0" step="1" class="w-32">
+                  <span id="font-size-value" class="text-text min-w-[3rem]">+0px</span>
+                </div>
+              </div>
+              
+              <!-- Display Mode Toggle -->
+              <div>
+                <label class="block text-text mb-2 text-sm font-medium">Display Mode:</label>
+                <div class="flex gap-2">
+                  <button class="mode-toggle-btn bg-secondary px-2 py-1 rounded-md flex items-center justify-center gap-1" data-mode="light">
+                    <img src="https://api.iconify.design/material-symbols:clear-day-rounded.svg" alt="Light mode" class="w-5 h-5">
+                    <span class="text-sm">Light</span>
+                  </button>
+                  <button class="mode-toggle-btn bg-secondary px-2 py-1 rounded-md flex items-center justify-center gap-1" data-mode="dark">
+                    <img src="https://api.iconify.design/material-symbols:dark-mode.svg" alt="Dark mode" class="w-5 h-5">
+                    <span class="text-sm">Dark</span>
+                  </button>
+                  <button class="mode-toggle-btn bg-secondary px-2 py-1 rounded-md flex items-center justify-center gap-1" data-mode="high-contrast">
+                    <img src="https://api.iconify.design/material-symbols:eye-tracking.svg" alt="High contrast mode" class="w-5 h-5">
+                    <span class="text-sm">HC</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
           <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
-
-          <%# unified theme toggle button %>
-          <%= button_tag(type: "button", id: "mode-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md flex items-center justify-center", data: { action: "click->theme#toggle" }) do %>
-            <img id="mode-icon" src="https://api.iconify.design/material-symbols:clear-day-rounded.svg" alt="Toggle display mode" data-theme-target="icon" />
-          <% end %>
-
           <%# logout %>
           <%= button_to "Logout", destroy_user_session_path, data: { turbo: false }, method: :delete, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
           <%# pfp %>
@@ -244,17 +273,115 @@
       <script>
     document.addEventListener("DOMContentLoaded", function() {
       initializeFontSizeSystem();
+      initializeSettingsDropdown();
       // initializeGoogleTranslate();
     });
 
     document.addEventListener('turbo:render', function() {
       applyStoredFontSize();
       // initializeGoogleTranslate();
+      initializeSettingsDropdown();
     });
 
     document.addEventListener('turbo:before-cache', function() {
       resetFontSizesToDefault();
     });
+
+    document.addEventListener('turbo:load', function() {
+      initializeFontSizeSystem();
+      initializeSettingsDropdown();
+     
+      var modeToggle = document.getElementById('mode-toggle');
+      var modeIcon = document.getElementById('mode-icon');
+
+      function updateIcon(mode) {
+        if (mode === 'light') {
+          modeIcon.src = 'https://api.iconify.design/material-symbols:clear-day-rounded.svg';
+        } else if (mode === 'dark') {
+          modeIcon.src = 'https://api.iconify.design/material-symbols:dark-mode.svg';
+        } else if (mode === 'high-contrast') {
+          modeIcon.src = 'https://api.iconify.design/material-symbols:eye-tracking.svg';
+        }
+      }
+
+      function applyMode(mode) {
+        document.documentElement.classList.remove('dark', 'high-contrast');
+
+        if (mode === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (mode === 'high-contrast') {
+          document.documentElement.classList.add('high-contrast');
+        }
+
+        localStorage.setItem('display-mode', mode);
+        updateIcon(mode);
+      }
+
+      // Initialize icon based on saved mode
+      var savedMode = localStorage.getItem('display-mode') || 'light';
+      applyMode(savedMode);
+
+      modeToggle.addEventListener('click', function() {
+        var currentMode = localStorage.getItem('display-mode') || 'light';
+        var nextMode;
+
+        if (currentMode === 'light') {
+          nextMode = 'dark';
+        } else if (currentMode === 'dark') {
+          nextMode = 'high-contrast';
+        } else {
+          nextMode = 'light';
+        }
+
+        applyMode(nextMode);
+      });
+    });
+
+    // Settings dropdown functionality
+    function initializeSettingsDropdown() {
+      const dropdownButton = document.getElementById('settings-dropdown-button');
+      const dropdown = document.getElementById('settings-dropdown');
+      
+      if (!dropdownButton || !dropdown) return;
+      
+      // Toggle dropdown visibility when button is clicked
+      dropdownButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target) && e.target !== dropdownButton) {
+          dropdown.classList.add('hidden');
+        }
+      });
+      
+      // Initialize mode toggle buttons
+      const modeButtons = document.querySelectorAll('.mode-toggle-btn');
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const mode = this.getAttribute('data-mode');
+          applyMode(mode);
+          dropdown.classList.add('hidden');  // Close dropdown after selection
+        });
+      });
+      
+      // Highlight active mode button
+      updateActiveButton();
+    }
+
+    function updateActiveButton() {
+      const currentMode = localStorage.getItem('display-mode') || 'light';
+      document.querySelectorAll('.mode-toggle-btn').forEach(btn => {
+        const btnMode = btn.getAttribute('data-mode');
+        if (btnMode === currentMode) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
 
     function initializeFontSizeSystem() {
       setupFontSizeSlider();
@@ -347,7 +474,7 @@
       document.querySelectorAll('.clamp-font-size[data-font-size]').forEach(link => {
         const initialFontSize = parseInt(link.getAttribute('data-font-size')) || 16;
         const adjustedFontSize = initialFontSize + savedFontSize;
-        link.style.fontSize = `${Math.min(18, adjustedFontSize)}px`;
+        link.style.fontSize = `${Math.min(20, adjustedFontSize)}px`;
         link.setAttribute('data-font-size-processed', 'true');
       });
     }
@@ -379,55 +506,67 @@
       applyStoredFontSize();
     }
     
-        document.addEventListener('turbo:load', function() {
-          initializeFontSizeSystem();
-         
-          var modeToggle = document.getElementById('mode-toggle');
-          var modeIcon = document.getElementById('mode-icon');
+    // Google Translate code is kept intact
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',          // Default page language is English
+        includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+        autoDisplay: false
+      }, 'google_translate_element');
+      
+      // Force English on first visit if no language cookie exists
+      if (!readCookie('googtrans')) {
+        // English is actually the default, so we don't need to do anything here
+        // But if you wanted to force another language by default, you could use:
+        // document.cookie = 'googtrans=/en/fr; path=/; domain=' + document.domain;
+      }
+    }
+    
+    // Helper function to read cookies
+    function readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+    
+    // Add event listener to execute after page loads
+    document.addEventListener('turbolinks:load', function() {
+      // This ensures the widget reflects the saved language after page navigation with Turbolinks
+      if (window.google && window.google.translate) {
+        // Refresh the Google Translate widget if needed
+        if (typeof window.google.translate.TranslateElement !== 'undefined') {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+            autoDisplay: false
+          }, 'google_translate_element');
+        }
+      }
+    });
 
-          function updateIcon(mode) {
-            if (mode === 'light') {
-              modeIcon.src = 'https://api.iconify.design/material-symbols:clear-day-rounded.svg';
-            } else if (mode === 'dark') {
-              modeIcon.src = 'https://api.iconify.design/material-symbols:dark-mode.svg';
-            } else if (mode === 'high-contrast') {
-              modeIcon.src = 'https://api.iconify.design/material-symbols:eye-tracking.svg';
-            }
-          }
 
-          function applyMode(mode) {
-            document.documentElement.classList.remove('dark', 'high-contrast');
-
-            if (mode === 'dark') {
-              document.documentElement.classList.add('dark');
-            } else if (mode === 'high-contrast') {
-              document.documentElement.classList.add('high-contrast');
-            }
-
-            localStorage.setItem('display-mode', mode);
-            updateIcon(mode);
-          }
-
-          // Initialize icon based on saved mode
-          var savedMode = localStorage.getItem('display-mode') || 'light';
-          applyMode(savedMode);
-
-          modeToggle.addEventListener('click', function() {
-            var currentMode = localStorage.getItem('display-mode') || 'light';
-            var nextMode;
-
-            if (currentMode === 'light') {
-              nextMode = 'dark';
-            } else if (currentMode === 'dark') {
-              nextMode = 'high-contrast';
-            } else {
-              nextMode = 'light';
-            }
-
-            applyMode(nextMode);
-          });
-        });
+      // Ensure Google Translate doesn't break our functionality
+        window.googleTranslateElementInit = function() {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'hi,nl,de,en,es,fr,it,ja,zh-CN',
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+            autoDisplay: false
+          }, 'google_translate_element');
+          
+          // Re-initialize our dropdown after Google Translate loads
+          setTimeout(initializeSettingsDropdown, 500);
+        };
       </script>
+      
+      <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   </body>
 </html>
