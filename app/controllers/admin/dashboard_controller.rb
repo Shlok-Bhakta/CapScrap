@@ -454,10 +454,7 @@ class Admin::DashboardController < ApplicationController
     if @item.save
       render json: { success: true, message: "Item created successfully" }
     else
-      render json: {
-        success: false,
-        error: @item.errors.full_messages.join(", ")
-      }, status: :unprocessable_entity
+      render json: { success: false, error: @item.errors.full_messages.join(", ") }, status: :ok
     end
   end
 
