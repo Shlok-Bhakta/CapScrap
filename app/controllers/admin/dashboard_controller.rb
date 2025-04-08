@@ -553,28 +553,28 @@ class Admin::DashboardController < ApplicationController
     data = JSON.parse(request.body.read)
     user_id = data["user_id"]
     role_id = data["role_id"]
-    
+
     # Find the user
     @user = User.find_by(id: user_id)
-    
+
     # Check if user exists
     unless @user
       return render json: { success: false, message: "User not found" }, status: :not_found
     end
-    
+
     # Check if role exists
     unless Role.exists?(id: role_id)
       return render json: { success: false, message: "Role not found" }, status: :not_found
     end
-    
+
     # Update the role
     if @user.update(role_id: role_id)
       render json: { success: true, message: "User role updated successfully" }
     else
-      render json: { 
-        success: false, 
-        message: "Failed to update user role", 
-        errors: @user.errors.full_messages 
+      render json: {
+        success: false,
+        message: "Failed to update user role",
+        errors: @user.errors.full_messages
       }, status: :unprocessable_entity
     end
   end
