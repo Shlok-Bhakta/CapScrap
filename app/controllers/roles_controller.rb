@@ -8,6 +8,7 @@ class RolesController < ApplicationController
 
   # GET /roles/1 or /roles/1.json
   def show
+    log_view(@item)
   end
 
   # GET /roles/new

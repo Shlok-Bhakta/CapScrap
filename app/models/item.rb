@@ -1,4 +1,5 @@
 class Item < ApplicationRecord
+  include Loggable
   belongs_to :category
   has_many :rentings
   has_many :users, through: :rentings
@@ -7,6 +8,11 @@ class Item < ApplicationRecord
 
   validates :description, presence: true
   validates :location, presence: true
+
+  validates :description, uniqueness: {
+    scope: :location,
+    message: "with that location already exists."
+  }
 
   # searches for item by name
   scope :search_by_name, ->(query) { where("name ILIKE ?", "%#{query}%") }

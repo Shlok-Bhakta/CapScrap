@@ -23,7 +23,20 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def after_sign_in_path_for(resource_or_scope)
-    stored_location_for(resource_or_scope) || root_path
+    stored_location = stored_location_for(resource_or_scope)
+    return stored_location if stored_location
+
+    # Redirect based on user role
+    case resource_or_scope.role_id
+    when 1 # Student
+      student_dashboard_items_path
+    when 2 # Teaching Assistant
+      ta_dashboard_renting_path
+    when 3 # Teacher/Admin
+      admin_dashboard_renting_path
+    else
+      root_path
+    end
   end
   # protected
 

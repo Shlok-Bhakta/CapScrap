@@ -1,40 +1,82 @@
-
 <%# protection to ensure only teachers can access this page %>
 <% if current_user.role_id == 3 %> 
-<%# make content lign up vertically so its searcg then table%>
   <div class="flex flex-col w-full h-full">
-    <%= form_with url: admin_dashboard_users_path, method: :get, data: { turbo_frame: "users_table", turbo_action: "advance" } do |f| %>
+    <%# Page Header %>
+    <div class="mb-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-text mb-2 text-content" data-font-size="24">User Management</h1>
+      <p class="text-text/70 text-content" data-font-size="16">View and manage user accounts and roles</p>
+    </div>
+    
+    <%# Search Section %>
+    <div class="mb-8 w-full bg-primary/10 rounded-lg p-4 shadow-sm">
+      <h2 class="text-lg font-semibold mb-3 text-text text-content flex items-center" data-font-size="18">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Search Users
+      </h2>
+      <%= form_with url: admin_dashboard_users_path, method: :get, data: { turbo_frame: "users_table", turbo_action: "advance" } do |f| %>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <%= f.text_field :query,
+              placeholder: "Search by name, email or role...",
+              class: "p-3 border border-primary/20 rounded-lg w-full focus:ring-2 focus:ring-primary/30 focus:outline-none text-content transition-all duration-200",
+              "data-font-size": { font_size: 16 },
+              data: {
+                controller: "search",
+                action: "input->search#search"
+              } %>
+          <button type="submit" class="bg-primary hover:bg-primary/90 text-background px-4 py-2 rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap sm:w-auto w-full">
+            Search
+          </button>
+        </div>
+      <% end %>
+    </div>
 
-      <%= f.text_field :query,
-          placeholder: "Search by name, email or role...",
-          class: "mb-4 p-2 border rounded w-1/2 text-content",
-          "data-font-size": { font_size: 16 },
-          data: {
-            controller: "search",
-            action: "input->search#search"
-          } %>
-    <% end %>
-
-    <%= turbo_frame_tag "users_table" do %>
-      <%= render partial: "users_table",
-                locals: {
-                  users: @users,
-                  roles: @roles,
-                  sort_field: params[:sort],
-                  sort_direction: params[:direction],
-                  pagy: @pagy
-                } %>
-    <% end %>
+    <%# Users Table Section %>
+    <div class="w-full bg-background rounded-lg shadow-sm border border-primary/10 p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-text text-content flex items-center" data-font-size="18">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          User List
+        </h2>
+      </div>
+      
+      <%= turbo_frame_tag "users_table" do %>
+        <%= render partial: "users_table",
+                  locals: {
+                    users: @users,
+                    roles: @roles,
+                    sort_field: params[:sort],
+                    sort_direction: params[:direction],
+                    pagy: @pagy
+                  } %>
+      <% end %>
+    </div>
   </div>
 
   <script>
     function initializeRoleSelects() {
+      console.log('Initializing role selects...');
+      
+      // Remove any existing listeners to prevent duplicates
+      document.querySelectorAll('.role-select').forEach(select => {
+        const newSelect = select.cloneNode(true);
+        select.parentNode.replaceChild(newSelect, select);
+      });
+      
+      // Add fresh listeners to all role selects
       document.querySelectorAll('.role-select').forEach(function(select) {
         select.addEventListener('change', function(e) {
           const userId = this.dataset.userId;
           const newRoleId = this.value;
+          const selectedText = this.options[this.selectedIndex].text;
           
-          if (confirm('Are you sure you want to change this user\'s role?')) {
+          if (confirm(`Are you sure you want to change this user's role to ${selectedText}?`)) {
+            // Show loading state
+            this.classList.add('opacity-50');
+            
             fetch('/admin/dashboard/update_user_role', {
               method: 'POST',
               headers: {
@@ -46,12 +88,46 @@
                 role_id: newRoleId
               })
             })
-            .then(response => response.json())
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
             .then(data => {
+              // Remove loading state
+              this.classList.remove('opacity-50');
+              
               if (data.success) {
-                alert('Role updated successfully');
+                // Update all other selects for this user to maintain consistency
+                document.querySelectorAll(`.role-select[data-user-id="${userId}"]`).forEach(otherSelect => {
+                  if (otherSelect !== this) {
+                    otherSelect.value = newRoleId;
+                  }
+                });
+                
+                // Success feedback
+                const successToast = document.createElement('div');
+                successToast.className = 'fixed bottom-4 right-4 bg-confirm/90 text-text px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-up';
+                successToast.innerHTML = `
+                  <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Role updated successfully</span>
+                  </div>
+                `;
+                document.body.appendChild(successToast);
+                
+                // Remove toast after 3 seconds
+                setTimeout(() => {
+                  successToast.classList.add('animate-fade-out');
+                  setTimeout(() => {
+                    document.body.removeChild(successToast);
+                  }, 300);
+                }, 3000);
               } else {
-                alert('Failed to update role');
+                alert('Failed to update role: ' + (data.message || 'Unknown error'));
                 // Reset select to original value without reload
                 const originalOption = Array.from(this.options).find(option =>
                   option.text === this.selectedOptions[0].text
@@ -61,7 +137,8 @@
             })
             .catch(error => {
               console.error('Error:', error);
-              alert('An error occurred while updating the role');
+              this.classList.remove('opacity-50');
+              alert('An error occurred while updating the role: ' + error.message);
               // Reset select to original value without reload
               const originalOption = Array.from(this.options).find(option =>
                 option.text === this.selectedOptions[0].text
@@ -77,12 +154,59 @@
           }
         });
       });
+      
+      console.log('Role selects initialized: ' + document.querySelectorAll('.role-select').length);
     }
+    
+    // Initialize on load and after any Turbo navigation
     document.addEventListener('turbo:load', initializeRoleSelects);
+    document.addEventListener('DOMContentLoaded', initializeRoleSelects);
+    
+    // Additionally initialize after any Ajax/Turbo Frame updates 
+    document.addEventListener('turbo:frame-render', function(event) {
+      if (event.target.id === 'users_table') {
+        setTimeout(initializeRoleSelects, 100); // Small delay to ensure DOM is fully updated
+      }
+    });
   </script>
-
 <% else %>
-
-<h1 class="font-bold text-4xl text-content" data-font-size="36">You are not authorized to view this page</h1>
-
+  <div class="flex items-center justify-center h-full">
+    <div class="bg-error/10 border border-error/20 rounded-lg p-8 text-center max-w-md">
+      <svg class="w-16 h-16 mx-auto text-error mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+      <h1 class="font-bold text-2xl text-content mb-2" data-font-size="24">Access Denied</h1>
+      <p class="text-text/70">You don't have permission to view this page. Please contact an administrator if you believe this is an error.</p>
+    </div>
+  </div>
 <% end %>
+
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out forwards;
+  }
+  
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+</style>

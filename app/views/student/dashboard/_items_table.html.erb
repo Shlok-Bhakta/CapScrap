@@ -1,0 +1,144 @@
+<div class="flex flex-col" data-controller="font">
+  <%# Responsive table with horizontal scrolling on small screens %>
+  <div class="overflow-x-auto rounded-lg border border-primary/10">
+    <table class="w-full min-w-[800px] border-collapse">
+      <thead>
+        <tr class="bg-primary/5 border-b border-primary/10">
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= student_sort_items_header('description', 'Description', sort_field, sort_direction) %>
+          </th>
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= student_sort_items_header('location', 'Location', sort_field, sort_direction) %>
+          </th>
+          <th class="p-3 text-left text-text/80 font-semibold text-content" data-font-size="16">
+            <%= student_sort_items_header('category', 'Category', sort_field, sort_direction) %>
+          </th>
+          <th class="p-3 text-center text-text/80 font-semibold text-content" data-font-size="16">Available</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if items.any? %>
+        <% items.each do |item| %>
+          <tr class="border-b border-primary/10 hover:bg-primary/5 transition-colors duration-150">
+            <td class="p-3 text-content" data-font-size="16">
+              <%= item.description %>
+            </td>
+            <td class="p-3 text-content" data-font-size="16">
+              <%= item.location %>
+            </td>
+            <td class="p-3 text-content" data-font-size="16">
+              <%= item.category.name %>
+            </td>
+            <%# if quantity < 3 then show warning color %>
+            <% if item.quantity < 3 %>
+              <td class="p-3 text-center" data-font-size="16">
+                <span class="bg-accent/20 text-accent font-medium px-3 py-1 rounded-full inline-block min-w-[40px]">
+                  <%= item.quantity %>
+                </span>
+              </td>
+            <% elsif item.quantity == item.total_quantity %>
+              <td class="p-3 text-center" data-font-size="16">
+                <span class="bg-confirm/20 text-confirm font-medium px-3 py-1 rounded-full inline-block min-w-[40px]">
+                  <%= item.quantity %>
+                </span>
+              </td>
+            <% else %>
+              <td class="p-3 text-center" data-font-size="16">
+                <span class="bg-primary/10 text-text font-medium px-3 py-1 rounded-full inline-block min-w-[40px]">
+                  <%= item.quantity %>
+                </span>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="4" class="p-8 text-center text-muted italic">
+            <div class="flex flex-col items-center justify-center py-6">
+              <svg class="w-12 h-12 text-muted/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+              </svg>
+              <p>No items found matching your search criteria</p>
+              <button type="button" onclick="window.location.href='<%= student_dashboard_items_path %>'" class="mt-4 text-primary hover:underline">
+                Clear search filters
+              </button>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <% if items.any? %>
+    <div class="mt-4">
+      <%= pagination_nav(pagy) %>
+    </div>
+  <% end %>
+
+  <%# Mobile cards view (hidden on larger screens) %>
+  <div class="lg:hidden mt-4">
+    <div class="space-y-4">
+      <% items.each do |item| %>
+        <div class="bg-background border border-primary/10 rounded-lg p-4 shadow-sm relative">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="font-medium text-lg"><%= item.description %></h3>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div>
+              <p class="text-text/60">Location:</p>
+              <p class="font-medium"><%= item.location %></p>
+            </div>
+            <div>
+              <p class="text-text/60">Category:</p>
+              <p class="font-medium"><%= item.category.name %></p>
+            </div>
+            <div class="col-span-2">
+              <p class="text-text/60">Available:</p>
+              <% if item.quantity < 3 %>
+                <span class="bg-accent/20 text-accent font-medium px-2 py-0.5 rounded-full inline-block">
+                  <%= item.quantity %>
+                </span>
+                <span class="text-xs text-accent ml-2">Limited availability</span>
+              <% elsif item.quantity == item.total_quantity %>
+                <span class="bg-confirm/20 text-confirm font-medium px-2 py-0.5 rounded-full inline-block">
+                  <%= item.quantity %>
+                </span>
+                <span class="text-xs text-confirm ml-2">All units available</span>
+              <% else %>
+                <span class="bg-primary/10 text-text font-medium px-2 py-0.5 rounded-full inline-block">
+                  <%= item.quantity %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle table/cards view based on screen size
+    function handleResponsiveView() {
+      const tableContainer = document.querySelector('.overflow-x-auto');
+      const cardsContainer = document.querySelector('.lg\\:hidden');
+      
+      if (window.innerWidth < 1024) { // lg breakpoint in Tailwind
+        tableContainer.classList.add('hidden');
+        cardsContainer.classList.remove('lg:hidden');
+      } else {
+        tableContainer.classList.remove('hidden');
+        cardsContainer.classList.add('lg:hidden');
+      }
+    }
+    
+    // Initial check
+    handleResponsiveView();
+    
+    // Check on resize
+    window.addEventListener('resize', handleResponsiveView);
+  });
+</script>
