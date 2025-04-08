@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     get "dashboard/items"
   end
   # Defines the root path route ("/")
-  root "items#index"
+  root "home#index"
 
   devise_for :users, controllers: {
     registrations: "users/registrations",
