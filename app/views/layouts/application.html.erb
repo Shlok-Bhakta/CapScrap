@@ -22,14 +22,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-background text-text font-sans antialiased">
+  <body class="bg-background text-text font-sans antialiased" data-controller="theme">
     <script>
-      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+      // KEEP THIS SCRIPT: Initial theme application to prevent FOUC
+      // It's okay to keep this minimal script in the head/early body for immediate application.
+      // The Stimulus controller will take over for interaction and subsequent loads.
       const savedMode = localStorage.getItem('display-mode');
 
-      function applyMode(mode) {
+      function applyInitialMode(mode) {
         document.documentElement.classList.remove('dark', 'high-contrast');
-
         if (mode === 'dark') {
           document.documentElement.classList.add('dark');
         } else if (mode === 'high-contrast') {
@@ -38,15 +39,13 @@
       }
 
       if (savedMode) {
-        applyMode(savedMode);
+        applyInitialMode(savedMode);
       } else {
-        // Default detection
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          localStorage.setItem('display-mode', 'dark');
-          applyMode('dark');
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          // Don't save here, let Stimulus handle saving later if needed
+          applyInitialMode('dark');
         } else {
-          localStorage.setItem('display-mode', 'light');
-          applyMode('light');
+          applyInitialMode('light');
         }
       }
     </script>
@@ -208,8 +207,8 @@
           <%= link_to "Help", help_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 mx-2 text-content clamp-font-size", data: { font_size: 16 } %>
 
           <%# unified theme toggle button %>
-          <%= button_tag(type: "button", id: "mode-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md flex items-center justify-center") do %>
-            <img id="mode-icon" src="https://api.iconify.design/material-symbols:clear-day-rounded.svg" alt="Toggle display mode" />
+          <%= button_tag(type: "button", id: "mode-toggle", class: "bg-secondary px-1 py-1 w-8 h-8 mr-2 rounded-md flex items-center justify-center", data: { action: "click->theme#toggle" }) do %>
+            <img id="mode-icon" src="https://api.iconify.design/material-symbols:clear-day-rounded.svg" alt="Toggle display mode" data-theme-target="icon" />
           <% end %>
 
           <%# logout %>
