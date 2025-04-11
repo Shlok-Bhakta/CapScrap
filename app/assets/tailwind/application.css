@@ -2,17 +2,21 @@
 
 @theme {
   --color-text: #070303;
+  --color-texting: #ffffff;
   --color-background: #fbf2f2;
   --color-primary: #500000;
   --color-secondary: #ee8a8a;
   --color-accent: #f14141;
   --color-confirm: #88E788;
+  --color-coloring: #ef4444;
+  --color-mode: #ee8a8a
 
   /* Additional standard colors */
   --color-blue: #1e40af;       /* dark blue */
   --color-green: #166534;      /* dark green */
   --color-yellow: #92400e;     /* dark yellow/orange */
   --color-purple: #5b21b6;     /* dark purple */
+  --color-activated: #5b21b6;
 
   /* Semantic colors */
   --color-info: #1e40af;       /* blue */
@@ -29,16 +33,20 @@
 @layer base {
     .dark {
       --color-text: #eae9e9;
+      --color-texting: #070303;
       --color-background: #100c0c;
       --color-primary: #ffadad;
       --color-secondary: #713131;
       --color-accent: #cc5c5c;
       --color-confirm: #34C759;
+      --color-coloring: #500000;
+      --color-mode: #713131;
 
       --color-blue: #3b82f6;       /* blue-500 */
       --color-green: #22c55e;      /* green-500 */
       --color-yellow: #eab308;     /* yellow-500 */
       --color-purple: #8b5cf6;     /* purple-500 */
+      --color-activated: #8b5cf6;
 
       --color-info: #3b82f6;
       --color-warning: #eab308;
@@ -58,11 +66,14 @@
       --color-secondary: #0a0a0a;
       --color-accent: #222222; /* very dark gray for subtle difference */
       --color-confirm: #0d250d;
+      --color-coloring: #4A4A4A;
+      --color-mode: #000000;
   
       --color-blue: #0a0a23;    /* nearly black blue */
       --color-green: #0a1f0a;   /* nearly black green */
       --color-yellow: #1a1505;  /* nearly black yellow/orange */
       --color-purple: #1a0a1f;  /* nearly black purple */
+      --color-activated: #ffffff;
   
       --color-info: #0a0a23;
       --color-warning: #1a1505;
