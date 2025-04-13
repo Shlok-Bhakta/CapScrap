@@ -16,7 +16,7 @@
   --color-green: #166534;      /* dark green */
   --color-yellow: #92400e;     /* dark yellow/orange */
   --color-purple: #5b21b6;     /* dark purple */
-  --color-activated: #5b21b6;
+  --color-activated: #eae9e9;
 
   /* Semantic colors */
   --color-info: #1e40af;       /* blue */
@@ -46,7 +46,7 @@
       --color-green: #22c55e;      /* green-500 */
       --color-yellow: #eab308;     /* yellow-500 */
       --color-purple: #8b5cf6;     /* purple-500 */
-      --color-activated: #8b5cf6;
+      --color-activated: #070303;
 
       --color-info: #3b82f6;
       --color-warning: #eab308;
