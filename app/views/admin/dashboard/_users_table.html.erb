@@ -38,8 +38,8 @@
                           data: { user_id: user.id } %>
             </td>
             <td class="p-3 text-content" data-font-size="16">
-              <span class="text-text/70 text-sm"><%= user.created_at.strftime("%Y-%m-%d") %></span>
-              <span class="block text-text/60 text-xs"><%= user.created_at.strftime("%H:%M") %></span>
+              <span class="text-text/70 text-sm text-content"><%= user.created_at.strftime("%Y-%m-%d") %></span>
+              <span class="block text-text/60 text-xs text-content"><%= user.created_at.strftime("%H:%M") %></span>
             </td>
           </tr>
         <% end %>
@@ -91,7 +91,7 @@
             </div>
             <div>
               <p class="text-text/60 mb-1">Joined:</p>
-              <p><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+              <p><%=  user.created_at.strftime("%Y-%m-%d %H:%M") %></p>
             </div>
           </div>
         </div>
