@@ -3,45 +3,45 @@
     <table class="w-full min-w-[800px] border-collapse" data-purchase-target="table">
       <thead>
         <tr class="bg-primary/5 border-b border-primary/10">
-          <th class="p-2 text-left text-text/80 font-semibold text-sm" data-font-size="14">
+          <th class="p-2 text-left text-text/80 font-semibold text-sm text-content" data-font-size="18">
             <%= sort_purchases_header('item_description', 'Item Description', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-text/80 font-semibold text-sm" data-font-size="14">
+          <th class="p-2 text-left text-text/80 font-semibold text-sm text-content" data-font-size="18">
             <%= sort_purchases_header('location', 'Location', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-text/80 font-semibold text-sm" data-font-size="14">
+          <th class="p-2 text-left text-text/80 font-semibold text-sm text-content" data-font-size="18">
             <%= sort_purchases_header('category', 'Category', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-text/80 font-semibold text-sm" data-font-size="14">
+          <th class="p-2 text-left text-text/80 font-semibold text-sm text-content" data-font-size="18">
             <%= sort_purchases_header('purchased_quantity', 'Quantity', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-left text-text/80 font-semibold text-sm" data-font-size="14">
+          <th class="p-2 text-left text-text/80 font-semibold text-sm text-content" data-font-size="18">
             <%= sort_purchases_header('created_at', 'Purchase Date', sort_field, sort_direction) %>
           </th>
-          <th class="p-2 text-center text-text/80 font-semibold text-sm" data-font-size="14">Actions</th>
+          <th class="p-2 text-center text-text/80 font-semibold text-sm text-content" data-font-size="18">Actions</th>
         </tr>
       </thead>
       <tbody>
         <% if purchases.any? %>
           <% purchases.each do |purchase| %>
             <tr class="border-b border-primary/10 hover:bg-primary/5 transition-colors duration-150">
-              <td class="p-2 text-sm" data-font-size="14">
+              <td class="p-2 text-sm text-content" data-font-size="17">
                 <span class="description-text"><%= purchase.item.description %></span>
               </td>
-              <td class="p-2 text-sm" data-font-size="14">
+              <td class="p-2 text-sm text-content" data-font-size="17">
                 <span class="location-text"><%= purchase.item.location %></span>
               </td>
-              <td class="p-2 text-sm" data-font-size="14">
+              <td class="p-2 text-sm text-content" data-font-size="17">
                 <span class="category-text"><%= purchase.item.category.name %></span>
               </td>
-              <td class="p-2 text-sm" data-font-size="14">
+              <td class="p-2 text-sm text-content" data-font-size="17">
                 <span class="quantity-text bg-primary/10 text-text font-medium px-2 py-0.5 rounded-full inline-block min-w-[32px] text-center"><%= purchase.purchased_quantity %></span>
                 <input type="number" name="purchased_quantity" value="<%= purchase.purchased_quantity %>"
                        class="hidden w-full p-2 border border-primary/20 rounded-lg focus:ring-2 focus:ring-primary/30 focus:outline-none" min="1" />
               </td>
               <td class="p-2 text-sm" data-font-size="14">
-                <span class="text-text/70 text-xs"><%= purchase.created_at.strftime("%Y-%m-%d") %></span>
-                <span class="block text-text/60 text-xs"><%= purchase.created_at.strftime("%H:%M") %></span>
+                <span class="text-text/70 text-xs text-content" data-font-size="17"><%= purchase.created_at.strftime("%Y-%m-%d") %></span>
+                <span class="block text-text/60 text-xs text-content" data-font-size="17"><%= purchase.created_at.strftime("%H:%M") %></span>
               </td>
               <td class="p-2">
                 <div class="flex justify-center items-center gap-1">
