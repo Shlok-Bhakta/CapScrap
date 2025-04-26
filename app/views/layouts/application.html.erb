@@ -183,12 +183,7 @@
           <%# spacer to push content to the middle %>
           <div class="flex-1 hidden lg:block"></div>
           <%# navigate to items depending on the user %>
-          <% if current_user.role_id == 1 %>
-            <%# student %>
-            <div class="flex flex-wrap gap-2 w-full lg:w-auto order-last lg:order-none">
-              <%= link_to "View Items", student_dashboard_items_path, class: "text-text font-medium bg-secondary hover:bg-secondary/80 transition-all duration-200 border border-secondary/90 rounded-md px-2 py-1 text-content clamp-font-size", data: { font_size: 16 } %>
-            </div>
-          <% end %>
+          <%# Student role (1) has no specific navigation links %>
           <%# Show admin links for Professor (3) and Teaching Assistant (2) %>
           <% if [2, 3].include?(current_user.role_id) %>
             <%# teacher %>
