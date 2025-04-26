@@ -179,7 +179,9 @@
       <% if current_user %>
         <nav class="flex flex-wrap bg-primary px-4 py-2 shadow-md min-h-[3rem] items-center gap-2">
           <%# logo %>
-          <%= image_tag "logo.png", class: "h-8 aspect-auto order-first" %>
+          <%= link_to root_path do %>
+            <%= image_tag "logo.png", class: "h-8 aspect-auto order-first" %>
+          <% end %>
           <%# spacer to push content to the middle %>
           <div class="flex-1 hidden lg:block"></div>
           <%# navigate to items depending on the user %>
