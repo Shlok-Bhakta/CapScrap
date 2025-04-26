@@ -587,7 +587,8 @@ class Admin::DashboardController < ApplicationController
   end
 
   def check_professor_role
-    return if current_user&.role_id == 3
+    # Allow Professor (3) and Teaching Assistant (2)
+    return if current_user && [2, 3].include?(current_user.role_id)
     redirect_to root_path, alert: "You are not authorized to view this page"
   end
 end

@@ -23,30 +23,6 @@ Rails.application.routes.draw do
     post "dashboard/add_comment"
   end
 
-  namespace :ta do
-    get "dashboard/users"
-    get "dashboard/search_users"
-
-    get "dashboard/items"
-    get "dashboard/renting"
-    post "dashboard/create_renting"
-    patch "dashboard/toggle_renting"
-    patch "dashboard/toggle_singleuse"
-    post "dashboard/add_comment"
-    patch "dashboard/update_quantity"
-    patch "dashboard/toggle_singleuse"
-    patch "dashboard/toggle_renting"
-    post "dashboard/add_comment"
-    delete "dashboard/delete_renting"
-    post "dashboard/create_renting"
-    get "dashboard/search_users"
-    get "dashboard/search_items"
-    post "dashboard/create_item"
-    patch "dashboard/update_item"
-    delete "dashboard/delete_item"
-    get "dashboard/purchased"
-    post "dashboard/create_purchase"
-  end
 
   namespace :student do
     get "dashboard/items"

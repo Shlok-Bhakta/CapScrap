@@ -8,7 +8,7 @@ class HomeController < ApplicationController
       when 1 # Student
         redirect_to student_dashboard_items_path
       when 2 # Teaching Assistant
-        redirect_to ta_dashboard_renting_path
+        redirect_to admin_dashboard_renting_path # Redirect TAs to admin dashboard
       when 3 # Teacher/Admin
         redirect_to admin_dashboard_renting_path
       else

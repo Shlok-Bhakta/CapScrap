@@ -21,7 +21,7 @@ export default class extends Controller {
       return
     }
 
-    const base = window.location.pathname.includes('/ta/') ? '/ta/dashboard' : '/admin/dashboard';
+    const base = '/admin/dashboard'; // Always use admin dashboard
     fetch(`${base}/search_users?query=${encodeURIComponent(query)}`, {
       headers: {
         'Accept': 'application/json',
@@ -55,7 +55,7 @@ export default class extends Controller {
       return
     }
 
-    const base = window.location.pathname.includes('/ta/') ? '/ta/dashboard' : '/admin/dashboard';
+    const base = '/admin/dashboard'; // Always use admin dashboard
     fetch(`${base}/search_items?query=${encodeURIComponent(query)}`, {
       headers: {
         'Accept': 'application/json',
