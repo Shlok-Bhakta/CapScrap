@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   resources :purchases
   resources :rentings
   resources :roles
-  resources :items
+  # resources :items # Disabled as per request
   resources :categories
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
