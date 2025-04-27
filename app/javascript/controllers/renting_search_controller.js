@@ -12,6 +12,10 @@ export default class extends Controller {
         this.hideItemSuggestions()
       }
     })
+
+    // Add keydown listener for Escape key to hide suggestions
+    this.userFieldTarget.addEventListener('keydown', this.handleKeydown.bind(this))
+    this.itemFieldTarget.addEventListener('keydown', this.handleKeydown.bind(this))
   }
 
   searchUsers() {
@@ -98,9 +102,9 @@ export default class extends Controller {
 
   showUserSuggestions(users) {
     const suggestionsList = users.map(user => `
-      <div class="p-2 hover:bg-gray-100 cursor-pointer" data-action="click->renting-search#selectUser">
-        <div class="font-medium">${user.full_name}</div>
-        <div class="text-sm text-gray-600">${user.email}</div>
+      <div class="p-2 hover:bg-primary/10 cursor-pointer" data-action="click->renting-search#selectUser">
+        <div class="font-medium text-text">${user.full_name}</div>
+        <div class="text-sm text-text/70">${user.email}</div>
       </div>
     `).join('')
 
@@ -110,9 +114,9 @@ export default class extends Controller {
 
   showItemSuggestions(items) {
     const suggestionsList = items.map(item => `
-      <div class="p-2 hover:bg-gray-100 cursor-pointer" data-action="click->renting-search#selectItem">
-        <div class="font-medium">${item.description}</div>
-        <div class="text-sm text-gray-600">${item.location} - ${item.category}</div>
+      <div class="p-2 hover:bg-primary/10 cursor-pointer" data-action="click->renting-search#selectItem">
+        <div class="font-medium text-text">${item.description}</div>
+        <div class="text-sm text-text/70">${item.location} - ${item.category}</div>
       </div>
     `).join('')
 
@@ -128,5 +132,13 @@ export default class extends Controller {
   hideItemSuggestions() {
     this.itemSuggestionsTarget.classList.add('hidden')
     this.itemSuggestionsTarget.innerHTML = ''
+  }
+
+  handleKeydown(event) {
+    // Hide suggestions if Escape key is pressed
+    if (event.key === 'Escape') {
+      this.hideUserSuggestions()
+      this.hideItemSuggestions()
+    }
   }
 }

@@ -9,8 +9,12 @@ export default class extends Controller {
     document.addEventListener('click', (e) => {
       if (!this.element.contains(e.target)) {
         this.hideSuggestions()
+        // Removed hiding new item fields on outside click
       }
     })
+
+    // Add keydown listener for Escape key
+    this.itemFieldTarget.addEventListener('keydown', this.handleKeydown.bind(this))
   }
 
   searchItems() {
@@ -70,9 +74,9 @@ export default class extends Controller {
 
   showSuggestions(items) {
     const suggestionsList = items.map(item => `
-      <div class="p-2 hover:bg-gray-100 cursor-pointer" data-action="click->purchase-search#selectItem">
-        <div class="font-medium">${item.description}</div>
-        <div class="text-sm text-gray-600">${item.location} - ${item.category}</div>
+      <div class="p-2 hover:bg-primary/10 cursor-pointer" data-action="click->purchase-search#selectItem">
+        <div class="font-medium text-text">${item.description}</div>
+        <div class="text-sm text-text/70">${item.location} - ${item.category}</div>
       </div>
     `).join('')
 
@@ -91,5 +95,13 @@ export default class extends Controller {
   hideSuggestions() {
     this.suggestionsTarget.classList.add('hidden')
     this.suggestionsTarget.innerHTML = ''
+  }
+
+  handleKeydown(event) {
+    // Hide suggestions if Escape key is pressed
+    if (event.key === 'Escape') {
+      this.hideSuggestions()
+      // Do not hide new item fields on Escape, only suggestions
+    }
   }
 }
