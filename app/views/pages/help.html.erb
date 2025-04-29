@@ -1,24 +1,24 @@
 <div class="mb-6">
-  <%= link_to "← Back to Items", items_path, class: "inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-all duration-200 shadow-md text-lg font-semibold text-content" %>
+  <%= link_to "← Back to Dashboard", root_path, class: "inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-all duration-200 shadow-md text-lg font-semibold text-content" %>
 </div>
 
 <div class="container mx-auto px-6 py-12 max-w-4xl">
   <!-- Page Header -->
   <div class="text-center">
 
-    <h1 class="text-4xl font-bold text-primary mb-4">How to Browse & Rent Items</h1>
-    <p class="text-lg text-gray-600">Step-by-step instructions for Teachers and TAs on browsing, renting, and listing items.</p>
+    <h1 class="text-4xl font-bold text-primary mb-4 text-content" data-font-size="24">How to Browse & Rent Items</h1>
+    <p class="text-lg text-gray-600 text-content" data-font-size="16">Step-by-step instructions for Teachers and TAs on browsing, renting, and listing items.</p>
   </div>
 
  <!-- Browsing Items -->
 <section class="mt-12">
-  <h2 class="text-2xl font-semibold text-primary">🔍 Browsing Available Items</h2>
-  <p class="text-gray-700 mt-2">
+  <h2 class="text-2xl font-semibold text-primary text-content" data-font-size="18">🔍 Browsing Available Items</h2>
+  <p class="text-gray-700 mt-2 text-content" data-font-size="16">
     Use the <span class="font-medium">Search Bar</span> on the Items Page to find items. Apply filters to refine your search.
     As an Admin, you are able to also add new items directly into the database.
   </p>
   <div class="bg-gray-100 p-4 mt-4 rounded-lg shadow-md">
-    <p class="text-gray-700">📌 Tip: Click an item to view its details and availability.</p>
+    <p class="text-gray-700 text-content" data-font-size="16">📌 Tip: Click an item to view its details and availability.</p>
   </div>
 
 <!-- Screenshot -->
@@ -26,7 +26,7 @@
   <div class="inline-block border-2 border-black rounded-md overflow-hidden">
     <%= image_tag "additems.png", alt: "Search and Add New Item Example", class: "max-w-full h-auto" %>
   </div>
-  <p class="mt-2 text-sm text-gray-600 italic">
+  <p class="mt-2 text-sm text-gray-600 italic text-content" data-font-size="16">
     Form to add new items on the 'View Items' Page
   </p>
 </div>
@@ -36,16 +36,16 @@
 
   <!-- Renting Items -->
   <section class="mt-12">
-    <h2 class="text-2xl font-semibold text-primary">🛒 Renting an Item (Teachers & TAs Only)</h2>
+    <h2 class="text-2xl font-semibold text-primary text-content" data-font-size="18">🛒 Renting an Item (Teachers & TAs Only)</h2>
 
     <div class="bg-gray-50 p-4 mt-4 rounded-lg border-l-4 border-primary">
-      <p class="font-semibold">✅ Eligible Renters:</p>
-      <ul class="list-disc list-inside text-gray-700">
+      <p class="font-semibold text-content" data-font-size="16">✅ Eligible Renters:</p>
+      <ul class="list-disc list-inside text-gray-700 text-content" data-font-size="16">
         <li>Teachers</li>
         <li>Teaching Assistants (TAs)</li>
       </ul>
-      <p class="font-semibold mt-2">❌ Not Eligible:</p>
-      <p class="text-gray-700">Students must have a TA or Admin rent items on their behalf.</p>
+      <p class="font-semibold mt-2 text-content" data-font-size="16">❌ Not Eligible:</p>
+      <p class="text-gray-700 text-content" data-font-size="16">Students must have a TA or Admin rent items on their behalf.</p>
 
     </div>
 
@@ -54,15 +54,15 @@
   <div class="inline-block border-2 border-black rounded-md overflow-hidden">
     <%= image_tag "rentitems.png", alt: "Search and Add New Item Example", class: "max-w-full h-auto" %>
   </div>
-  <p class="mt-2 text-sm text-gray-600 italic">
+  <p class="mt-2 text-sm text-gray-600 italic text-content" data-font-size="16">
     Form to rent items on the 'View Renting' Page
   </p>
 </div>
 
     <div class="mt-6">
 
-      <p class="text-gray-700 font-medium">To rent an item, follow these steps:</p>
-      <ul class="list-decimal list-inside text-gray-700 mt-2 space-y-2">
+      <p class="text-gray-700 font-medium text-content" data-font-size="16">To rent an item, follow these steps:</p>
+      <ul class="list-decimal list-inside text-gray-700 mt-2 space-y-2 text-content" data-font-size="16">
         <li>Enter the required details requested.</li>
         <li>Click <strong>"Create Rental"</strong> on your selected item. Make sure to check the 'Single-use' box if Item can only be used once.</li>
         <li>You will see the details of the rental in the table on the 'View Rentings' Page.</li>
@@ -74,8 +74,8 @@
 
   <!-- Renting Items -->
   <section class="mt-12">
-    <h2 class="text-2xl font-semibold text-primary">🔄 Returning Items</h2>
-    <p class="text-gray-700 mt-2">
+    <h2 class="text-2xl font-semibold text-primary text-content" data-font-size="18">🔄 Returning Items</h2>
+    <p class="text-gray-700 mt-2 text-content" data-font-size="16">
     The status should say rented in red in the Rentings Table. If any issues arise, report them promptly. For damaged items, use the <strong>Comment</strong> button to note the issue on the renting record.
 
     </p>
@@ -85,10 +85,10 @@
   <div class="inline-block border-2 border-black rounded-md overflow-hidden">
     <%= image_tag "rentp1.png", alt: "Search and Add New Item Example", class: "max-w-full h-auto" %>
   </div>
-  <p class="mt-2 text-sm text-gray-600 italic">
+  <p class="mt-2 text-sm text-gray-600 italic text-content" data-font-size="16">
     You can see that it states the item is rented. 
   </p>
-  <p class="text-gray-700 mt-2">
+  <p class="text-gray-700 mt-2 text-content" data-font-size="16">
     Once the item is returned, you simply click the Rented button. This allows you to mark it as returned and automatically provides a date of the return. 
     </p>
 </div>
@@ -97,7 +97,7 @@
   <div class="inline-block border-2 border-black rounded-md overflow-hidden">
     <%= image_tag "rentp2.png", alt: "Search and Add New Item Example", class: "max-w-full h-auto" %>
   </div>
-  <p class="mt-2 text-sm text-gray-600 italic">
+  <p class="mt-2 text-sm text-gray-600 italic text-content" data-font-size="16">
     Status is changed to Returned and Date of the return is provided. 
   </p>
 </div>
@@ -109,7 +109,7 @@
 
     <div class="bg-gray-100 p-4 mt-4 rounded-lg shadow-md">
 
-      <p class="text-gray-700">
+      <p class="text-gray-700 text-content" data-font-size="16">
         📩 All rental records are accessible in the Rentings Table, which is viewable only by TAs and Admins.
 
       </p>
@@ -119,8 +119,8 @@
 
   <!-- Rules & Policies -->
   <section class="mt-12">
-    <h2 class="text-2xl font-semibold text-primary">⚠️ Rules & Policies</h2>
-    <ul class="text-gray-700 mt-2 list-disc list-inside">
+    <h2 class="text-2xl font-semibold text-primary text-content" data-font-size="18">⚠️ Rules & Policies</h2>
+    <ul class="text-gray-700 mt-2 list-disc list-inside text-content" data-font-size="16">
       <li>Only Teachers and TAs can rent or list items.</li>
       <li>All damages must be reported immediately.</li>
     </ul>
@@ -128,8 +128,8 @@
 
   <!-- Contact -->
   <section class="mt-12">
-    <h2 class="text-2xl font-semibold text-primary">💬 Need Help?</h2>
-    <p class="text-gray-700 mt-2">
+    <h2 class="text-2xl font-semibold text-primary text-content" data-font-size="18">💬 Need Help?</h2>
+    <p class="text-gray-700 mt-2 text-content" data-font-size="16">
       For support, please <a href="mailto:james.reyes@tamu.edu" class="text-primary font-medium">contact James Reyes</a>.
 
     </p>
