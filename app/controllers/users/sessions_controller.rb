@@ -31,7 +31,7 @@ class Users::SessionsController < Devise::SessionsController
     when 1 # Student
       student_dashboard_items_path
     when 2 # Teaching Assistant
-      ta_dashboard_renting_path
+      admin_dashboard_renting_path # Redirect TAs to admin dashboard
     when 3 # Teacher/Admin
       admin_dashboard_renting_path
     else
