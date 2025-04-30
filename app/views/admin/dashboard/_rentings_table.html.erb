@@ -223,89 +223,6 @@
       </div>
     <% end %>
 
-    <%# Mobile cards view (hidden on larger screens) %>
-    <div class="lg:hidden mt-4">
-      <div class="space-y-4">
-        <% rentings.each do |renting| %>
-          <div class="bg-background border border-primary/10 rounded-lg p-4 shadow-sm relative">
-            <div class="flex justify-between items-start mb-3">
-              <div>
-                <h3 class="font-medium text-lg mb-1"><%= renting.user.email %></h3>
-                <p class="text-text/70"><%= renting.item.description %></p>
-              </div>
-              <div class="flex items-center gap-1">
-                <button type="button"
-                        class="edit-button rounded-lg bg-info hover:bg-info-hover text-text p-1.5 transition-colors duration-200"
-                        data-renting-id="<%= renting.id %>"
-                        data-action="renting#editRow"
-                        title="Edit Rental">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                  </svg>
-                </button>
-                <%= form_with(url: admin_dashboard_delete_renting_path(id: renting.id),
-                             method: :delete,
-                             data: { turbo_stream: true,
-                                   turbo_confirm: "Are you sure you want to delete this renting?" }) do |f| %>
-                  <%= button_tag(type: 'submit',
-                               class: "delete-button rounded-lg bg-error hover:bg-error-hover text-text p-1.5 transition-colors duration-200",
-                               data: { disable_with: "Deleting..." },
-                               title: "Delete Rental") do %>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <p class="text-text/60">Quantity:</p>
-                <span class="bg-primary/10 text-text font-medium px-2 py-0.5 rounded-full inline-block">
-                  <%= renting.quantity %>
-                </span>
-              </div>
-              <div>
-                <p class="text-text/60">Status:</p>
-                <% if renting.is_returned %>
-                  <span class="text-confirm font-medium">Returned</span>
-                <% else %>
-                  <span class="text-warning font-medium">Not Returned</span>
-                <% end %>
-              </div>
-              <div>
-                <p class="text-text/60">Single Use:</p>
-                <% if renting.is_singleuse %>
-                  <span class="text-info font-medium">Yes</span>
-                <% else %>
-                  <span class="text-muted font-medium">No</span>
-                <% end %>
-              </div>
-              <div>
-                <p class="text-text/60">Dates:</p>
-                <p class="text-sm">
-                  <%= renting.checkout_date&.strftime("%Y-%m-%d") %> to
-                  <%= renting.return_date&.strftime("%Y-%m-%d") %>
-                </p>
-              </div>
-              <div class="col-span-2">
-                <button type="button"
-                       class="w-full rounded-lg bg-primary hover:bg-primary/90 text-text p-2 mt-2 transition-colors duration-200 flex items-center justify-center gap-2"
-                       data-renting-id="<%= renting.id %>"
-                       onclick="document.getElementById('comment-modal-<%= renting.id %>').classList.remove('hidden'); document.getElementById('comment-modal-<%= renting.id %>').classList.add('flex')"
-                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-5 h-5">
-                    <path fill="currentColor" d="M208 32h-24v-8a8 8 0 0 0-16 0v8h-32v-8a8 8 0 0 0-16 0v8H88v-8a8 8 0 0 0-16 0v8H48a8 8 0 0 0-8 8v160a32 32 0 0 0 32 32h112a32 32 0 0 0 32-32V40a8 8 0 0 0-8-8m-88 24a8 8 0 0 1 16 0v8a8 8 0 0 1-16 0ZM80 72a8 8 0 0 1-8-8v-8a8 8 0 0 1 16 0v8a8 8 0 0 1-8 8m80 96H96a8 8 0 0 1 0-16h64a8 8 0 0 1 0 16m0-32H96a8 8 0 0 1 0-16h64a8 8 0 0 1 0 16m24-72a8 8 0 0 1-16 0v-8a8 8 0 0 1 16 0Z"/>
-                  </svg>
-                  View Comments
-                </button>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
   </div>
 <% end %>
 
@@ -352,26 +269,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Toggle table/cards view based on screen size
-    function handleResponsiveView() {
-      const tableContainer = document.querySelector('.overflow-x-auto');
-      const cardsContainer = document.querySelector('.lg\\:hidden');
-      
-      if (window.innerWidth < 1024) { // lg breakpoint in Tailwind
-        tableContainer.classList.add('hidden');
-        cardsContainer.classList.remove('lg:hidden');
-      } else {
-        tableContainer.classList.remove('hidden');
-        cardsContainer.classList.add('lg:hidden');
-      }
-    }
-    
-    // Initial check
-    handleResponsiveView();
-    
-    // Check on resize
-    window.addEventListener('resize', handleResponsiveView);
-    
     // Toast notification function
     window.showToast = function(message, type = 'success') {
       const toastContainer = document.getElementById('toast-container');
