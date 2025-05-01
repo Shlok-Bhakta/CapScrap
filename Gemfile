@@ -62,7 +62,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem "rspec-rails", "~> 7.1", ">= 7.1.1"
+  gem "rspec-rails", "~> 8.0"
 end
 
 group :development do
